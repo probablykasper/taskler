@@ -1,9 +1,44 @@
 // compileCompressed:todo.css
 @import "variables.sass"
-p, input, label
+p, input, label, div
     font-family: "Roboto", sans-serif
 body
     margin: 0px
+    .chrome-extension
+        position: fixed
+        align-items: center
+        z-index: 2
+        display: none
+        &.visible
+            display: flex
+        svg
+            margin: 12px
+            padding: 8px
+            cursor: pointer
+            width: 20px
+            height: 20px
+            &:hover + .chrome-extension-tooltip
+                opacity: 1
+                transform: translateX(0px) scale(1)
+        .chrome-extension-tooltip
+            color: white
+            height: 100%
+            background-color: rgba(#000000, 0.2)
+            padding: 8px
+            border-radius: 3px
+            opacity: 0
+            transform: translateX(-20px) scale(0.9)
+            pointer-events: none
+            transition: opacity $transition, transform $transition
+            &::after
+                content: ''
+                position: absolute
+                left: -7px
+                top: 50%
+                transform: translateY(-50%)
+                border-top: 15px solid transparent
+                border-bottom: 15px solid transparent
+                border-right: 7px solid rgba(0, 0, 0, 0.2)
     .bg
         background: linear-gradient(to bottom, #C450C4, #588EE2)
         min-height: 1000px

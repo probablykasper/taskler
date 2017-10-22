@@ -9,7 +9,7 @@
         "16": "icon16.png"
     },
     "chrome_url_overrides": {
-        "newtab": "newtab.html"
+        "newtab": "index.html"
     },
     "permissions": [
         "storage"
