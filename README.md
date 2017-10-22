@@ -1,11 +1,6 @@
-# vidl-chrome-extension
-Download YouTube videos
+# Taskler
+A simple extension that adds a todo list on the New Tab page
+(and it's also on http://taskler.kasp.io)
 
 # ToDo
 - This list is emptier than me
-
-# Deployment
-### Chrome extension
-- **hostURL** variable in extension/event-page.js:1
-    - Dev: **localhost**
-    - Production: **vidl.kasp.io**
