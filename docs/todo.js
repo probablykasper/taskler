@@ -90,7 +90,7 @@ if (chrome && chrome.webstore && chrome.webstore.install) {
     chromeExtensionDiv.classList.add("visible");
     var svg = chromeExtensionDiv.querySelector(" svg");
     svg.addEventListener("click", function() {
-        var extLink = "https://chrome.google.com/webstore/detail/ofojemljpdnbfmjenigkncgofkcoacag";
+        var extLink = "https://chrome.google.com/webstore/detail/jnibmbpjkpfgaefgbnaneldfbfecpjih";
         chrome.webstore.install(extLink, function(suc) {
             console.log(suc);
         }, function(err) {
