@@ -1,8 +1,3 @@
-// $("body").on("input", "section.contact textarea", function() {
-//     var offset = this.offsetHeight - this.clientHeight;
-//     $(this).css("height", "auto").css("height", this.scrollHeight + offset);
-// });
-
 var todos = document.querySelector(".todos");
 var itemCount = 0;
 var items = JSON.parse(localStorage.getItem("items"));
@@ -28,35 +23,64 @@ function addNewItem() {
     item.classList.add("item", "new-item");
     item.innerHTML =
         '<div class="checkmark-placeholder"></div>'+
-        '<textarea rows="1" placeholder="Add a new one"></textarea>';
+        '<textarea rows="1" data-id="'+items.length+'" placeholder="Add a new one"></textarea>';
     todos.appendChild(item);
 }
-
-function makeId() {
-    var text = "";
-    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    for (var i = 0; i < 6; i++)
-        text += possible.charAt(Math.floor(Math.random() * possible.length));
-    return text;
+function removeItem(id) {
+    items.splice(id, 1);
+    var textarea = document.querySelector('textarea[data-id="'+id+'"]');
+    textarea.removeAttribute("data-id");
+    var divItem = textarea.parentElement;
+    divItem.classList.add("removed");
+    divItem.style.height = "0px";
+    var textareas = document.querySelectorAll("textarea");
+    for (var i = 0; i < textareas.length; i++) {
+        if (textareas[i].dataset.id > id) {
+            textareas[i].dataset.id = textareas[i].dataset.id - 1;
+        }
+    }
+    save();
 }
+function resizeTextarea(id) {
+    var textarea = document.querySelector('textarea[data-id="'+id+'"]');
+    textarea.style.height = "auto";
+    textarea.parentElement.style.height = "auto";
+    var newHeight = textarea.scrollHeight;
+    textarea.style.height = newHeight-16+"px";
+    textarea.parentElement.style.height = newHeight+"px";
+}
+function resizeTextareas() {
+    var textareas = document.querySelectorAll("textarea");
+    for (var i = 0; i < textareas.length-1; i++) {
+        resizeTextarea(i);
+    }
+}
+resizeTextareas();
+window.addEventListener("resize", resizeTextareas);
 
 var itemsToSave = [];
 document.addEventListener("input", function(e) {
     var textarea = e.target;
-    var divItem = textarea.parentElement;
+    var itemDiv = textarea.parentElement;
     textarea.style.height = "auto";
     textarea.style.height = textarea.scrollHeight - 16+"px";
-    if (divItem.classList.contains("new-item")) {
-        divItem.classList.remove("new-item");
-        var checkmark = divItem.querySelector("div.checkmark-placeholder");
+    resizeTextarea(textarea.dataset.id);
+    if (itemDiv.classList.contains("new-item")) {
+        itemDiv.classList.remove("new-item");
+        var checkmark = itemDiv.querySelector("div.checkmark-placeholder");
         checkmark.classList.remove("checkmark-placeholder");
         checkmark.classList.add("checkmark");
-        divItem.querySelector("textarea").setAttribute("data-id", items.length);
+        itemDiv.querySelector("textarea").setAttribute("data-id", items.length);
         items[items.length] = textarea.value;
         addNewItem();
         save();
     } else {
         items[textarea.dataset.id] = textarea.value;
         save();
+    }
+});
+document.addEventListener("click", function(e) {
+    if (e.target.classList.contains("checkmark")) {
+        removeItem(e.target.nextElementSibling.dataset.id);
     }
 });
