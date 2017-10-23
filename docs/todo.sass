@@ -54,6 +54,8 @@ body
         width: 100%
         height: 100%
         overflow-y: scroll
+        .todos.no-transition .item
+            transition: none
         .todos
             display: flex
             z-index: 1
@@ -64,27 +66,36 @@ body
             flex-direction: column
             min-height: min-content
             .item
-                margin: 5px 30px
+                margin: 0px 30px
                 display: flex
                 max-width: 100%
                 align-items: center
                 flex-shrink: 0
-                transition: opacity $transition, margin $transition, height $transition
+                transition: opacity $transition, margin $transition, height $transition, transform $transition-short, box-shadow $transition-short
+                &.rearranging
+                    box-shadow: $shadow-3
                 &.removed
                     opacity: 0
                     margin: 0px
-                .checkmark
-                    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="#ffffff" height="24" viewbox="0 0 24 24" width="24" class="check"><path d="M0 0h24v24H0z" fill="none"></path><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"></path></svg>')
+                .checkmark, .sort-icon
                     background-position: center
                     background-repeat: no-repeat
                     background-size: contain
                     margin: 0px 5px
                     min-width: 30px
                     min-height: 30px
-                    cursor: pointer
                     transition: transform $transition-short
+                .checkmark
+                    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="#ffffff" height="24" viewbox="0 0 24 24" width="24" class="check"><path d="M0 0h24v24H0z" fill="none"></path><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"></path></svg>')
+                    cursor: pointer
                     &:active
                         transform: scale(1.1)
+                .sort-icon
+                    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#FFFFFF" height="24" viewBox="0 0 24 24" width="24"><defs><path d="M0 0h24v24H0V0z" id="a"/></defs><clipPath id="b"><use overflow="visible" xlink:href="#a"/></clipPath><path clip-path="url(#b)" d="M20 9H4v2h16V9zM4 15h16v-2H4v2z"/></svg>')
+                    cursor: move
+                    &.hidden
+                        visibility: hidden
+                        pointer-events: none
                 .checkmark-placeholder
                     margin: 0px 5px
                     min-width: 30px
@@ -97,7 +108,7 @@ body
                     border: none
                     font-size: 16px
                     width: 450px
-                    padding: 8px
+                    padding: 13px 8px
                     color: #FFFFFF
                     resize: none
                     &::placeholder

@@ -8,7 +8,8 @@ function addItems() {
         itemDiv.classList.add("item");
         itemDiv.innerHTML =
             '<div class="checkmark"></div>'+
-            '<textarea data-id="'+i+'" rows="1" placeholder="oshit where did the text go"></textarea>';
+            '<textarea data-id="'+i+'" rows="1" placeholder="oshit where did the text go"></textarea>'+
+            '<div class="sort-icon"></div>';
         itemDiv.querySelector("textarea").value = items[i];
         todos.appendChild(itemDiv);
     }
@@ -23,7 +24,8 @@ function addNewItem() {
     item.classList.add("item", "new-item");
     item.innerHTML =
         '<div class="checkmark-placeholder"></div>'+
-        '<textarea rows="1" data-id="'+items.length+'" placeholder="Add a new one"></textarea>';
+        '<textarea rows="1" data-id="'+items.length+'" placeholder="Add a new one"></textarea>'+
+        '<div class="sort-icon hidden"></div>';
     todos.appendChild(item);
 }
 function removeItem(id) {
@@ -41,12 +43,15 @@ function removeItem(id) {
     }
     save();
 }
+
 function resizeTextarea(id) {
     var textarea = document.querySelector('textarea[data-id="'+id+'"]');
     textarea.style.height = "auto";
     textarea.parentElement.style.height = "auto";
     var newHeight = textarea.scrollHeight;
-    textarea.style.height = newHeight-16+"px";
+    var cs = window.getComputedStyle(textarea); // cs == computedStyles
+    var padding = cs.paddingTop.slice(0, -2) + cs.paddingBottom.slice(0, -2);
+    textarea.style.height = newHeight - padding+"px";
     textarea.parentElement.style.height = newHeight+"px";
 }
 function resizeTextareas() {
@@ -67,10 +72,11 @@ document.addEventListener("input", function(e) {
     resizeTextarea(textarea.dataset.id);
     if (itemDiv.classList.contains("new-item")) {
         itemDiv.classList.remove("new-item");
-        var checkmark = itemDiv.querySelector("div.checkmark-placeholder");
+        var checkmark = itemDiv.querySelector(".checkmark-placeholder");
         checkmark.classList.remove("checkmark-placeholder");
         checkmark.classList.add("checkmark");
         itemDiv.querySelector("textarea").setAttribute("data-id", items.length);
+        itemDiv.querySelector(".sort-icon").classList.remove("hidden");
         items[items.length] = textarea.value;
         addNewItem();
         save();
@@ -97,4 +103,87 @@ if (chrome && chrome.webstore && chrome.webstore.install) {
             console.log(err);
         });
     });
+}
+
+// sort
+var mouseDown, mousePosY, mousePosStartY, currentItem, moveCount;
+document.addEventListener("mousedown", function(e) {
+    if (e.button == 0 && e.target.classList.contains("checkmark")) {
+        e.preventDefault();
+    }
+    if (e.button == 0 && e.target.classList.contains("sort-icon")) {
+        e.preventDefault();
+        mouseDown = true;
+        mousePosY = e.clientY;
+        mousePosStartY = mousePosY;
+        currentItem = e.target.parentElement;
+        currentItem.classList.add("rearranging");
+    }
+});
+document.addEventListener("mousemove", function(e) {
+    if (mouseDown) {
+        mousePosY = e.clientY;
+        var difference = mousePosY - mousePosStartY;
+
+        var reverse = difference < 0 ? true : false;
+        var remainding = difference;
+        moveCount = 0;
+        function moveOtherItems(item, reverse, moveEnd = false, end = false) {
+            var next = item.nextElementSibling;
+            if (reverse) next = item.previousElementSibling;
+            if (next == null || next.classList.contains("new-item")) end = true;
+            if (!end) {
+                if (moveEnd) next.style.transform = "translateY(0px)";
+                else {
+                    if (!reverse && remainding > next.clientHeight/2) {
+                        remainding -= next.clientHeight;
+                        var height = -currentItem.clientHeight;
+                        next.style.transform = "translateY("+height+"px)";
+                        moveCount++;
+                    } else if (reverse && remainding < -next.clientHeight/2) {
+                        remainding += next.clientHeight;
+                        var height = currentItem.clientHeight;
+                        next.style.transform = "translateY("+height+"px)";
+                        moveCount--;
+                    } else {
+                        moveEnd = true;
+                        next.style.transform = "translateY(0px)";
+                    }
+                }
+                moveOtherItems(next, reverse, moveEnd, end);
+            }
+        }
+        moveOtherItems(currentItem, reverse);
+        var toMoveUp = difference - remainding;
+        currentItem.style.transform = "translateY("+toMoveUp+"px)";
+    }
+});
+document.addEventListener("mouseup", function(e) {
+    if (mouseDown) {
+        mouseDown = false;
+        currentItem.classList.remove("rearranging");
+
+        var todos = document.querySelector(".todos");
+        todos.classList.add("no-transition");
+        var itemDivs = document.querySelectorAll(".todos .item");
+        var newPos;
+        for (var i = 0; i < items.length; i++) {
+            itemDivs[i].style.transform = "translateY(0px)";
+            if (itemDivs[i] == currentItem) newPos = i + moveCount;
+        }
+        if      (moveCount > 0) todos.insertBefore(currentItem, todos.children[newPos+1]);
+        else if (moveCount < 0) todos.insertBefore(currentItem, todos.children[newPos]);
+        setTimeout(function() {
+            todos.classList.remove("no-transition");
+        }, 10);
+        if (moveCount != 0) {
+            updateColIds();
+        }
+    }
+});
+function updateColIds() {
+    var textareas = document.querySelectorAll(".todos .item textarea");
+    for (var i = 0; i < items.length; i++) {
+        textareas[i].setAttribute("data-id", i);
+    }
 }
