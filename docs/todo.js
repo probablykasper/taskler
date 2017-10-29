@@ -1,3 +1,5 @@
+websiteCode();
+globalCode();
 function websiteCode() {
     if (chrome && chrome.webstore && chrome.webstore.install) {
         var chromeExtensionDiv = document.querySelector(".chrome-extension");
