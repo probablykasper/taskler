@@ -66,7 +66,7 @@ function globalCode() {
         textarea.parentElement.style.height = "auto";
         var newHeight = textarea.scrollHeight;
         var cs = window.getComputedStyle(textarea); // cs == computedStyles
-        var padding = cs.paddingTop.slice(0, -2) + cs.paddingBottom.slice(0, -2);
+        var padding = Number(cs.paddingTop.slice(0, -2)) + Number(cs.paddingBottom.slice(0, -2));
         textarea.style.height = newHeight - padding+"px";
         textarea.parentElement.style.height = newHeight+"px";
     }
