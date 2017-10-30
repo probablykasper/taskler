@@ -108,6 +108,14 @@ function globalCode() {
         }
     });
 
+    function moveIndex(array, iFrom, iTo) {
+        var arr = array.slice();
+        var fromValue = arr[iFrom];
+        arr.splice(iFrom, 1);
+        if      (iFrom < iTo) arr.splice(iTo, 0, fromValue);
+        else if (iFrom > iTo) arr.splice(iTo, 0, fromValue);
+        return arr;
+    }
     // sort
     var mouseDown, mousePosY, mousePosStartY, currentItem, moveCount;
     document.addEventListener("mousedown", function(e) {
@@ -174,13 +182,16 @@ function globalCode() {
                 itemDivs[i].style.transform = "translateY(0px)";
                 if (itemDivs[i] == currentItem) newPos = i + moveCount;
             }
-            if      (moveCount > 0) todos.insertBefore(currentItem, todos.children[newPos+1]);
+            var oldPos = newPos - moveCount;
+            items = moveIndex(items, oldPos, newPos);
+            if (moveCount > 0) todos.insertBefore(currentItem, todos.children[newPos+1]);
             else if (moveCount < 0) todos.insertBefore(currentItem, todos.children[newPos]);
             setTimeout(function() {
                 todos.classList.remove("no-transition");
             }, 10);
             if (moveCount != 0) {
                 updateColIds();
+                save();
             }
         }
     });
@@ -190,21 +201,4 @@ function globalCode() {
             textareas[i].setAttribute("data-id", i);
         }
     }
-
-    function hasEl(el, cls) {
-        if (el.classList.contains(classes[ci])) return true;
-        for (var eci = 0; eci < el.classList.length; eci++) { // elementClassIndex
-            if (startsWith && el.classList[eci].startsWith(classes[ci])) {
-                return el.classList[eci];
-            }
-        }
-        return false;
-    }
-
-    // fix selecting text after clicking svg icons
-    document.addEventListener("mousedown", function(e) {
-        if (e.button == 0 && hasEl(e.target)) {
-            e.preventDefault();
-        }
-    });
 }
