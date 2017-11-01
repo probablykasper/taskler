@@ -32,10 +32,35 @@ function globalCode() {
         }
         addNewItem();
     }
+    addItems();
     function save() {
         localStorage.setItem("items", JSON.stringify(items));
     }
-    addItems();
+    (function sync() {
+        var svg = document.querySelector(".sync svg");
+        var dialog = document.querySelector(".sync-dialog");
+        var PersonalAccessTokenInput = dialog.querySelector("input.personal-access-token");
+        svg.addEventListener("click", function() {
+            dialog.classList.add("visible");
+        });
+        var saveButton = dialog.querySelector("button.save-personal-access-token");
+        saveButton.addEventListener("click", function() {
+            console.log("saving access token");
+            var gql = new TinyGQL({
+                url: "https://api.github.com/graphql"
+            });
+            setTimeout(function() {
+                dialog.classList.remove("visible");
+            }, 1000);
+        });
+    })();
+    (function dialogs() {
+        document.addEventListener("click", function(e) {
+            if (e.target.classList.contains("dialog-container")) {
+                e.target.classList.remove("visible");
+            }
+        });
+    })();
     function addNewItem() {
         var item = document.createElement("DIV");
         item.classList.add("item", "new-item");
@@ -108,6 +133,7 @@ function globalCode() {
     });
 
     function moveIndex(array, iFrom, iTo) {
+        if (iFrom == iTo) return array;
         var arr = array.slice();
         var fromValue = arr[iFrom];
         arr.splice(iFrom, 1);
@@ -118,6 +144,7 @@ function globalCode() {
     // sort
     var mouseDown, mousePosY, mousePosStartY, currentItem, moveCount;
     document.addEventListener("mousedown", function(e) {
+        moveCount = 0;
         if (e.button == 0 && e.target.classList.contains("checkmark")) {
             e.preventDefault();
         }
@@ -135,6 +162,10 @@ function globalCode() {
             mousePosY = e.clientY;
             var difference = mousePosY - mousePosStartY;
 
+            var itemDivs = document.querySelectorAll(".todos .item");
+            for (var i = 0; i < itemDivs.length; i++) {
+                itemDivs[i].style.transform = "translateY(0px)";
+            }
             var reverse = difference < 0 ? true : false;
             var remainding = difference;
             moveCount = 0;
@@ -195,7 +226,7 @@ function globalCode() {
         }
     });
     function updateColIds() {
-        var textareas = document.querySelectorAll(".todos .item textarea");
+        var textareas = document.querySelectorAll(".todos .item:not(.new-item) textarea");
         for (var i = 0; i < items.length; i++) {
             textareas[i].setAttribute("data-id", i);
         }

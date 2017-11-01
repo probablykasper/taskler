@@ -1,14 +1,16 @@
 // compileCompressed:extension/todo.css
 @import "variables.sass"
-p, input, label, div
+p, input, label, div, h1, textarea
     font-family: "Roboto", sans-serif
 body
     margin: 0px
-    .chrome-extension, .add-alarm
+    .chrome-extension, .add-alarm, .sync
         position: fixed
         align-items: center
         z-index: 2
+        pointer-events: none
         svg
+            pointer-events: all
             margin: 12px
             padding: 8px
             cursor: pointer
@@ -23,6 +25,7 @@ body
                 // transform: scale(1.1)
                 opacity: 0.8
         .tooltip
+            font-size: 16px
             color: white
             height: 100%
             background-color: rgba(#000000, 0.2)
@@ -59,6 +62,94 @@ body
                 border-top: 15px solid transparent
                 border-bottom: 15px solid transparent
                 border-left: 7px solid rgba(0, 0, 0, 0.2)
+    .sync
+        display: flex
+        top: 20px+16px
+        right: 0px
+        .tooltip
+            order: -1
+            transform: translateX(20px) scale(0.9)
+            &::after
+                right: -7px
+                border-top: 15px solid transparent
+                border-bottom: 15px solid transparent
+                border-left: 7px solid rgba(0, 0, 0, 0.2)
+    .dialog-container
+        width: 100%
+        height: 100%
+        position: fixed
+        display: flex
+        justify-content: center
+        align-items: center
+        z-index: 10
+        background-color: rgba(#000000, 0.4)
+        transition: background-color $transition-short
+        opacity: 0
+        pointer-events: none
+        &.visible
+            opacity: 1
+            pointer-events: all
+        .dialog
+            width: 600px
+            max-width: calc(100% - 150px)
+            max-height: calc(100% - 100px)
+            padding: 0px 25px
+            background-color: #eeeeee
+            box-shadow: $shadow-4
+            overflow-y: scroll
+            h1
+                font-weight: 500
+                font-size: 20px
+                color: #212121
+                margin-top: 25px
+                margin-bottom: 15px
+            h2
+                font-weight: 400
+                font-size: 18px
+                color: #212121
+            p
+                font-weight: 400
+                font-size: 14px
+                color: #333333
+                margin: 8px 0px
+            a
+                font-weight: 500
+                font-size: 14px
+                color: #156FDB
+                text-decoration: none
+                transition: opacity $transition
+                &:active
+                    opacity: 0.8
+            button
+                outline: none
+                background-color: transparent
+                border: none
+                color: #000000
+                cursor: pointer
+                text-transform: uppercase
+                font-weight: 500
+                font-size: 14px
+                padding: 8px
+                margin: 10px
+                margin-top: 5px
+                float: right
+                transition: opacity $transition
+                &:active
+                    opacity: 0.8
+            input.personal-access-token
+                border: none
+                border-bottom: 2px solid #212121
+                background-color: transparent
+                outline: none
+                color: rgba(#000000, 0.8)
+                width: calc(100% - 26px)
+                padding: 8px
+                margin: 0px
+                color: #212121
+                font-size: 14px
+                transition: border-bottom $transition-short
+                &:focus
+                    border-bottom: 2px solid #7F34AD
     .bg
         background: linear-gradient(to bottom, #bb3ebb, #457fde)
         min-height: 1000px
