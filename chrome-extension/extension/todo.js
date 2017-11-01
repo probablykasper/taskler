@@ -17,43 +17,9 @@ function websiteCode() {
 function globalCode() {
     var todos = document.querySelector(".todos");
     var itemCount = 0;
-    var items = JSON.parse(localStorage.getItem("items"));
+    window.items = JSON.parse(localStorage.getItem("items"));
     if (items == null) items = [];
-    function addItems() {
-        for (var i = 0; i < items.length; i++) {
-            var itemDiv = document.createElement("DIV");
-            itemDiv.classList.add("item");
-            itemDiv.innerHTML =
-            '<div class="checkmark"></div>'+
-            '<textarea data-id="'+i+'" rows="1" placeholder="oshit where did the text go"></textarea>'+
-            '<div class="sort-icon"></div>';
-            itemDiv.querySelector("textarea").value = items[i];
-            todos.appendChild(itemDiv);
-        }
-        addNewItem();
-    }
     addItems();
-    function save() {
-        localStorage.setItem("items", JSON.stringify(items));
-    }
-    (function sync() {
-        var svg = document.querySelector(".sync svg");
-        var dialog = document.querySelector(".sync-dialog");
-        var PersonalAccessTokenInput = dialog.querySelector("input.personal-access-token");
-        svg.addEventListener("click", function() {
-            dialog.classList.add("visible");
-        });
-        var saveButton = dialog.querySelector("button.save-personal-access-token");
-        saveButton.addEventListener("click", function() {
-            console.log("saving access token");
-            var gql = new TinyGQL({
-                url: "https://api.github.com/graphql"
-            });
-            setTimeout(function() {
-                dialog.classList.remove("visible");
-            }, 1000);
-        });
-    })();
     (function dialogs() {
         document.addEventListener("click", function(e) {
             if (e.target.classList.contains("dialog-container")) {
@@ -61,15 +27,6 @@ function globalCode() {
             }
         });
     })();
-    function addNewItem() {
-        var item = document.createElement("DIV");
-        item.classList.add("item", "new-item");
-        item.innerHTML =
-        '<div class="checkmark-placeholder"></div>'+
-        '<textarea rows="1" data-id="'+items.length+'" placeholder="Add a new one"></textarea>'+
-        '<div class="sort-icon hidden"></div>';
-        todos.appendChild(item);
-    }
     function removeItem(id) {
         items.splice(id, 1);
         var textarea = document.querySelector('textarea[data-id="'+id+'"]');
@@ -108,22 +65,24 @@ function globalCode() {
     document.addEventListener("input", function(e) {
         var textarea = e.target;
         var itemDiv = textarea.parentElement;
-        textarea.style.height = "auto";
-        textarea.style.height = textarea.scrollHeight - 16+"px";
-        resizeTextarea(textarea.dataset.id);
-        if (itemDiv.classList.contains("new-item")) {
-            itemDiv.classList.remove("new-item");
-            var checkmark = itemDiv.querySelector(".checkmark-placeholder");
-            checkmark.classList.remove("checkmark-placeholder");
-            checkmark.classList.add("checkmark");
-            itemDiv.querySelector("textarea").setAttribute("data-id", items.length);
-            itemDiv.querySelector(".sort-icon").classList.remove("hidden");
-            items[items.length] = textarea.value;
-            addNewItem();
-            save();
-        } else {
-            items[textarea.dataset.id] = textarea.value;
-            save();
+        if (itemDiv.classList.contains("item")) {
+            textarea.style.height = "auto";
+            textarea.style.height = textarea.scrollHeight - 16+"px";
+            resizeTextarea(textarea.dataset.id);
+            if (itemDiv.classList.contains("new-item")) {
+                itemDiv.classList.remove("new-item");
+                var checkmark = itemDiv.querySelector(".checkmark-placeholder");
+                checkmark.classList.remove("checkmark-placeholder");
+                checkmark.classList.add("checkmark");
+                itemDiv.querySelector("textarea").setAttribute("data-id", items.length);
+                itemDiv.querySelector(".sort-icon").classList.remove("hidden");
+                items[items.length] = textarea.value;
+                addNewItem();
+                save();
+            } else {
+                items[textarea.dataset.id] = textarea.value;
+                save();
+            }
         }
     });
     document.addEventListener("click", function(e) {
@@ -231,4 +190,252 @@ function globalCode() {
             textareas[i].setAttribute("data-id", i);
         }
     }
+}
+function addItems() {
+    for (var i = 0; i < items.length; i++) {
+        var itemDiv = document.createElement("DIV");
+        itemDiv.classList.add("item");
+        itemDiv.innerHTML =
+        '<div class="checkmark"></div>'+
+        '<textarea data-id="'+i+'" rows="1" placeholder="oshit where did the text go"></textarea>'+
+        '<div class="sort-icon"></div>';
+        itemDiv.querySelector("textarea").value = items[i];
+        var todos = document.querySelector(".todos");
+        todos.appendChild(itemDiv);
+    }
+    addNewItem();
+}
+function addNewItem() {
+    var item = document.createElement("DIV");
+    item.classList.add("item", "new-item");
+    item.innerHTML =
+    '<div class="checkmark-placeholder"></div>'+
+    '<textarea rows="1" data-id="'+items.length+'" placeholder="Add a new one"></textarea>'+
+    '<div class="sort-icon hidden"></div>';
+    var todos = document.querySelector(".todos");
+    todos.appendChild(item);
+}
+
+window.xhr = function(req, options) {
+    // handle options passed as first argument
+    if (options === undefined) {
+        options = req;
+        if (options.req) req = options.req;
+        else if (options.json) req = JSON.stringify(options.json);
+    }
+
+    // init xhr
+    if (!options.url) return "url required";
+    if (!options.type) options.type = "POST";
+    if (!options.contentType) options.contentType = "application/x-www-form-urlencoded";
+
+    // initiate & send request
+    var xhr = new XMLHttpRequest();
+    xhr.open(options.type, options.url, true);
+    xhr.setRequestHeader("content-type", "application/x-www-form-urlencoded");
+    if (options.auth) xhr.setRequestHeader("Authorization", options.auth);
+    if (options.headers) {
+        for (var i = 0; i < options.headers.length; i++) {
+            xhr.setRequestHeader(options.headers[i][0], options.headers[i][1]);
+        }
+    }
+    xhr.send(req);
+
+    // handle response
+    xhr.onreadystatechange = function() {
+        if (this.readyState == 4) {
+            if (String(this.status).startsWith(2)) {
+                if (options.callback) options.callback(this.responseText, false);
+                if (options.onSuccess) options.onSuccess(this.responseText, this.status);
+            } else {
+                if (options.callback) options.callback(this.responseText, this.status);
+                if (options.onError) options.onError(this.responseText, this.status);
+            }
+        }
+    };
+}
+
+function savePersonalAccessToken(paToken) {
+    localStorage.setItem("personalAccessToken", paToken);
+    personalAccessToken = paToken;
+    gist = null;
+    localStorage.removeItem("gist");
+    reloadTasks();
+}
+function updateGistId(id) {
+    localStorage.setItem("gistId", id);
+    gistId = id;
+}
+function updateGistDate(date) {
+    localStorage.setItem("gistDate", String(date));
+    gistDate = String(date);
+}
+var personalAccessToken = localStorage.getItem("personalAccessToken");
+var gistId = localStorage.getItem("gistId");
+var gistDate = new Date(localStorage.getItem("gistDate"));
+function getFilename(paToken) {
+    return "taskler-"+paToken.slice(0,4)+".json";
+}
+function save(saveGist = true) {
+    localStorage.setItem("items", JSON.stringify(items));
+    if (saveGist) {
+        updateGist(personalAccessToken, gistId, function(id, updatedAt) {
+            updateGistDate(updatedAt);
+            console.log("Updated gist");
+        });
+    }
+}
+
+(function sync() {
+    var svg = document.querySelector(".sync svg");
+    var dialog = document.querySelector(".sync-dialog");
+    var personalAccessTokenInput = dialog.querySelector("input.personal-access-token");
+    if (personalAccessToken) personalAccessTokenInput.value = personalAccessToken;
+    svg.addEventListener("click", function() {
+        dialog.classList.add("visible");
+    });
+    var saveButton = dialog.querySelector("button.save-personal-access-token");
+    saveButton.addEventListener("click", function() {
+        console.log("saving access token");
+        savePersonalAccessToken(personalAccessTokenInput.value);
+        dialog.classList.remove("visible");
+    });
+})();
+
+reloadTasks();
+function reloadTasks() {
+    if (personalAccessToken) {
+        if (gistId) {
+            findGist(personalAccessToken, gistId, gistFound);
+        } else {
+            findGistId(personalAccessToken, function(id) {
+                if (id) {
+                    findGist(personalAccessToken, id, gistFound);
+                } else {
+                    createGist(personalAccessToken, function(id, updatedAt) {
+                        updateGistId(id);
+                        updateGistDate(id, updatedAt);
+                    });
+                }
+            });
+        }
+        function saveGist() {
+            localStorage.setItem("items", JSON.stringify(items));
+        }
+    }
+}
+
+function gistFound(content, updatedAt) {
+    if (updatedAt > gistDate) {
+        gistDate = updatedAt;
+        var todos = document.querySelector(".todos");
+        todos.innerHTML = "";
+        items = content;
+        addItems();
+        save(false);
+    }
+}
+
+function findGist(paToken, gistId, callback) {
+    xhr({
+        url: "https://api.github.com/gists/"+gistId,
+        auth: "token "+paToken,
+        type: "GET",
+        req: "",
+        onSuccess: function(gist) {
+            gist = JSON.parse(gist);
+            console.log("----------------------------------- findGist suc");
+            console.log(gist);
+            var file = gist.files[getFilename(paToken)];
+            callback(JSON.parse(file.content), new Date(gist.updated_at));
+        },
+        onError: function(res, code) {
+            res = JSON.parse(res);
+            console.log("----------------------------------- findGist err");
+            console.log(code);
+            console.log(res);
+        }
+    });
+}
+
+// fc395703130a46c1ed7f9fe323adf8a85aa0743d
+function createGist(paToken, callback) {
+    var req = {
+        description: "Gist that enables syncing Taskler tasks",
+        files: {}
+    };
+    req.files[getFilename(paToken)] = {
+        content: JSON.stringify(items)
+    };
+    xhr({
+        url: "https://api.github.com/gists",
+        auth: "token "+paToken,
+        type: "POST",
+        json: req,
+        onSuccess: function(res) {
+            res = JSON.parse(res);
+            console.log("----------------------------------- createGist suc");
+            console.log(res);
+            callback(res.id, new Date(res.updated_at));
+        },
+        onError: function(res, code) {
+            res = JSON.parse(res);
+            console.log("----------------------------------- createGist err");
+            console.log(code);
+            console.log(res);
+        }
+    });
+}
+
+function findGistId(paToken, callback) {
+    xhr({
+        url: "https://api.github.com/gists",
+        auth: "token "+paToken,
+        type: "GET",
+        req: "",
+        onSuccess: function(gists) {
+            gists = JSON.parse(gists);
+            console.log("----------------------------------- findgistid suc");
+            console.log(gists);
+            for (var i = 0; i < gists.length; i++) {
+                if (gists[i].files[getFilename(paToken)]) {
+                    callback(gists[i].id);
+                }
+            }
+            callback(false);
+        },
+        onError: function(res, code) {
+            res = JSON.parse(res);
+            console.log("----------------------------------- findgistid err");
+            console.log(code);
+            console.log(res);
+        }
+    });
+}
+
+function updateGist(paToken, gistId, callback) {
+    var req = {
+        files: {}
+    };
+    req.files[getFilename(paToken)] = {
+        content: JSON.stringify(items)
+    };
+    xhr({
+        url: "https://api.github.com/gists/"+gistId,
+        auth: "token "+paToken,
+        type: "PATCH",
+        json: req,
+        onSuccess: function(res) {
+            res = JSON.parse(res);
+            console.log("----------------------------------- updateGist suc");
+            console.log(res);
+            callback(res.id, new Date(res.updated_at));
+        },
+        onError: function(res, code) {
+            res = JSON.parse(res);
+            console.log("----------------------------------- updateGist err");
+            console.log(code);
+            console.log(res);
+        }
+    })
 }
