@@ -276,13 +276,38 @@ var gistDate = new Date(localStorage.getItem("gistDate"));
 function getFilename(paToken) {
     return "taskler-"+paToken.slice(0,4)+".json";
 }
+
+var saveTimer;
+var syncIcon = document.querySelector(".sync svg");
 function save(saveGist = true) {
     localStorage.setItem("items", JSON.stringify(items));
+    if (saveTimer) clearTimeout(saveTimer);
     if (saveGist) {
-        updateGist(personalAccessToken, gistId, function(id, updatedAt) {
-            updateGistDate(updatedAt);
-            console.log("Updated gist");
-        });
+        console.log("Updating gist in 500ms...");
+        saveTimer = setTimeout(function() {
+            var saveFinished = false;
+            var degs = 0;
+            function rotate() {
+                if (saveFinished) {
+                    syncIcon.style.transition = "none";
+                    syncIcon.style.transform = "rotate(0deg)";
+                    setTimeout(function() {
+                        syncIcon.style.transition = "";
+                    }, 10);
+                    clearInterval(savingAnimation);
+                } else {
+                    degs -= 180;
+                    syncIcon.style.transform = "rotate("+degs+"deg)";
+                }
+            }
+            rotate();
+            var savingAnimation = setInterval(rotate, 1000);
+            updateGist(personalAccessToken, gistId, function(id, updatedAt) {
+                updateGistDate(updatedAt);
+                console.log("Updated gist");
+                saveFinished = true;
+            });
+        }, 500);
     }
 }
 

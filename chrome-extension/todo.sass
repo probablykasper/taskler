@@ -74,6 +74,9 @@ body
                 border-top: 15px solid transparent
                 border-bottom: 15px solid transparent
                 border-left: 7px solid rgba(0, 0, 0, 0.2)
+        svg
+            transform: rotate(0deg)
+            transition: transform $transition-longest
     .dialog-container
         width: 100%
         height: 100%
@@ -83,7 +86,7 @@ body
         align-items: center
         z-index: 10
         background-color: rgba(#000000, 0.4)
-        transition: background-color $transition-short
+        transition: background-color $transition-short, opacity $transition-short
         opacity: 0
         pointer-events: none
         &.visible
