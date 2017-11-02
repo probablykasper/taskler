@@ -255,13 +255,6 @@ window.xhr = function(req, options) {
     };
 }
 
-function savePersonalAccessToken(paToken) {
-    localStorage.setItem("personalAccessToken", paToken);
-    personalAccessToken = paToken;
-    gist = null;
-    localStorage.removeItem("gist");
-    reloadTasks();
-}
 function updateGistId(id) {
     localStorage.setItem("gistId", id);
     gistId = id;
@@ -311,7 +304,7 @@ function save(saveGist = true) {
     }
 }
 
-(function sync() {
+(function syncDialog() {
     var svg = document.querySelector(".sync svg");
     var dialog = document.querySelector(".sync-dialog");
     var personalAccessTokenInput = dialog.querySelector("input.personal-access-token");
@@ -322,24 +315,41 @@ function save(saveGist = true) {
     var saveButton = dialog.querySelector("button.save-personal-access-token");
     saveButton.addEventListener("click", function() {
         console.log("saving access token");
-        savePersonalAccessToken(personalAccessTokenInput.value);
-        dialog.classList.remove("visible");
+        // save personal access token
+        personalAccessToken = personalAccessTokenInput.value;
+        localStorage.setItem("personalAccessToken", personalAccessToken);
+        gistId = null;
+        gistDate = null;
+        localStorage.removeItem("gistId");
+        localStorage.removeItem("gistDate");
+        dialog.classList.add("saving");
+        reloadTasks(function() {
+            dialog.classList.remove("saving");
+            dialog.classList.remove("visible");
+        });
     });
 })();
 
 reloadTasks();
-function reloadTasks() {
+function reloadTasks(callback) {
     if (personalAccessToken) {
         if (gistId) {
-            findGist(personalAccessToken, gistId, gistFound);
+            findGist(personalAccessToken, gistId, function(content, updatedAt) {
+                gistFound(content, updatedAt);
+                if (callback) callback();
+            });
         } else {
             findGistId(personalAccessToken, function(id) {
                 if (id) {
-                    findGist(personalAccessToken, id, gistFound);
+                    findGist(personalAccessToken, id, function(content, updatedAt) {
+                        gistFound(content, updatedAt);
+                        if (callback) callback();
+                    });
                 } else {
                     createGist(personalAccessToken, function(id, updatedAt) {
                         updateGistId(id);
                         updateGistDate(id, updatedAt);
+                        if (callback) callback();
                     });
                 }
             });
@@ -383,7 +393,6 @@ function findGist(paToken, gistId, callback) {
     });
 }
 
-// fc395703130a46c1ed7f9fe323adf8a85aa0743d
 function createGist(paToken, callback) {
     var req = {
         description: "Gist that enables syncing Taskler tasks",
@@ -425,6 +434,7 @@ function findGistId(paToken, callback) {
             for (var i = 0; i < gists.length; i++) {
                 if (gists[i].files[getFilename(paToken)]) {
                     callback(gists[i].id);
+                    return;
                 }
             }
             callback(false);

@@ -1,7 +1,7 @@
 // compileCompressed:extension/todo.css
 @import "variables.sass"
 p, input, label, div, h1, textarea
-    font-family: "Roboto", sans-serif
+    font-family: "Roboto", Arial, sans-serif
 body
     margin: 0px
     .chrome-extension, .add-alarm, .sync
@@ -92,6 +92,8 @@ body
         &.visible
             opacity: 1
             pointer-events: all
+        &.saving .dialog > *
+            opacity: 0
         .dialog
             width: 600px
             max-width: calc(100% - 150px)
