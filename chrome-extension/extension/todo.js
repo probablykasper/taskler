@@ -282,7 +282,7 @@ var syncIcon = document.querySelector(".sync svg");
 function save(saveGist = true) {
     localStorage.setItem("items", JSON.stringify(items));
     if (saveTimer) clearTimeout(saveTimer);
-    if (saveGist) {
+    if (saveGist && personalAccessToken) {
         console.log("Updating gist in 500ms...");
         saveTimer = setTimeout(function() {
             var saveFinished = false;
