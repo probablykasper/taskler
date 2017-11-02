@@ -27,15 +27,34 @@
       <div class="tooltip">Install the Chrome extension</div>
     </div>
     <div class="add-alarm">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="#ffffff" height="24" viewbox="0 0 24 24" width="24">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="#FFFFFF" height="24" viewbox="0 0 24 24" width="24">
         <path d="M0 0h24v24H0z" fill="none"></path>
         <path d="M23.9,4.6L18.4,0l-1.5,1.8l5.5,4.6L23.9,4.6z M7.1,1.8L5.6,0L0.1,4.6l1.5,1.8C1.6,6.4,7.1,1.8,7.1,1.8z M12.6,7.3h-1.8v7.1  l5.7,3.4l0.9-1.5l-4.8-2.8V7.3z M12,2.6C6.1,2.6,1.3,7.4,1.3,13.3S6.1,24,12,24c5.9,0,10.7-4.8,10.7-10.7S17.9,2.6,12,2.6z M12,21.6  c-4.6,0-8.3-3.7-8.3-8.3S7.4,4.9,12,4.9s8.3,3.7,8.3,8.3S16.6,21.6,12,21.6z"></path>
       </svg>
       <div class="tooltip">Repeating tasks</div>
     </div>
+    <div class="sync">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="#FFFFFF" height="24" viewbox="0 0 24 24" width="24">
+        <path d="M0 0h24v24H0z" fill="none"></path>
+        <path d="M12,3.3V0L7.6,4.4L12,8.7V5.5c3.6,0,6.5,2.9,6.5,6.5c0,1.1-0.3,2.1-0.8,3.1l1.6,1.6c0.9-1.3,1.4-2.9,1.4-4.6  C20.7,7.2,16.8,3.3,12,3.3z M12,18.5c-3.6,0-6.5-2.9-6.5-6.5c0-1.1,0.3-2.1,0.8-3.1L4.6,7.4C3.8,8.7,3.3,10.3,3.3,12  c0,4.8,3.9,8.7,8.7,8.7V24l4.4-4.4L12,15.3V18.5z"></path>
+      </svg>
+      <div class="tooltip">Sync your tasks</div>
+    </div>
     <div class="bg"></div>
     <div class="container">
       <div class="todos"></div>
+    </div>
+    <div class="dialog-container sync-dialog">
+      <div class="dialog">
+        <h1>Sync your tasks (beta)</h1>
+        <input tabindex="-1" placeholder="GitHub Personal Access Token" class="personal-access-token">
+        <h2>How to get your personal access token</h2>
+        <p>1. Log in or register on <a target="_blank" href="https://github.com/">GitHub</a>.</p>
+        <p>2. Create a new "Personal access token" by going to <a target="_blank" href="https://github.com/settings/tokens/new">this link</a>. Write Taskler or whatever into the Token description field. Make sure "gist" is checked, and click "Generate token".</p>
+        <p>3. Copy the random text shown in the green field (This is your personal access token). Paste this text into the field above, in every instance of Taskler you have.</p>
+        <p><b>If your personal access token has already been used, your offline tasks will be replaced.</b></p>
+        <button tabindex="-1" class="save-personal-access-token">SAVE</button>
+      </div>
     </div>
     <script src="todo.js"></script>
   </body>

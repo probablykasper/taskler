@@ -14,12 +14,16 @@ function websiteCode() {
         });
     }
 }
+function addLocalItems() {
+    window.items = JSON.parse(localStorage.getItem("items"));
+    if (items == null) items = [];
+    var todos = document.querySelector(".todos");
+    todos.innerHTML = "";
+    addItems();
+}
 function globalCode() {
     var todos = document.querySelector(".todos");
     var itemCount = 0;
-    window.items = JSON.parse(localStorage.getItem("items"));
-    if (items == null) items = [];
-    addItems();
     (function dialogs() {
         document.addEventListener("click", function(e) {
             if (e.target.classList.contains("dialog-container")) {
@@ -357,6 +361,9 @@ function reloadTasks(callback) {
         function saveGist() {
             localStorage.setItem("items", JSON.stringify(items));
         }
+    } else {
+        addLocalItems();
+        if (callback) callback();
     }
 }
 
