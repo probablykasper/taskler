@@ -57,13 +57,12 @@ function globalCode() {
         textarea.style.height = newHeight - padding+"px";
         textarea.parentElement.style.height = newHeight+"px";
     }
-    function resizeTextareas() {
+    window.resizeTextareas = function() {
         var textareas = document.querySelectorAll("textarea");
         for (var i = 0; i < textareas.length-1; i++) {
             resizeTextarea(i);
         }
     }
-    resizeTextareas();
     window.addEventListener("resize", resizeTextareas);
 
     var itemsToSave = [];
@@ -126,7 +125,7 @@ function globalCode() {
             mousePosY = e.clientY;
             var difference = mousePosY - mousePosStartY;
 
-            var itemDivs = document.querySelectorAll(".todos .item");
+            var itemDivs = document.querySelectorAll(".todos .item:not(.removed)");
             for (var i = 0; i < itemDivs.length; i++) {
                 itemDivs[i].style.transform = "translateY(0px)";
             }
@@ -170,7 +169,7 @@ function globalCode() {
 
             var todos = document.querySelector(".todos");
             todos.classList.add("no-transition");
-            var itemDivs = document.querySelectorAll(".todos .item");
+            var itemDivs = document.querySelectorAll(".todos .item:not(.removed)");
             var newPos;
             for (var i = 0; i < items.length; i++) {
                 itemDivs[i].style.transform = "translateY(0px)";
@@ -190,7 +189,7 @@ function globalCode() {
         }
     });
     function updateColIds() {
-        var textareas = document.querySelectorAll(".todos .item:not(.new-item) textarea");
+        var textareas = document.querySelectorAll(".todos .item:not(.new-item):not(.removed) textarea");
         for (var i = 0; i < items.length; i++) {
             textareas[i].setAttribute("data-id", i);
         }
@@ -342,6 +341,7 @@ function reloadTasks(callback) {
             findGist(personalAccessToken, gistId, function(content, updatedAt) {
                 gistFound(content, updatedAt);
                 if (callback) callback();
+                resizeTextareas();
             });
         } else {
             findGistId(personalAccessToken, function(id) {
@@ -349,12 +349,14 @@ function reloadTasks(callback) {
                     findGist(personalAccessToken, id, function(content, updatedAt) {
                         gistFound(content, updatedAt);
                         if (callback) callback();
+                        resizeTextareas();
                     });
                 } else {
                     createGist(personalAccessToken, function(id, updatedAt) {
                         updateGistId(id);
                         updateGistDate(id, updatedAt);
                         if (callback) callback();
+                        resizeTextareas();
                     });
                 }
             });
@@ -365,6 +367,7 @@ function reloadTasks(callback) {
     } else {
         addLocalItems();
         if (callback) callback();
+        resizeTextareas();
     }
 }
 
