@@ -346,6 +346,8 @@ function reloadTasks(callback) {
         } else {
             findGistId(personalAccessToken, function(id) {
                 if (id) {
+                    gistId = id;
+                    localStorage.setItem("gistId", gistId);
                     findGist(personalAccessToken, id, function(content, updatedAt) {
                         gistFound(content, updatedAt);
                         if (callback) callback();
