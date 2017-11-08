@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
     "name": "Taskler",
-    "version": "1.2.2",
+    "version": "1.2.3",
     "description": "A simple todo New Tab page",
     "icons": {
         "128": "icon128.png",
