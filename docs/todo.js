@@ -265,7 +265,7 @@ function updateGistId(id) {
 }
 function updateGistDate(date) {
     localStorage.setItem("gistDate", String(date));
-    gistDate = String(date);
+    gistDate = date;
 }
 var personalAccessToken = localStorage.getItem("personalAccessToken");
 var gistId = localStorage.getItem("gistId");
@@ -274,9 +274,17 @@ function getFilename(paToken) {
     return "taskler-"+paToken.slice(0,4)+".json";
 }
 
+// unsynced changes popup
+var unsyncedChanges = false;
+window.onbeforeunload = function() {
+    if (unsyncedChanges) {
+        return "Changes are not yet synced. Do you want to leave without syncing?";
+    }
+}
 var saveTimer;
 var syncIcon = document.querySelector(".sync svg");
 function save(saveGist = true) {
+    unsyncedChanges = true;
     localStorage.setItem("items", JSON.stringify(items));
     if (saveTimer) clearTimeout(saveTimer);
     if (saveGist && personalAccessToken) {
@@ -303,6 +311,7 @@ function save(saveGist = true) {
                 updateGistDate(updatedAt);
                 console.log("Updated gist");
                 saveFinished = true;
+                unsyncedChanges = false;
             });
         }, 500);
     }
@@ -381,6 +390,8 @@ function gistFound(content, updatedAt) {
         items = content;
         addItems();
         save(false);
+    } else {
+        addLocalItems();
     }
 }
 
