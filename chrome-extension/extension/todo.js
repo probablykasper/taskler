@@ -264,7 +264,7 @@ function updateGistId(id) {
 }
 function updateGistDate(date) {
     localStorage.setItem("gistDate", String(date));
-    gistDate = String(date);
+    gistDate = date;
 }
 var personalAccessToken = localStorage.getItem("personalAccessToken");
 var gistId = localStorage.getItem("gistId");
@@ -380,6 +380,8 @@ function gistFound(content, updatedAt) {
         items = content;
         addItems();
         save(false);
+    } else {
+        addLocalItems();
     }
 }
 
