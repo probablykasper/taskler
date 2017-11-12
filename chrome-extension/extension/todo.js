@@ -273,9 +273,17 @@ function getFilename(paToken) {
     return "taskler-"+paToken.slice(0,4)+".json";
 }
 
+// unsynced changes popup
+var unsyncedChanges = false;
+window.onbeforeunload = function() {
+    if (unsyncedChanges) {
+        return "Changes are not yet synced. Do you want to leave without syncing?";
+    }
+}
 var saveTimer;
 var syncIcon = document.querySelector(".sync svg");
 function save(saveGist = true) {
+    unsyncedChanges = true;
     localStorage.setItem("items", JSON.stringify(items));
     if (saveTimer) clearTimeout(saveTimer);
     if (saveGist && personalAccessToken) {
@@ -302,6 +310,7 @@ function save(saveGist = true) {
                 updateGistDate(updatedAt);
                 console.log("Updated gist");
                 saveFinished = true;
+                unsyncedChanges = false;
             });
         }, 500);
     }
