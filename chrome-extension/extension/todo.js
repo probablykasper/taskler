@@ -63,20 +63,19 @@ function globalCode() {
         }
         save();
     }
-    function resizeTextarea(id) {
-        var textarea = document.querySelector('textarea[data-id="'+id+'"]');
-        textarea.style.height = "auto";
-        textarea.parentElement.style.height = "auto";
-        var newHeight = textarea.scrollHeight;
-        var cs = window.getComputedStyle(textarea); // cs == computedStyles
-        var padding = Number(cs.paddingTop.slice(0, -2)) + Number(cs.paddingBottom.slice(0, -2));
-        textarea.style.height = newHeight - padding+"px";
-        textarea.parentElement.style.height = newHeight+"px";
+    function resizeTextarea(textarea) {
+        var value = textarea.value;
+        var newLineCount = (value.match(/\n/g) || []).length;
+        textarea.setAttribute("rows", newLineCount+1);
     }
     window.resizeTextareas = function() {
-        var textareas = document.querySelectorAll("textarea");
-        for (var i = 0; i < textareas.length-1; i++) {
-            resizeTextarea(i);
+        var itemTextareas = document.querySelectorAll("textarea[data-id]");
+        for (var i = 0; i < itemTextareas.length-1; i++) {
+            resizeTextarea(itemTextareas[i]);
+        }
+        var rtTextareas = document.querySelectorAll("textarea[data-rt-id]");
+        for (var i = 0; i < rtTextareas.length; i++) {
+            resizeTextarea(rtTextareas[i]);
         }
     }
     window.addEventListener("resize", resizeTextareas);
@@ -85,10 +84,9 @@ function globalCode() {
     document.addEventListener("input", function(e) {
         var textarea = e.target;
         var itemDiv = textarea.parentElement;
-        if (itemDiv.classList.contains("item")) {
-            textarea.style.height = "auto";
-            textarea.style.height = textarea.scrollHeight - 16+"px";
-            resizeTextarea(textarea.dataset.id);
+        var cl = itemDiv.classList;
+        if (cl.contains("item")) {
+            resizeTextarea(textarea);
             if (itemDiv.classList.contains("new-item")) {
                 itemDiv.classList.remove("new-item");
                 var checkmark = itemDiv.querySelector(".checkmark-placeholder");
@@ -103,6 +101,8 @@ function globalCode() {
                 items.tasks[textarea.dataset.id] = textarea.value;
                 save();
             }
+        } else if (cl.contains("repeating-task")) {
+            resizeTextarea(textarea);
         }
     });
     document.addEventListener("click", function(e) {
@@ -334,9 +334,75 @@ function save(saveGist = true) {
 }
 
 (function repeatingTasksDialog() {
+    var th = document.querySelector(".day-of-month .th");
+    var dateTh = document.querySelector(".date-day-of-month .th");
+    var oldEvery = "";
+    var oldHours = "";
+    var oldMinutes = "";
+    var dayOfMonth = "";
+    document.addEventListener("input", function(e) {
+        var input = e.target;
+        var value = Number(input.value);
+        // validate every x
+        if (e.inputType == "insertText") {
+            if (input.classList.contains("every")) {
+                if (isNaN(value) || value <= 0) {
+                    input.value = oldEvery;
+                } else {
+                    oldEvery = input.value;
+                }
+                // validate hours input
+            } else if (input.classList.contains("at-hour")) {
+                if (isNaN(value) || value < 0 || value > 24) {
+                    input.value = oldHours;
+                } else {
+                    oldHours = input.value;
+                }
+                // validate minutes input
+            } else if (input.classList.contains("at-min")) {
+                if (isNaN(value) || value < 0 || value > 59) {
+                    input.value = oldMinutes;
+                } else {
+                    oldMinutes = input.value;
+                }
+                // validate day-of-the-month input
+            } else if (input.classList.contains("at-day-of-month")) {
+                if (isNaN(value) || value < 1 || value > 31) {
+                    input.value = dayOfMonth;
+                } else {
+                    dayOfMonth = input.value;
+                }
+                if (input.value.slice(-1) == 1) th.innerHTML = "st";
+                else if (input.value.slice(-1) == 2) th.innerHTML = "nd";
+                else if (input.value.slice(-1) == 3) th.innerHTML = "rd";
+                else th.innerHTML = "th";
+                dateTh.innerHTML = th.innerHTML;
+            }
+        }
+    });
+
+    var selectPeriod = document.querySelector("select.period");
+    var weekday = selectPeriod.parentElement.querySelector(".weekday");
+    var dayOfMonth = selectPeriod.parentElement.querySelector(".day-of-month");
+    var date = selectPeriod.parentElement.querySelector(".date");
+    selectPeriod.addEventListener("change", function(e) {
+        weekday.classList.remove("visible");
+        dayOfMonth.classList.remove("visible");
+        date.classList.remove("visible");
+        if (selectPeriod.value == "days") {
+            
+        } else if (selectPeriod.value == "weeks") {
+            weekday.classList.add("visible");
+        } else if (selectPeriod.value == "months") {
+            dayOfMonth.classList.add("visible");
+        } else if (selectPeriod.value == "years") {
+            date.classList.add("visible");
+        }
+    });
 
     var svg = document.querySelector(".repeating-tasks svg");
     var dialog = document.querySelector(".repeating-tasks-dialog");
+    dialog.classList.add("visible");
     svg.addEventListener("click", function() {
         dialog.classList.add("visible");
     });

@@ -44,10 +44,59 @@ html
         .dialog-container.repeating-tasks-dialog
             .dialog
                 h1 Repeating tasks
-                p 1. Log in or register on <a target="_blank" href="https://github.com/">GitHub</a>.
-                p 2. Create a new "Personal access token" by going to <a target="_blank" href="https://github.com/settings/tokens/new">this link</a>. Write Taskler or whatever into the Token description field. Make sure "gist" is checked, and click "Generate token".
-                p 3. Copy the random text shown in the green field (This is your personal access token). Paste this text into the field above, in every instance of Taskler you have.
-                p <b>If your personal access token has already been used, your offline tasks will be replaced.</b>
+                .repeating-task
+                    textarea(rows="1", data-rt-id="1", placeholder="Add a new one")
+                    .options
+                        p Repeat every
+                        input.every(value="1")
+                        select.period
+                            option(value="days") days
+                            option(value="weeks") weeks
+                            option(value="months") months
+                            option(value="years") years
+                        p at
+                        .time
+                            input.at-hour(placeholder="15")
+                            p :
+                            input.at-min(placeholder="30")
+                        .weekday
+                            p on
+                            //- input.at-weekday
+                            input#Mon(type="checkbox" value="M")
+                            label(for="Mon") M
+                            input#Tue(type="checkbox" value="T")
+                            label(for="Tue") T
+                            input#Wed(type="checkbox" value="W")
+                            label(for="Wed") W
+                            input#Thu(type="checkbox" value="T")
+                            label(for="Thu") T
+                            input#Fri(type="checkbox" value="F")
+                            label(for="Fri") F
+                            input#Sat(type="checkbox" value="S")
+                            label(for="Sat") S
+                            input#Sun(type="checkbox" value="S")
+                            label(for="Sun") S
+                        .day-of-month
+                            p , the
+                            input.at-day-of-month
+                            p.th th
+                            p &nbsp;day of the month
+                        .date
+                            select.date-month
+                                option(value="january") January
+                                option(value="february") February
+                                option(value="march") March
+                                option(value="april") April
+                                option(value="may") May
+                                option(value="june") June
+                                option(value="july") July
+                                option(value="august") August
+                                option(value="september") September
+                                option(value="october") October
+                                option(value="november") November
+                                option(value="december") December
+                            input.at-day-of-month
+                            p.th th
                 button(tabindex="-1").save-personal-access-token SAVE
         .dialog-container.sync-dialog
             .dialog

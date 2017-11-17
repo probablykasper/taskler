@@ -38,10 +38,66 @@
     <div class="dialog-container repeating-tasks-dialog">
       <div class="dialog">
         <h1>Repeating tasks</h1>
-        <p>1. Log in or register on <a target="_blank" href="https://github.com/">GitHub</a>.</p>
-        <p>2. Create a new "Personal access token" by going to <a target="_blank" href="https://github.com/settings/tokens/new">this link</a>. Write Taskler or whatever into the Token description field. Make sure "gist" is checked, and click "Generate token".</p>
-        <p>3. Copy the random text shown in the green field (This is your personal access token). Paste this text into the field above, in every instance of Taskler you have.</p>
-        <p><b>If your personal access token has already been used, your offline tasks will be replaced.</b></p>
+        <div class="repeating-task">
+          <textarea rows="1" data-rt-id="1" placeholder="Add a new one"></textarea>
+          <div class="options">
+            <p>Repeat every</p>
+            <input value="1" class="every">
+            <select class="period">
+              <option value="days">days</option>
+              <option value="weeks">weeks</option>
+              <option value="months">months</option>
+              <option value="years">years</option>
+            </select>
+            <p>at</p>
+            <div class="time">
+              <input placeholder="15" class="at-hour">
+              <p>:</p>
+              <input placeholder="30" class="at-min">
+            </div>
+            <div class="weekday">
+              <p>on</p>
+              <input id="Mon" type="checkbox" value="M">
+              <label for="Mon">M</label>
+              <input id="Tue" type="checkbox" value="T">
+              <label for="Tue">T</label>
+              <input id="Wed" type="checkbox" value="W">
+              <label for="Wed">W</label>
+              <input id="Thu" type="checkbox" value="T">
+              <label for="Thu">T</label>
+              <input id="Fri" type="checkbox" value="F">
+              <label for="Fri">F</label>
+              <input id="Sat" type="checkbox" value="S">
+              <label for="Sat">S</label>
+              <input id="Sun" type="checkbox" value="S">
+              <label for="Sun">S</label>
+            </div>
+            <div class="day-of-month">
+              <p>, the</p>
+              <input class="at-day-of-month">
+              <p class="th">th</p>
+              <p>&nbsp;day of the month</p>
+            </div>
+            <div class="date">
+              <select class="date-month">
+                <option value="january">January</option>
+                <option value="february">February</option>
+                <option value="march">March</option>
+                <option value="april">April</option>
+                <option value="may">May</option>
+                <option value="june">June</option>
+                <option value="july">July</option>
+                <option value="august">August</option>
+                <option value="september">September</option>
+                <option value="october">October</option>
+                <option value="november">November</option>
+                <option value="december">December</option>
+              </select>
+              <input class="at-day-of-month">
+              <p class="th">th</p>
+            </div>
+          </div>
+        </div>
         <button tabindex="-1" class="save-personal-access-token">SAVE</button>
       </div>
     </div>

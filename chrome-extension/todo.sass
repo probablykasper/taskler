@@ -1,6 +1,6 @@
 // compileCompressed:extension/todo.css
 @import "variables.sass"
-p, input, label, div, h1, textarea
+p, input, label, div, h1, textarea, select
     font-family: "Roboto", Arial, sans-serif
 body
     margin: 0px
@@ -157,6 +157,104 @@ body
                 transition: border-bottom $transition-short
                 &:focus
                     border-bottom: 2px solid #7F34AD
+            .repeating-task
+                display: flex
+                flex-direction: column
+                textarea
+                    margin: 0px 5px
+                    background-color: transparent
+                    outline: none
+                    border: none
+                    border-bottom: 2px solid #212121
+                    font-size: 16px
+                    padding: 9px 8px
+                    color: #000000
+                    margin-top: 8px
+                    resize: none
+                    &:focus
+                        border-bottom: 2px solid #7F34AD
+                    &::placeholder
+                        color: rgba(#000000, 0.5)
+                .options
+                    margin-left: 5px
+                    margin-right: 5px
+                    display: flex
+                    align-items: center
+                input
+                    border: none
+                    border-top: 2px solid transparent
+                    border-bottom: 2px solid #212121
+                    background-color: transparent
+                    outline: none
+                    color: rgba(#000000, 0.8)
+                    padding: 8px
+                    margin: 0px
+                    color: #212121
+                    font-size: 14px
+                    transition: border-bottom $transition-short
+                    &:focus
+                        border-bottom: 2px solid #7F34AD
+                input.every
+                    padding: 4px 0px
+                    text-align: center
+                    width: 32px
+                .time
+                    display: flex
+                    align-items: center
+                .weekday
+                    align-items: center
+                    display: none
+                    &.visible
+                        display: flex
+                    input
+                        display: none
+                    label
+                        display: inline-block
+                        margin: 0px 2px
+                        border: 2px solid #616161
+                        background-color: white
+                        width: 20px
+                        height: 20px
+                        line-height: 20px
+                        cursor: pointer
+                        border-radius: 2px
+                        text-align: center
+                        user-select: none
+                        transition: all $transition
+                    input:checked + label
+                        background-color: #212121
+                        border: 2px solid #212121
+                        color: white
+                .day-of-month
+                    align-items: center
+                    display: none
+                    &.visible
+                        display: flex
+                    .at-day-of-month
+                        padding: 4px 2px
+                        width: 17px
+                        text-align: center
+                    p.th
+                        width: 16px
+                .date
+                    align-items: center
+                    display: none
+                    &.visible
+                        display: flex
+                    .at-day-of-month
+                        padding: 4px 2px
+                        width: 17px
+                        text-align: center
+                    p.date-th
+                        width: 16px
+                select.period, select.date-month
+                    outline: none
+                    border: none
+                    font-size: 14px
+                    background-color: transparent
+                input.at-hour, input.at-min
+                    padding: 4px 2px
+                    width: 17px
     .bg
         background: linear-gradient(to bottom, #bb3ebb, #457fde)
         min-height: 1000px
@@ -222,7 +320,6 @@ body
                     min-height: 30px
                 textarea
                     margin: 0px 5px
-                    border-radius: 3px
                     background-color: transparent
                     outline: none
                     border: none
