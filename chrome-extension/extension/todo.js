@@ -14,9 +14,26 @@ function websiteCode() {
         });
     }
 }
+function updateItemsObject() {
+    if (Array.isArray(items)) {
+        return {
+            tasks: items,
+            repeatingTasks: []
+        };
+    } else {
+        return items;
+    }
+}
 function addLocalItems() {
     window.items = JSON.parse(localStorage.getItem("items"));
-    if (items == null) items = [];
+    items = updateItemsObject();
+    if (items == null) {
+        items = {
+            tasks: [],
+            repeatingTasks: []
+        };
+    }
+    console.log(items);
     var todos = document.querySelector(".todos");
     todos.innerHTML = "";
     addItems();
@@ -32,7 +49,7 @@ function globalCode() {
         });
     })();
     function removeItem(id) {
-        items.splice(id, 1);
+        items.tasks.splice(id, 1);
         var textarea = document.querySelector('textarea[data-id="'+id+'"]');
         textarea.removeAttribute("data-id");
         var divItem = textarea.parentElement;
@@ -77,13 +94,13 @@ function globalCode() {
                 var checkmark = itemDiv.querySelector(".checkmark-placeholder");
                 checkmark.classList.remove("checkmark-placeholder");
                 checkmark.classList.add("checkmark");
-                itemDiv.querySelector("textarea").setAttribute("data-id", items.length);
+                itemDiv.querySelector("textarea").setAttribute("data-id", items.tasks.length);
                 itemDiv.querySelector(".sort-icon").classList.remove("hidden");
-                items[items.length] = textarea.value;
+                items.tasks[items.length] = textarea.value;
                 addNewItem();
                 save();
             } else {
-                items[textarea.dataset.id] = textarea.value;
+                items.tasks[textarea.dataset.id] = textarea.value;
                 save();
             }
         }
@@ -170,12 +187,12 @@ function globalCode() {
             todos.classList.add("no-transition");
             var itemDivs = document.querySelectorAll(".todos .item:not(.removed)");
             var newPos;
-            for (var i = 0; i < items.length; i++) {
+            for (var i = 0; i < items.tasks.length; i++) {
                 itemDivs[i].style.transform = "translateY(0px)";
                 if (itemDivs[i] == currentItem) newPos = i + moveCount;
             }
             var oldPos = newPos - moveCount;
-            items = moveIndex(items, oldPos, newPos);
+            items.tasks = moveIndex(items.tasks, oldPos, newPos);
             if (moveCount > 0) todos.insertBefore(currentItem, todos.children[newPos+1]);
             else if (moveCount < 0) todos.insertBefore(currentItem, todos.children[newPos]);
             setTimeout(function() {
@@ -189,20 +206,20 @@ function globalCode() {
     });
     function updateColIds() {
         var textareas = document.querySelectorAll(".todos .item:not(.new-item):not(.removed) textarea");
-        for (var i = 0; i < items.length; i++) {
+        for (var i = 0; i < items.tasks.length; i++) {
             textareas[i].setAttribute("data-id", i);
         }
     }
 }
 function addItems() {
-    for (var i = 0; i < items.length; i++) {
+    for (var i = 0; i < items.tasks.length; i++) {
         var itemDiv = document.createElement("DIV");
         itemDiv.classList.add("item");
         itemDiv.innerHTML =
         '<div class="checkmark"></div>'+
         '<textarea data-id="'+i+'" rows="1" placeholder="oshit where did the text go"></textarea>'+
         '<div class="sort-icon"></div>';
-        itemDiv.querySelector("textarea").value = items[i];
+        itemDiv.querySelector("textarea").value = items.tasks[i];
         var todos = document.querySelector(".todos");
         todos.appendChild(itemDiv);
     }
@@ -213,7 +230,7 @@ function addNewItem() {
     item.classList.add("item", "new-item");
     item.innerHTML =
     '<div class="checkmark-placeholder"></div>'+
-    '<textarea rows="1" data-id="'+items.length+'" placeholder="Add a new one"></textarea>'+
+    '<textarea rows="1" data-id="'+items.tasks.length+'" placeholder="Add a new one"></textarea>'+
     '<div class="sort-icon hidden"></div>';
     var todos = document.querySelector(".todos");
     todos.appendChild(item);
@@ -316,6 +333,30 @@ function save(saveGist = true) {
     }
 }
 
+(function repeatingTasksDialog() {
+
+    var svg = document.querySelector(".repeating-tasks svg");
+    var dialog = document.querySelector(".repeating-tasks-dialog");
+    svg.addEventListener("click", function() {
+        dialog.classList.add("visible");
+    });
+    var saveButton = dialog.querySelector("button.save-personal-access-token");
+    saveButton.addEventListener("click", function() {
+        // console.log("saving access token");
+        // // save personal access token
+        // personalAccessToken = personalAccessTokenInput.value;
+        // localStorage.setItem("personalAccessToken", personalAccessToken);
+        // gistId = null;
+        // gistDate = null;
+        // localStorage.removeItem("gistId");
+        // localStorage.removeItem("gistDate");
+        // dialog.classList.add("saving");
+        // reloadTasks(function() {
+        //     dialog.classList.remove("saving");
+        //     dialog.classList.remove("visible");
+        // });
+    });
+})();
 (function syncDialog() {
     var svg = document.querySelector(".sync svg");
     var dialog = document.querySelector(".sync-dialog");
@@ -387,6 +428,7 @@ function gistFound(content, updatedAt) {
         var todos = document.querySelector(".todos");
         todos.innerHTML = "";
         items = content;
+        items = updateItemsObject(items);
         addItems();
         save(false);
     } else {
