@@ -49,8 +49,8 @@
               <option value="months">months</option>
               <option value="years">years</option>
             </select>
-            <p>at</p>
             <div class="time">
+              <p>at</p>
               <input placeholder="15" class="at-hour">
               <p>:</p>
               <input placeholder="30" class="at-min">
@@ -96,21 +96,23 @@
               <input class="at-day-of-month">
               <p class="th">th</p>
             </div>
+            <div class="delete"></div>
           </div>
         </div>
-        <button tabindex="-1" class="save-personal-access-token">SAVE</button>
+        <button tabindex="0" class="save-personal-access-token">SAVE</button>
+        <div class="delete"></div>
       </div>
     </div>
     <div class="dialog-container sync-dialog">
       <div class="dialog">
         <h1>Sync your tasks</h1>
-        <input tabindex="-1" placeholder="GitHub Personal Access Token" class="personal-access-token">
+        <input tabindex="0" placeholder="GitHub Personal Access Token" class="personal-access-token">
         <h2>How to get your personal access token</h2>
         <p>1. Log in or register on <a target="_blank" href="https://github.com/">GitHub</a>.</p>
         <p>2. Create a new "Personal access token" by going to <a target="_blank" href="https://github.com/settings/tokens/new">this link</a>. Write Taskler or whatever into the Token description field. Make sure "gist" is checked, and click "Generate token".</p>
         <p>3. Copy the random text shown in the green field (This is your personal access token). Paste this text into the field above, in every instance of Taskler you have.</p>
         <p><b>If your personal access token has already been used, your offline tasks will be replaced.</b></p>
-        <button tabindex="-1" class="save-personal-access-token">SAVE</button>
+        <button tabindex="0" class="save-personal-access-token">SAVE</button>
       </div>
     </div>
     <script src="todo.js"></script>

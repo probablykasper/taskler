@@ -81,7 +81,6 @@ body
         width: 100%
         height: 100%
         position: fixed
-        display: flex
         justify-content: center
         align-items: center
         z-index: 10
@@ -89,7 +88,11 @@ body
         transition: opacity $transition-short
         opacity: 0
         pointer-events: none
+        display: none
+        &.displayed
+            display: flex
         &.visible
+            display: flex
             opacity: 1
             pointer-events: all
         &.saving .dialog > *
@@ -140,9 +143,8 @@ body
                 margin: 10px
                 margin-top: 5px
                 float: right
-                transition: opacity $transition
-                &:active
-                    opacity: 0.8
+                &:focus
+                    font-weight: 600
             input.personal-access-token
                 border: none
                 border-bottom: 2px solid #212121
@@ -160,6 +162,7 @@ body
             .repeating-task
                 display: flex
                 flex-direction: column
+                margin-bottom: 20px
                 textarea
                     margin: 0px 5px
                     background-color: transparent
@@ -179,6 +182,7 @@ body
                     margin-left: 5px
                     margin-right: 5px
                     display: flex
+                    flex-wrap: wrap
                     align-items: center
                 input
                     border: none
@@ -252,9 +256,24 @@ body
                     border: none
                     font-size: 14px
                     background-color: transparent
+                    &:focus
+                        background-color: rgba(#000000, 0.06)
                 input.at-hour, input.at-min
                     padding: 4px 2px
                     width: 17px
+                .delete
+                    background-position: center
+                    background-repeat: no-repeat
+                    background-size: contain
+                    margin-left: auto
+                    margin-right: 5px
+                    min-width: 24px
+                    min-height: 24px
+                    transition: transform $transition-short
+                    cursor: pointer
+                    &:active
+                        transform: scale(1.1)
+                    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#212121" height="24" viewBox="0 0 24 24" width="24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"></path><path d="M0 0h24v24H0z" fill="none"></path></svg>')
     .bg
         background: linear-gradient(to bottom, #bb3ebb, #457fde)
         min-height: 1000px
@@ -278,7 +297,7 @@ body
             width: 550px
             margin: 0px 60px
             height: fit-content
-            padding: 10px 0px
+            padding: 10px 10px
             max-height: calc(100% - 10px*2)
             overflow-y: auto
             margin-top: auto

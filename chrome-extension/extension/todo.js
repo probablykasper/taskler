@@ -1,3 +1,4 @@
+document.querySelector(".repeating-tasks-dialog").classList.add("visible", "displayed");
 globalCode();
 function websiteCode() {
     if (chrome && chrome.webstore && chrome.webstore.install) {
@@ -41,13 +42,6 @@ function addLocalItems() {
 function globalCode() {
     var todos = document.querySelector(".todos");
     var itemCount = 0;
-    (function dialogs() {
-        document.addEventListener("click", function(e) {
-            if (e.target.classList.contains("dialog-container")) {
-                e.target.classList.remove("visible");
-            }
-        });
-    })();
     function removeItem(id) {
         items.tasks.splice(id, 1);
         var textarea = document.querySelector('textarea[data-id="'+id+'"]');
@@ -300,7 +294,7 @@ window.onbeforeunload = function() {
 var saveTimer;
 var syncIcon = document.querySelector(".sync svg");
 function save(saveGist = true) {
-    unsyncedChanges = true;
+    if (saveGist) unsyncedChanges = true;
     localStorage.setItem("items", JSON.stringify(items));
     if (saveTimer) clearTimeout(saveTimer);
     if (saveGist && personalAccessToken) {
@@ -333,6 +327,17 @@ function save(saveGist = true) {
     }
 }
 
+(function dialogClose() {
+    document.addEventListener("click", function(e) {
+        if (e.target.classList.contains("dialog-container")) {
+            var dialog = e.target;
+            dialog.classList.remove("visible");
+            setTimeout(function() {
+                dialog.classList.remove("displayed");
+            }, 1000);
+        }
+    });
+})();
 (function repeatingTasksDialog() {
     var th = document.querySelector(".day-of-month .th");
     var dateTh = document.querySelector(".date-day-of-month .th");
@@ -381,6 +386,7 @@ function save(saveGist = true) {
         }
     });
 
+    // dynamic options
     var selectPeriod = document.querySelector("select.period");
     var weekday = selectPeriod.parentElement.querySelector(".weekday");
     var dayOfMonth = selectPeriod.parentElement.querySelector(".day-of-month");
@@ -389,9 +395,7 @@ function save(saveGist = true) {
         weekday.classList.remove("visible");
         dayOfMonth.classList.remove("visible");
         date.classList.remove("visible");
-        if (selectPeriod.value == "days") {
-            
-        } else if (selectPeriod.value == "weeks") {
+        if (selectPeriod.value == "weeks") {
             weekday.classList.add("visible");
         } else if (selectPeriod.value == "months") {
             dayOfMonth.classList.add("visible");
@@ -402,25 +406,16 @@ function save(saveGist = true) {
 
     var svg = document.querySelector(".repeating-tasks svg");
     var dialog = document.querySelector(".repeating-tasks-dialog");
-    dialog.classList.add("visible");
     svg.addEventListener("click", function() {
-        dialog.classList.add("visible");
+        dialog.classList.add("displayed");
+        setTimeout(function() {
+            dialog.classList.add("visible");
+        }, 10);
     });
     var saveButton = dialog.querySelector("button.save-personal-access-token");
     saveButton.addEventListener("click", function() {
-        // console.log("saving access token");
-        // // save personal access token
-        // personalAccessToken = personalAccessTokenInput.value;
-        // localStorage.setItem("personalAccessToken", personalAccessToken);
-        // gistId = null;
-        // gistDate = null;
-        // localStorage.removeItem("gistId");
-        // localStorage.removeItem("gistDate");
-        // dialog.classList.add("saving");
-        // reloadTasks(function() {
-        //     dialog.classList.remove("saving");
-        //     dialog.classList.remove("visible");
-        // });
+        console.log("saving repeating tasks");
+        save();
     });
 })();
 (function syncDialog() {
@@ -429,7 +424,10 @@ function save(saveGist = true) {
     var personalAccessTokenInput = dialog.querySelector("input.personal-access-token");
     if (personalAccessToken) personalAccessTokenInput.value = personalAccessToken;
     svg.addEventListener("click", function() {
-        dialog.classList.add("visible");
+        dialog.classList.add("displayed");
+        setTimeout(function() {
+            dialog.classList.add("visible");
+        }, 10);
     });
     var saveButton = dialog.querySelector("button.save-personal-access-token");
     saveButton.addEventListener("click", function() {
@@ -445,6 +443,9 @@ function save(saveGist = true) {
         reloadTasks(function() {
             dialog.classList.remove("saving");
             dialog.classList.remove("visible");
+            setTimeout(function() {
+                dialog.classList.remove("displayed");
+            }, 10);
         });
     });
 })();
