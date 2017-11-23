@@ -206,6 +206,7 @@ function globalCode() {
     }
 }
 function addItems() {
+    postRepeatingTasks();
     for (var i = 0; i < items.tasks.length; i++) {
         var itemDiv = document.createElement("DIV");
         itemDiv.classList.add("item");
@@ -218,6 +219,9 @@ function addItems() {
         todos.appendChild(itemDiv);
     }
     addNewItem();
+    for (var i = 0; i < items.repeatingTasks.length; i++) {
+        addRepeatingTask(items.repeatingTasks[i], false);
+    }
 }
 function addNewItem() {
     var item = document.createElement("DIV");
@@ -344,9 +348,140 @@ function save(saveGist = true, instant = false) {
         }
     });
 })();
+function addRepeatingTask(o, transition = true) { // options
+    var dialog = document.querySelector(".repeating-tasks-dialog");
+
+    var nrt = document.createElement("DIV"); // newRepeatingTask
+
+    var dialogChildren = dialog.children[0].children;
+    var bottomBar = dialogChildren[dialogChildren.length-1];
+    dialog.children[0].insertBefore(nrt, bottomBar);
+
+    nrt.classList.add("new-repeating-task", "repeating-task");
+    var repeatingTasks = dialog.querySelectorAll(".repeating-task:not(.new-repeating-task):not(.deleted)");
+    var id = repeatingTasks.length; // weekday Id
+    var p = o.interval.period;
+    var weeks = (p == "weeks") ? " visible" : "";
+    var months = (p == "months") ? " visible" : "";
+    var years = (p == "years") ? " visible" : "";
+    nrt.innerHTML =
+        '<textarea rows="1" data-rt-id="1" placeholder="Add a new one"></textarea>'
+        +'<div class="options">'
+            +'<p>Repeat every</p>'
+                +'<input value="1" class="every">'
+                +'<select class="period">'
+                    +'<option value="days">days</option>'
+                    +'<option value="weeks">weeks</option>'
+                    +'<option value="months">months</option>'
+                    +'<option value="years">years</option>'
+                +'</select>'
+                +'<div class="time">'
+                    +'<p>at</p>'
+                    +'<input placeholder="15" class="at-hour">'
+                    +'<p>:</p>'
+                    +'<input placeholder="30" class="at-min">'
+                +'</div>'
+                +'<div class="weekday'+weeks+'">'
+                    +'<p>on</p>'
+                    +'<input id="Mon'+id+'" type="checkbox" value="M" class="mon">'
+                    +'<label for="Mon'+id+'">M</label>'
+                    +'<input id="Tue'+id+'" type="checkbox" value="T" class="tue">'
+                    +'<label for="Tue'+id+'">T</label>'
+                    +'<input id="Wed'+id+'" type="checkbox" value="W" class="wed">'
+                    +'<label for="Wed'+id+'">W</label>'
+                    +'<input id="Thu'+id+'" type="checkbox" value="T" class="thu">'
+                    +'<label for="Thu'+id+'">T</label>'
+                    +'<input id="Fri'+id+'" type="checkbox" value="F" class="fri">'
+                    +'<label for="Fri'+id+'">F</label>'
+                    +'<input id="Sat'+id+'" type="checkbox" value="S" class="sat">'
+                    +'<label for="Sat'+id+'">S</label>'
+                    +'<input id="Sun'+id+'" type="checkbox" value="S" class="sun">'
+                    +'<label for="Sun'+id+'">S</label>'
+                +'</div>'
+                +'<div class="day-of-month'+months+'">'
+                    +'<p>, the</p>'
+                    +'<input class="at-day-of-month">'
+                    +'<p class="th">th</p>'
+                    +'<p>&nbsp;day of the month</p>'
+                +'</div>'
+                +'<div class="date'+years+'">'
+                    +'<select class="date-month">'
+                        +'<option value="january">January</option>'
+                        +'<option value="february">February</option>'
+                        +'<option value="march">March</option>'
+                        +'<option value="april">April</option>'
+                        +'<option value="may">May</option>'
+                        +'<option value="june">June</option>'
+                        +'<option value="july">July</option>'
+                        +'<option value="august">August</option>'
+                        +'<option value="september">September</option>'
+                        +'<option value="october">October</option>'
+                        +'<option value="november">November</option>'
+                        +'<option value="december">December</option>'
+                    +'</select>'
+                    +'<input class="at-day-of-month">'
+                    +'<p class="th">th</p>'
+                +'</div>'
+                +'<div class="delete"></div>'
+            +'</div>'
+        +'</div>';
+
+    nrt.querySelector("textarea").value = o.text;
+    nrt.querySelector(".every").value = o.interval.every;
+    nrt.querySelector(".at-hour").value = o.interval.hour;
+    nrt.querySelector(".at-min").value = o.interval.min;
+    nrt.querySelector(".period").value = o.interval.period;
+    if (p == "weeks") {
+        var wd = o.interval.weekdays;
+        nrt.querySelector(".mon").checked = wd.mon;
+        nrt.querySelector(".tue").checked = wd.tue;
+        nrt.querySelector(".wed").checked = wd.wed;
+        nrt.querySelector(".thu").checked = wd.thu;
+        nrt.querySelector(".fri").checked = wd.fri;
+        nrt.querySelector(".sat").checked = wd.sat;
+        nrt.querySelector(".sun").checked = wd.sun;
+    } else if (p == "months") {
+        nrt.querySelector(".day-of-month .at-day-of-month").value = o.interval.dayOfMonth;
+    } else if (p == "years") {
+        nrt.querySelector(".date-month").value = o.interval.month;
+        nrt.querySelector(".date .at-day-of-month").value = o.interval.dayOfMonth;
+    }
+
+    if (transition) {
+        var height = getComputedStyle(nrt).height;
+        nrt.classList.add("deleted");
+        nrt.style.height = "0px";
+
+        nrt.classList.remove("new-repeating-task");
+        nrt.classList.add("repeating-task");
+
+        setTimeout(function() {
+            nrt.style.height = height;
+            nrt.classList.remove("deleted");
+            setTimeout(function() {
+                nrt.style.height = "";
+            }, 150);
+        }, 10);
+    } else {
+        nrt.classList.remove("new-repeating-task");
+    }
+
+}
+function postRepeatingTasks() {
+    var currentDate = new Date();
+    var newTasks = false;
+    for (var i = 0; i < items.repeatingTasks.length; i++) {
+        // post tasks that are due
+        var item = items.repeatingTasks[i];
+        if (item.nextDate < currentDate) {
+            newTasks = true;
+            items.unshift(item.text);
+            // update nextDate
+        }
+    }
+    if (newTasks) save(true, true);
+}
 (function repeatingTasksDialog() {
-    var th = document.querySelector(".day-of-month .th");
-    var dateTh = document.querySelector(".date-day-of-month .th");
     var oldEvery = "";
     var oldHours = "";
     var oldMinutes = "";
@@ -383,11 +518,6 @@ function save(saveGist = true, instant = false) {
                 } else {
                     dayOfMonth = input.value;
                 }
-                if (input.value.slice(-1) == 1) th.innerHTML = "st";
-                else if (input.value.slice(-1) == 2) th.innerHTML = "nd";
-                else if (input.value.slice(-1) == 3) th.innerHTML = "rd";
-                else th.innerHTML = "th";
-                dateTh.innerHTML = th.innerHTML;
             }
         }
     });
@@ -431,44 +561,16 @@ function save(saveGist = true, instant = false) {
     // new
     var addIcon = dialog.querySelector(".add-repeating-task");
     addIcon.addEventListener("click", function(e) {
-        var newRepeatingTask = document.querySelector(".new-repeating-task");
-        var height = getComputedStyle(newRepeatingTask).height;
-        newRepeatingTask = newRepeatingTask.cloneNode(true);
-
-        var repeatingTasks = dialog.querySelectorAll(".repeating-task:not(.new-repeating-task):not(.deleted)");
-        var weekdayId = repeatingTasks.length;
-        newRepeatingTask.querySelector(".weekday").innerHTML +=
-         '<input id="Mon'+weekdayId+'" type="checkbox" value="M" class="mon">'
-        +'<label for="Mon'+weekdayId+'">M</label>'
-        +'<input id="Tue'+weekdayId+'" type="checkbox" value="T" class="tue">'
-        +'<label for="Tue'+weekdayId+'">T</label>'
-        +'<input id="Wed'+weekdayId+'" type="checkbox" value="W" class="wed">'
-        +'<label for="Wed'+weekdayId+'">W</label>'
-        +'<input id="Thu'+weekdayId+'" type="checkbox" value="T" class="thu">'
-        +'<label for="Thu'+weekdayId+'">T</label>'
-        +'<input id="Fri'+weekdayId+'" type="checkbox" value="F" class="fri">'
-        +'<label for="Fri'+weekdayId+'">F</label>'
-        +'<input id="Sat'+weekdayId+'" type="checkbox" value="S" class="sat">'
-        +'<label for="Sat'+weekdayId+'">S</label>'
-        +'<input id="Sun'+weekdayId+'" type="checkbox" value="S" class="sun">'
-        +'<label for="Sun'+weekdayId+'">S</label>';
-        newRepeatingTask.classList.add("deleted");
-        newRepeatingTask.style.height = "0px";
-
-        newRepeatingTask.classList.remove("new-repeating-task");
-        newRepeatingTask.classList.add("repeating-task");
-
-        setTimeout(function() {
-            newRepeatingTask.style.height = height;
-            newRepeatingTask.classList.remove("deleted");
-            setTimeout(function() {
-                newRepeatingTask.style.height = "";
-            }, 150);
-        }, 10);
-
-        var dialogChildren = dialog.children[0].children;
-        var bottomBar = dialogChildren[dialogChildren.length-1];
-        dialog.children[0].insertBefore(newRepeatingTask, bottomBar);
+        addRepeatingTask({
+            text: "",
+            interval: {
+                every: 1,
+                hour: "",
+                min: "",
+                period: "days"
+            },
+            nextDate: new Date()
+        });
     });
     // open dialog
     var icon = document.querySelector(".repeating-tasks svg");
@@ -482,6 +584,7 @@ function save(saveGist = true, instant = false) {
     var saveButton = dialog.querySelector("button.save-personal-access-token");
     saveButton.addEventListener("click", function() {
         var repeatingTasks = dialog.querySelectorAll(".repeating-task:not(.new-repeating-task):not(.deleted)");
+        items.repeatingTasks = [];
         for (var i = 0; i < repeatingTasks.length; i++) {
             currentTask = repeatingTasks[i];
             var every = Number(currentTask.querySelector(".every").value);
@@ -491,33 +594,43 @@ function save(saveGist = true, instant = false) {
                 min: currentTask.querySelector(".at-min").value
             }
             if (period == "weeks") {
-                var weekdays = {};
-                if (currentTask.querySelector(".mon"))
                 var weekdays = {
-                    mon: ( currentTask.querySelector(".mon") ) ? true : false,
-                    tue: ( currentTask.querySelector(".tue") ) ? true : false,
-                    wed: ( currentTask.querySelector(".wed") ) ? true : false,
-                    thu: ( currentTask.querySelector(".thu") ) ? true : false,
-                    fri: ( currentTask.querySelector(".fri") ) ? true : false,
-                    sat: ( currentTask.querySelector(".sat") ) ? true : false,
-                    sun: ( currentTask.querySelector(".sun") ) ? true : false
-                }
+                    mon: ( currentTask.querySelector(".mon").checked ) ? true : false,
+                    tue: ( currentTask.querySelector(".tue").checked ) ? true : false,
+                    wed: ( currentTask.querySelector(".wed").checked ) ? true : false,
+                    thu: ( currentTask.querySelector(".thu").checked ) ? true : false,
+                    fri: ( currentTask.querySelector(".fri").checked ) ? true : false,
+                    sat: ( currentTask.querySelector(".sat").checked ) ? true : false,
+                    sun: ( currentTask.querySelector(".sun").checked ) ? true : false
+                };
             } else if (period == "months") {
-
+                var dayOfMonth = currentTask.querySelector(".day-of-month .at-day-of-month").value;
             } else if (period == "years") {
-
+                var month = currentTask.querySelector(".date-month").value;
+                var dayOfMonth = currentTask.querySelector(".date .at-day-of-month").value;
             }
+
             var currentItem = {
-                text: currentTask.querySelector("textarea").value
+                text: currentTask.querySelector("textarea").value,
+                nextDate: new Date(),
+                interval: {
+                    every: every,
+                    period: period,
+                    hour: time.hour,
+                    min: time.min
+                }
+            };
+            if (period == "weeks") {
+                currentItem.interval.weekdays = weekdays;
+            } else if (period == "months") {
+                currentItem.interval.dayOfMonth = dayOfMonth;
+            } else if (period == "years") {
+                currentItem.interval.month = month;
+                currentItem.interval.dayOfMonth = dayOfMonth;
             }
 
-            // items.repeatingTasks.push(currentItem);
-
-            // items.repeatingTasks[i] = {
-            //     text: "",
-            //     interval: ???,
-            //     lastDate: Date
-            // };
+            items.repeatingTasks[i] = currentItem;
+            console.log(items);
         }
         save(true, true);
         dialog.classList.remove("visible");

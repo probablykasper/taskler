@@ -44,49 +44,7 @@ html
         .dialog-container.repeating-tasks-dialog
             .dialog
                 h1 Repeating tasks
-                
-                .new-repeating-task.repeating-task
-                    textarea(rows="1", data-rt-id="1", placeholder="Add a new one")
-                    .options
-                        p Repeat every
-                        input.every(value="1")
-                        select.period
-                            option(value="days") days
-                            option(value="weeks") weeks
-                            option(value="months") months
-                            option(value="years") years
-                        .time
-                            p at
-                            input.at-hour(placeholder="15")
-                            p :
-                            input.at-min(placeholder="30")
-                        .weekday
-                            p on
-                            // weekdays added via JS because
-                            // label for attr needs individual IDs
-                        .day-of-month
-                            p , the
-                            input.at-day-of-month
-                            p.th th
-                            p &nbsp;day of the month
-                        .date
-                            select.date-month
-                                option(value="january") January
-                                option(value="february") February
-                                option(value="march") March
-                                option(value="april") April
-                                option(value="may") May
-                                option(value="june") June
-                                option(value="july") July
-                                option(value="august") August
-                                option(value="september") September
-                                option(value="october") October
-                                option(value="november") November
-                                option(value="december") December
-                            input.at-day-of-month
-                            p.th th
-                        .delete
-
+                // repeating tasks...
                 .bottom-bar
                     svg.add-repeating-task(xmlns='http://www.w3.org/2000/svg', fill='#212121', height='20', viewbox='0 0 24 24', width='20')
                         path(d='M24,13.7H13.7V24h-3.4V13.7H0v-3.4h10.3V0h3.4v10.3H24V13.7z')
