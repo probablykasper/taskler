@@ -130,21 +130,36 @@ body
                 transition: opacity $transition
                 &:active
                     opacity: 0.8
-            button
-                outline: none
-                background-color: transparent
-                border: none
-                color: #000000
-                cursor: pointer
-                text-transform: uppercase
-                font-weight: 500
-                font-size: 14px
-                padding: 8px
-                margin: 10px
-                margin-top: 5px
-                float: right
-                &:focus
-                    font-weight: 600
+            .bottom-bar
+                width: 100%
+                height: auto
+                display: flex
+                justify-content: space-between
+                align-items: center
+                margin-bottom: 15px
+                svg.add-repeating-task
+                    width: 14px
+                    height: 14px
+                    padding: 8px
+                    cursor: pointer
+                    margin: 0px 10px
+                    transition: opacity $transition-short
+                    opacity: 1
+                    &:active
+                        opacity: 0.8
+                button
+                    outline: none
+                    background-color: transparent
+                    border: none
+                    color: #000000
+                    cursor: pointer
+                    text-transform: uppercase
+                    font-weight: 500
+                    font-size: 14px
+                    padding: 8px
+                    margin: 0px 10px
+                    &:focus
+                        font-weight: 600
             input.personal-access-token
                 border: none
                 border-bottom: 2px solid #212121
@@ -162,7 +177,20 @@ body
             .repeating-task
                 display: flex
                 flex-direction: column
+                transition: opacity $transition, margin $transition, height $transition, transform $transition
+                opacity: 1
                 margin-bottom: 20px
+                justify-content: center
+                &.new-repeating-task
+                    position: absolute
+                    visibility: hidden
+                div, textarea
+                    flex-shrink: 0
+                &.deleted
+                    opacity: 0
+                    transform: scaleY(0.5)
+                    margin-bottom: 0px
+                    pointer-events: none
                 textarea
                     margin: 0px 5px
                     background-color: transparent
@@ -269,10 +297,12 @@ body
                     margin-right: 5px
                     min-width: 24px
                     min-height: 24px
-                    transition: transform $transition-short
                     cursor: pointer
+                    transition: opacity $transition-short
+                    opacity: 1
+                    -webkit-user-drag: none
                     &:active
-                        transform: scale(1.1)
+                        opacity: 0.8
                     background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#212121" height="24" viewBox="0 0 24 24" width="24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"></path><path d="M0 0h24v24H0z" fill="none"></path></svg>')
     .bg
         background: linear-gradient(to bottom, #bb3ebb, #457fde)

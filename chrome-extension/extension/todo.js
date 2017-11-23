@@ -293,13 +293,12 @@ window.onbeforeunload = function() {
 }
 var saveTimer;
 var syncIcon = document.querySelector(".sync svg");
-function save(saveGist = true) {
+function save(saveGist = true, instant = false) {
     if (saveGist) unsyncedChanges = true;
     localStorage.setItem("items", JSON.stringify(items));
     if (saveTimer) clearTimeout(saveTimer);
     if (saveGist && personalAccessToken) {
-        console.log("Updating gist in 500ms...");
-        saveTimer = setTimeout(function() {
+        function finallySave() {
             var saveFinished = false;
             var degs = 0;
             function rotate() {
@@ -323,7 +322,14 @@ function save(saveGist = true) {
                 saveFinished = true;
                 unsyncedChanges = false;
             });
-        }, 500);
+        }
+        if (instant) {
+            console.log("Updating gist instantly...");
+            finallySave();
+        } else {
+            console.log("Updating gist in 500ms...");
+            saveTimer = setTimeout(finallySave, 500);
+        }
     }
 }
 
@@ -386,36 +392,138 @@ function save(saveGist = true) {
         }
     });
 
+    var dialog = document.querySelector(".repeating-tasks-dialog");
+
     // dynamic options
-    var selectPeriod = document.querySelector("select.period");
-    var weekday = selectPeriod.parentElement.querySelector(".weekday");
-    var dayOfMonth = selectPeriod.parentElement.querySelector(".day-of-month");
-    var date = selectPeriod.parentElement.querySelector(".date");
-    selectPeriod.addEventListener("change", function(e) {
-        weekday.classList.remove("visible");
-        dayOfMonth.classList.remove("visible");
-        date.classList.remove("visible");
-        if (selectPeriod.value == "weeks") {
-            weekday.classList.add("visible");
-        } else if (selectPeriod.value == "months") {
-            dayOfMonth.classList.add("visible");
-        } else if (selectPeriod.value == "years") {
-            date.classList.add("visible");
+    dialog.addEventListener("change", function(e) {
+        if (e.target.classList.contains("period")) {
+            var selectPeriod = e.target;
+            var weekday = selectPeriod.parentElement.querySelector(".weekday");
+            var dayOfMonth = selectPeriod.parentElement.querySelector(".day-of-month");
+            var date = selectPeriod.parentElement.querySelector(".date");
+
+            weekday.classList.remove("visible");
+            dayOfMonth.classList.remove("visible");
+            date.classList.remove("visible");
+            if (selectPeriod.value == "weeks") {
+                weekday.classList.add("visible");
+            } else if (selectPeriod.value == "months") {
+                dayOfMonth.classList.add("visible");
+            } else if (selectPeriod.value == "years") {
+                date.classList.add("visible");
+            }
         }
     });
 
-    var svg = document.querySelector(".repeating-tasks svg");
-    var dialog = document.querySelector(".repeating-tasks-dialog");
-    svg.addEventListener("click", function() {
+    // delete
+    window.dialog = dialog;
+    dialog.addEventListener("click", function(e) {
+        if (e.target.classList.contains("delete")) {
+            var repeatingTask = e.target.parentElement.parentElement;
+            repeatingTask.classList.add("deleted");
+            var computedHeight = getComputedStyle(repeatingTask).height;
+            repeatingTask.style.height = computedHeight;
+            setTimeout(function() {
+                repeatingTask.style.height = "0px";
+            }, 10);
+        }
+    });
+    // new
+    var addIcon = dialog.querySelector(".add-repeating-task");
+    addIcon.addEventListener("click", function(e) {
+        var newRepeatingTask = document.querySelector(".new-repeating-task");
+        var height = getComputedStyle(newRepeatingTask).height;
+        newRepeatingTask = newRepeatingTask.cloneNode(true);
+
+        var repeatingTasks = dialog.querySelectorAll(".repeating-task:not(.new-repeating-task):not(.deleted)");
+        var weekdayId = repeatingTasks.length;
+        newRepeatingTask.querySelector(".weekday").innerHTML +=
+         '<input id="Mon'+weekdayId+'" type="checkbox" value="M" class="mon">'
+        +'<label for="Mon'+weekdayId+'">M</label>'
+        +'<input id="Tue'+weekdayId+'" type="checkbox" value="T" class="tue">'
+        +'<label for="Tue'+weekdayId+'">T</label>'
+        +'<input id="Wed'+weekdayId+'" type="checkbox" value="W" class="wed">'
+        +'<label for="Wed'+weekdayId+'">W</label>'
+        +'<input id="Thu'+weekdayId+'" type="checkbox" value="T" class="thu">'
+        +'<label for="Thu'+weekdayId+'">T</label>'
+        +'<input id="Fri'+weekdayId+'" type="checkbox" value="F" class="fri">'
+        +'<label for="Fri'+weekdayId+'">F</label>'
+        +'<input id="Sat'+weekdayId+'" type="checkbox" value="S" class="sat">'
+        +'<label for="Sat'+weekdayId+'">S</label>'
+        +'<input id="Sun'+weekdayId+'" type="checkbox" value="S" class="sun">'
+        +'<label for="Sun'+weekdayId+'">S</label>';
+        newRepeatingTask.classList.add("deleted");
+        newRepeatingTask.style.height = "0px";
+
+        newRepeatingTask.classList.remove("new-repeating-task");
+        newRepeatingTask.classList.add("repeating-task");
+
+        setTimeout(function() {
+            newRepeatingTask.style.height = height;
+            newRepeatingTask.classList.remove("deleted");
+            setTimeout(function() {
+                newRepeatingTask.style.height = "";
+            }, 150);
+        }, 10);
+
+        var dialogChildren = dialog.children[0].children;
+        var bottomBar = dialogChildren[dialogChildren.length-1];
+        dialog.children[0].insertBefore(newRepeatingTask, bottomBar);
+    });
+    // open dialog
+    var icon = document.querySelector(".repeating-tasks svg");
+    icon.addEventListener("click", function() {
         dialog.classList.add("displayed");
         setTimeout(function() {
             dialog.classList.add("visible");
         }, 10);
     });
+    // save
     var saveButton = dialog.querySelector("button.save-personal-access-token");
     saveButton.addEventListener("click", function() {
-        console.log("saving repeating tasks");
-        save();
+        var repeatingTasks = dialog.querySelectorAll(".repeating-task:not(.new-repeating-task):not(.deleted)");
+        for (var i = 0; i < repeatingTasks.length; i++) {
+            currentTask = repeatingTasks[i];
+            var every = Number(currentTask.querySelector(".every").value);
+            var period = currentTask.querySelector(".period").value;
+            var time = {
+                hour: currentTask.querySelector(".at-hour").value,
+                min: currentTask.querySelector(".at-min").value
+            }
+            if (period == "weeks") {
+                var weekdays = {};
+                if (currentTask.querySelector(".mon"))
+                var weekdays = {
+                    mon: ( currentTask.querySelector(".mon") ) ? true : false,
+                    tue: ( currentTask.querySelector(".tue") ) ? true : false,
+                    wed: ( currentTask.querySelector(".wed") ) ? true : false,
+                    thu: ( currentTask.querySelector(".thu") ) ? true : false,
+                    fri: ( currentTask.querySelector(".fri") ) ? true : false,
+                    sat: ( currentTask.querySelector(".sat") ) ? true : false,
+                    sun: ( currentTask.querySelector(".sun") ) ? true : false
+                }
+            } else if (period == "months") {
+
+            } else if (period == "years") {
+
+            }
+            var currentItem = {
+                text: currentTask.querySelector("textarea").value
+            }
+
+            // items.repeatingTasks.push(currentItem);
+
+            // items.repeatingTasks[i] = {
+            //     text: "",
+            //     interval: ???,
+            //     lastDate: Date
+            // };
+        }
+        save(true, true);
+        dialog.classList.remove("visible");
+        setTimeout(function() {
+            dialog.classList.remove("displayed");
+        }, 1000);
     });
 })();
 (function syncDialog() {

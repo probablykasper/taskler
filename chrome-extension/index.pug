@@ -44,7 +44,8 @@ html
         .dialog-container.repeating-tasks-dialog
             .dialog
                 h1 Repeating tasks
-                .repeating-task
+                
+                .new-repeating-task.repeating-task
                     textarea(rows="1", data-rt-id="1", placeholder="Add a new one")
                     .options
                         p Repeat every
@@ -61,21 +62,8 @@ html
                             input.at-min(placeholder="30")
                         .weekday
                             p on
-                            //- input.at-weekday
-                            input#Mon(type="checkbox" value="M")
-                            label(for="Mon") M
-                            input#Tue(type="checkbox" value="T")
-                            label(for="Tue") T
-                            input#Wed(type="checkbox" value="W")
-                            label(for="Wed") W
-                            input#Thu(type="checkbox" value="T")
-                            label(for="Thu") T
-                            input#Fri(type="checkbox" value="F")
-                            label(for="Fri") F
-                            input#Sat(type="checkbox" value="S")
-                            label(for="Sat") S
-                            input#Sun(type="checkbox" value="S")
-                            label(for="Sun") S
+                            // weekdays added via JS because
+                            // label for attr needs individual IDs
                         .day-of-month
                             p , the
                             input.at-day-of-month
@@ -98,8 +86,11 @@ html
                             input.at-day-of-month
                             p.th th
                         .delete
-                button(tabindex="0").save-personal-access-token SAVE
-                .delete
+
+                .bottom-bar
+                    svg.add-repeating-task(xmlns='http://www.w3.org/2000/svg', fill='#212121', height='20', viewbox='0 0 24 24', width='20')
+                        path(d='M24,13.7H13.7V24h-3.4V13.7H0v-3.4h10.3V0h3.4v10.3H24V13.7z')
+                    button(tabindex="0").save-personal-access-token SAVE
         .dialog-container.sync-dialog
             .dialog
                 h1 Sync your tasks
@@ -109,5 +100,6 @@ html
                 p 2. Create a new "Personal access token" by going to <a target="_blank" href="https://github.com/settings/tokens/new">this link</a>. Write Taskler or whatever into the Token description field. Make sure "gist" is checked, and click "Generate token".
                 p 3. Copy the random text shown in the green field (This is your personal access token). Paste this text into the field above, in every instance of Taskler you have.
                 p <b>If your personal access token has already been used, your offline tasks will be replaced.</b>
-                button(tabindex="0").save-personal-access-token SAVE
+                .bottom-bar
+                    button(tabindex="0").save-personal-access-token SAVE
         script(src="todo.js")

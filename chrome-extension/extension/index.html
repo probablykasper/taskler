@@ -38,7 +38,7 @@
     <div class="dialog-container repeating-tasks-dialog">
       <div class="dialog">
         <h1>Repeating tasks</h1>
-        <div class="repeating-task">
+        <div class="new-repeating-task repeating-task">
           <textarea rows="1" data-rt-id="1" placeholder="Add a new one"></textarea>
           <div class="options">
             <p>Repeat every</p>
@@ -57,20 +57,8 @@
             </div>
             <div class="weekday">
               <p>on</p>
-              <input id="Mon" type="checkbox" value="M">
-              <label for="Mon">M</label>
-              <input id="Tue" type="checkbox" value="T">
-              <label for="Tue">T</label>
-              <input id="Wed" type="checkbox" value="W">
-              <label for="Wed">W</label>
-              <input id="Thu" type="checkbox" value="T">
-              <label for="Thu">T</label>
-              <input id="Fri" type="checkbox" value="F">
-              <label for="Fri">F</label>
-              <input id="Sat" type="checkbox" value="S">
-              <label for="Sat">S</label>
-              <input id="Sun" type="checkbox" value="S">
-              <label for="Sun">S</label>
+              <!-- weekdays added via JS because-->
+              <!-- label for attr needs individual IDs-->
             </div>
             <div class="day-of-month">
               <p>, the</p>
@@ -99,8 +87,12 @@
             <div class="delete"></div>
           </div>
         </div>
-        <button tabindex="0" class="save-personal-access-token">SAVE</button>
-        <div class="delete"></div>
+        <div class="bottom-bar">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="#212121" height="20" viewbox="0 0 24 24" width="20" class="add-repeating-task">
+            <path d="M24,13.7H13.7V24h-3.4V13.7H0v-3.4h10.3V0h3.4v10.3H24V13.7z"></path>
+          </svg>
+          <button tabindex="0" class="save-personal-access-token">SAVE</button>
+        </div>
       </div>
     </div>
     <div class="dialog-container sync-dialog">
@@ -112,7 +104,9 @@
         <p>2. Create a new "Personal access token" by going to <a target="_blank" href="https://github.com/settings/tokens/new">this link</a>. Write Taskler or whatever into the Token description field. Make sure "gist" is checked, and click "Generate token".</p>
         <p>3. Copy the random text shown in the green field (This is your personal access token). Paste this text into the field above, in every instance of Taskler you have.</p>
         <p><b>If your personal access token has already been used, your offline tasks will be replaced.</b></p>
-        <button tabindex="0" class="save-personal-access-token">SAVE</button>
+        <div class="bottom-bar">
+          <button tabindex="0" class="save-personal-access-token">SAVE</button>
+        </div>
       </div>
     </div>
     <script src="todo.js"></script>
