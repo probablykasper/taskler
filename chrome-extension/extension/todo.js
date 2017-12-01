@@ -1,4 +1,4 @@
-document.querySelector(".repeating-tasks-dialog").classList.add("visible", "displayed");
+// document.querySelector(".repeating-tasks-dialog").classList.add("visible", "displayed");
 globalCode();
 function websiteCode() {
     if (chrome && chrome.webstore && chrome.webstore.install) {
@@ -48,7 +48,11 @@ function globalCode() {
         textarea.removeAttribute("data-id");
         var divItem = textarea.parentElement;
         divItem.classList.add("removed");
-        divItem.style.height = "0px";
+        var computedHeight = getComputedStyle(divItem).height;
+        divItem.style.height = computedHeight;
+        setTimeout(function() {
+            divItem.style.height = "0px";
+        }, 10);
         var textareas = document.querySelectorAll("textarea");
         for (var i = 0; i < textareas.length; i++) {
             if (textareas[i].dataset.id > id) {
