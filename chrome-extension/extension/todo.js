@@ -370,10 +370,10 @@ function addRepeatingTask(o, transition = true) { // options
             +'<p>Repeat every</p>'
                 +'<input value="1" class="every">'
                 +'<select class="period">'
-                    +'<option value="days">days</option>'
-                    +'<option value="weeks">weeks</option>'
-                    +'<option value="months">months</option>'
-                    +'<option value="years">years</option>'
+                    +'<option value="days">day</option>'
+                    +'<option value="weeks">week</option>'
+                    +'<option value="months">month</option>'
+                    +'<option value="years">year</option>'
                 +'</select>'
                 +'<div class="time">'
                     +'<p>at</p>'
@@ -383,19 +383,19 @@ function addRepeatingTask(o, transition = true) { // options
                 +'</div>'
                 +'<div class="weekday'+weeks+'">'
                     +'<p>on</p>'
-                    +'<input id="Mon'+id+'" type="checkbox" value="M" class="mon">'
+                    +'<input id="Mon'+id+'" type="checkbox" value="M" class="wd wd1">'
                     +'<label for="Mon'+id+'">M</label>'
-                    +'<input id="Tue'+id+'" type="checkbox" value="T" class="tue">'
+                    +'<input id="Tue'+id+'" type="checkbox" value="T" class="wd wd2">'
                     +'<label for="Tue'+id+'">T</label>'
-                    +'<input id="Wed'+id+'" type="checkbox" value="W" class="wed">'
+                    +'<input id="Wed'+id+'" type="checkbox" value="W" class="wd wd3">'
                     +'<label for="Wed'+id+'">W</label>'
-                    +'<input id="Thu'+id+'" type="checkbox" value="T" class="thu">'
+                    +'<input id="Thu'+id+'" type="checkbox" value="T" class="wd wd4">'
                     +'<label for="Thu'+id+'">T</label>'
-                    +'<input id="Fri'+id+'" type="checkbox" value="F" class="fri">'
+                    +'<input id="Fri'+id+'" type="checkbox" value="F" class="wd wd5">'
                     +'<label for="Fri'+id+'">F</label>'
-                    +'<input id="Sat'+id+'" type="checkbox" value="S" class="sat">'
+                    +'<input id="Sat'+id+'" type="checkbox" value="S" class="wd wd6">'
                     +'<label for="Sat'+id+'">S</label>'
-                    +'<input id="Sun'+id+'" type="checkbox" value="S" class="sun">'
+                    +'<input id="Sun'+id+'" type="checkbox" value="S" class="wd wd0">'
                     +'<label for="Sun'+id+'">S</label>'
                 +'</div>'
                 +'<div class="day-of-month'+months+'">'
@@ -406,18 +406,18 @@ function addRepeatingTask(o, transition = true) { // options
                 +'</div>'
                 +'<div class="date'+years+'">'
                     +'<select class="date-month">'
-                        +'<option value="january">January</option>'
-                        +'<option value="february">February</option>'
-                        +'<option value="march">March</option>'
-                        +'<option value="april">April</option>'
-                        +'<option value="may">May</option>'
-                        +'<option value="june">June</option>'
-                        +'<option value="july">July</option>'
-                        +'<option value="august">August</option>'
-                        +'<option value="september">September</option>'
-                        +'<option value="october">October</option>'
-                        +'<option value="november">November</option>'
-                        +'<option value="december">December</option>'
+                        +'<option value="0">January</option>'
+                        +'<option value="1">February</option>'
+                        +'<option value="2">March</option>'
+                        +'<option value="3">April</option>'
+                        +'<option value="4">May</option>'
+                        +'<option value="5">June</option>'
+                        +'<option value="6">July</option>'
+                        +'<option value="7">August</option>'
+                        +'<option value="8">September</option>'
+                        +'<option value="9">October</option>'
+                        +'<option value="10">November</option>'
+                        +'<option value="11">December</option>'
                     +'</select>'
                     +'<input class="at-day-of-month">'
                     +'<p class="th">th</p>'
@@ -428,18 +428,16 @@ function addRepeatingTask(o, transition = true) { // options
 
     nrt.querySelector("textarea").value = o.text;
     nrt.querySelector(".every").value = o.interval.every;
+    if (o.interval.hour < 10) o.interval.hour = "0"+o.interval.hour;
+    if (o.interval.min  < 10) o.interval.min  = "0"+o.interval.min;
     nrt.querySelector(".at-hour").value = o.interval.hour;
     nrt.querySelector(".at-min").value = o.interval.min;
     nrt.querySelector(".period").value = o.interval.period;
     if (p == "weeks") {
         var wd = o.interval.weekdays;
-        nrt.querySelector(".mon").checked = wd.mon;
-        nrt.querySelector(".tue").checked = wd.tue;
-        nrt.querySelector(".wed").checked = wd.wed;
-        nrt.querySelector(".thu").checked = wd.thu;
-        nrt.querySelector(".fri").checked = wd.fri;
-        nrt.querySelector(".sat").checked = wd.sat;
-        nrt.querySelector(".sun").checked = wd.sun;
+        for (var i = 0; i < 7; i++) {
+            nrt.querySelector(".wd"+i).checked = wd[i];
+        }
     } else if (p == "months") {
         nrt.querySelector(".day-of-month .at-day-of-month").value = o.interval.dayOfMonth;
     } else if (p == "years") {
@@ -468,18 +466,70 @@ function addRepeatingTask(o, transition = true) { // options
 
 }
 function postRepeatingTasks() {
-    var currentDate = new Date();
+    var now = new Date();
     var newTasks = false;
     for (var i = 0; i < items.repeatingTasks.length; i++) {
         // post tasks that are due
         var item = items.repeatingTasks[i];
-        if (item.nextDate < currentDate) {
+        if (typeof item.nextDate == "string") {
+            item.nextDate = new Date(item.nextDate);
+        }
+        if (now > item.nextDate) {
             newTasks = true;
-            items.unshift(item.text);
-            // update nextDate
+            items.tasks.unshift(item.text); // add to start of array
+            item.nextDate = getNextDate(item);
         }
     }
     if (newTasks) save(true, true);
+}
+(function dateIncrements() {
+    // prototype increment date, month and year
+    Date.prototype.incrementDate = function(incrementWith = 1) {
+        this.setDate(this.getDate()+incrementWith);
+    }
+    Date.prototype.incrementMonth = function(incrementWith = 1) {
+        this.setMonth(this.getMonth()+incrementWith);
+    }
+    Date.prototype.incrementYear = function(incrementWith = 1) {
+        this.setFullYear(this.getFullYear()+incrementWith);
+    }
+})();
+function getNextDate(item, postDueTasks = true) {
+
+    var now = new Date();
+    var nextDate = new Date();
+    now.setSeconds(0);
+    nextDate.setSeconds(0);
+
+    nextDate.setHours(item.interval.hour);
+    nextDate.setMinutes(item.interval.min);
+    if (item.interval.period == "days") {
+        if (now > nextDate) {
+            nextDate.incrementDate();
+        }
+    } else if (item.interval.period == "weeks") {
+        for (var i = 0; i < 7; i++) {
+            var wdi = (i + now.getDay()) % 7; // weekDayIndex
+            if (item.interval.weekdays[wdi] && now < nextDate) {
+                break;
+            }
+            nextDate.incrementDate();
+        }
+    } else if (item.interval.period == "months") {
+        nextDate.setDate(item.interval.dayOfMonth);
+        if (now > nextDate) {
+            nextDate.incrementMonth();
+        }
+    } else if (item.interval.period == "years") {
+        nextDate.setDate(item.interval.dayOfMonth);
+        nextDate.setMonth(item.interval.month);
+        if (now > nextDate) {
+            nextDate.incrementYear();
+        }
+        console.log("------------------------------ NEXXXXXXXX");
+        console.log(item);
+    }
+    return nextDate;
 }
 (function repeatingTasksDialog() {
     var oldEvery = "";
@@ -590,19 +640,15 @@ function postRepeatingTasks() {
             var every = Number(currentTask.querySelector(".every").value);
             var period = currentTask.querySelector(".period").value;
             var time = {
-                hour: currentTask.querySelector(".at-hour").value,
-                min: currentTask.querySelector(".at-min").value
+                hour: Number(currentTask.querySelector(".at-hour").value),
+                min: Number(currentTask.querySelector(".at-min").value)
             }
             if (period == "weeks") {
-                var weekdays = {
-                    mon: ( currentTask.querySelector(".mon").checked ) ? true : false,
-                    tue: ( currentTask.querySelector(".tue").checked ) ? true : false,
-                    wed: ( currentTask.querySelector(".wed").checked ) ? true : false,
-                    thu: ( currentTask.querySelector(".thu").checked ) ? true : false,
-                    fri: ( currentTask.querySelector(".fri").checked ) ? true : false,
-                    sat: ( currentTask.querySelector(".sat").checked ) ? true : false,
-                    sun: ( currentTask.querySelector(".sun").checked ) ? true : false
-                };
+                var weekdays = [];
+                for (var wdi = 0; wdi < 7; wdi++) { // weekDayIndex
+                    var wdElement = currentTask.querySelector(".wd"+wdi);
+                    weekdays.push(wdElement.checked || false);
+                }
             } else if (period == "months") {
                 var dayOfMonth = currentTask.querySelector(".day-of-month .at-day-of-month").value;
             } else if (period == "years") {
@@ -612,7 +658,6 @@ function postRepeatingTasks() {
 
             var currentItem = {
                 text: currentTask.querySelector("textarea").value,
-                nextDate: new Date(),
                 interval: {
                     every: every,
                     period: period,
@@ -628,9 +673,9 @@ function postRepeatingTasks() {
                 currentItem.interval.month = month;
                 currentItem.interval.dayOfMonth = dayOfMonth;
             }
+            currentItem.nextDate = getNextDate(currentItem);
 
             items.repeatingTasks[i] = currentItem;
-            console.log(items);
         }
         save(true, true);
         dialog.classList.remove("visible");
