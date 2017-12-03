@@ -306,10 +306,10 @@ window.onbeforeunload = function() {
 var saveTimer;
 var syncIcon = document.querySelector(".sync svg");
 function save(saveGist = true, instant = false) {
-    if (saveGist) unsyncedChanges = true;
     localStorage.setItem("items", JSON.stringify(items));
     if (saveTimer) clearTimeout(saveTimer);
     if (saveGist && personalAccessToken) {
+        unsyncedChanges = true;
         function finallySave() {
             var saveFinished = false;
             var degs = 0;
