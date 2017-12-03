@@ -619,12 +619,17 @@ function getNextDate(item, postDueTasks = true) {
     // new
     var addIcon = dialog.querySelector(".add-repeating-task");
     addIcon.addEventListener("click", function(e) {
+        var now = new Date();
+        var hour = String(now.getHours());
+        var min = String(now.getMinutes());
+        if (hour.length == 1) hour = "0"+hour;
+        if (min.length == 1) min = "0"+min;
         addRepeatingTask({
             text: "",
             interval: {
                 every: 1,
-                hour: "",
-                min: "",
+                hour: hour,
+                min: min,
                 period: "days"
             },
             nextDate: new Date()
