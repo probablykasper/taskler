@@ -34,7 +34,7 @@ body
             opacity: 0
             pointer-events: none
             transition: opacity $transition, transform $transition
-            &::after
+            &::after¸
                 content: ''
                 position: absolute
                 top: 50%
@@ -340,6 +340,8 @@ body
                 align-items: center
                 flex-shrink: 0
                 transition: opacity $transition, margin $transition, height $transition, transform $transition-short, box-shadow $transition-short
+                &.new-item textarea
+                    user-select: none
                 &.rearranging
                     box-shadow: $shadow-3
                 &.removed

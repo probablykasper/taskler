@@ -61,9 +61,13 @@ function globalCode() {
         save();
     }
     function resizeTextarea(textarea) {
-        var value = textarea.value;
-        var newLineCount = (value.match(/\n/g) || []).length;
-        textarea.setAttribute("rows", newLineCount+1);
+        textarea.style.height = "auto";
+        var scrollHeight = textarea.scrollHeight;
+        var computedStyle = getComputedStyle(textarea);
+        var paddingTop = computedStyle.paddingBottom.slice(0, -2);
+        var paddingBot = computedStyle.paddingTop.slice(0, -2);
+        var padding = Number(paddingTop) + Number(paddingBot);
+        textarea.style.height = textarea.scrollHeight - padding+"px";
     }
     window.resizeTextareas = function() {
         var itemTextareas = document.querySelectorAll("textarea[data-id]");
@@ -221,6 +225,7 @@ function addItems() {
         var todos = document.querySelector(".todos");
         todos.appendChild(itemDiv);
     }
+    resizeTextareas();
     addNewItem();
     for (var i = 0; i < items.repeatingTasks.length; i++) {
         addRepeatingTask(items.repeatingTasks[i], false);
