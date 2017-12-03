@@ -15,9 +15,26 @@ function websiteCode() {
         });
     }
 }
+function updateItemsObject() {
+    if (Array.isArray(items)) {
+        return {
+            tasks: items,
+            repeatingTasks: []
+        };
+    } else {
+        return items;
+    }
+}
 function addLocalItems() {
     window.items = JSON.parse(localStorage.getItem("items"));
-    if (items == null) items = [];
+    items = updateItemsObject();
+    if (items == null) {
+        items = {
+            tasks: [],
+            repeatingTasks: []
+        };
+    }
+    console.log(items);
     var todos = document.querySelector(".todos");
     todos.innerHTML = "";
     addItems();
@@ -25,20 +42,17 @@ function addLocalItems() {
 function globalCode() {
     var todos = document.querySelector(".todos");
     var itemCount = 0;
-    (function dialogs() {
-        document.addEventListener("click", function(e) {
-            if (e.target.classList.contains("dialog-container")) {
-                e.target.classList.remove("visible");
-            }
-        });
-    })();
     function removeItem(id) {
-        items.splice(id, 1);
+        items.tasks.splice(id, 1);
         var textarea = document.querySelector('textarea[data-id="'+id+'"]');
         textarea.removeAttribute("data-id");
         var divItem = textarea.parentElement;
         divItem.classList.add("removed");
-        divItem.style.height = "0px";
+        var computedHeight = getComputedStyle(divItem).height;
+        divItem.style.height = computedHeight;
+        setTimeout(function() {
+            divItem.style.height = "0px";
+        }, 10);
         var textareas = document.querySelectorAll("textarea");
         for (var i = 0; i < textareas.length; i++) {
             if (textareas[i].dataset.id > id) {
@@ -47,20 +61,19 @@ function globalCode() {
         }
         save();
     }
-    function resizeTextarea(id) {
-        var textarea = document.querySelector('textarea[data-id="'+id+'"]');
-        textarea.style.height = "auto";
-        textarea.parentElement.style.height = "auto";
-        var newHeight = textarea.scrollHeight;
-        var cs = window.getComputedStyle(textarea); // cs == computedStyles
-        var padding = Number(cs.paddingTop.slice(0, -2)) + Number(cs.paddingBottom.slice(0, -2));
-        textarea.style.height = newHeight - padding+"px";
-        textarea.parentElement.style.height = newHeight+"px";
+    function resizeTextarea(textarea) {
+        var value = textarea.value;
+        var newLineCount = (value.match(/\n/g) || []).length;
+        textarea.setAttribute("rows", newLineCount+1);
     }
     window.resizeTextareas = function() {
-        var textareas = document.querySelectorAll("textarea");
-        for (var i = 0; i < textareas.length-1; i++) {
-            resizeTextarea(i);
+        var itemTextareas = document.querySelectorAll("textarea[data-id]");
+        for (var i = 0; i < itemTextareas.length-1; i++) {
+            resizeTextarea(itemTextareas[i]);
+        }
+        var rtTextareas = document.querySelectorAll("textarea[data-rt-id]");
+        for (var i = 0; i < rtTextareas.length; i++) {
+            resizeTextarea(rtTextareas[i]);
         }
     }
     window.addEventListener("resize", resizeTextareas);
@@ -69,24 +82,25 @@ function globalCode() {
     document.addEventListener("input", function(e) {
         var textarea = e.target;
         var itemDiv = textarea.parentElement;
-        if (itemDiv.classList.contains("item")) {
-            textarea.style.height = "auto";
-            textarea.style.height = textarea.scrollHeight - 16+"px";
-            resizeTextarea(textarea.dataset.id);
+        var cl = itemDiv.classList;
+        if (cl.contains("item")) {
+            resizeTextarea(textarea);
             if (itemDiv.classList.contains("new-item")) {
                 itemDiv.classList.remove("new-item");
                 var checkmark = itemDiv.querySelector(".checkmark-placeholder");
                 checkmark.classList.remove("checkmark-placeholder");
                 checkmark.classList.add("checkmark");
-                itemDiv.querySelector("textarea").setAttribute("data-id", items.length);
+                itemDiv.querySelector("textarea").setAttribute("data-id", items.tasks.length);
                 itemDiv.querySelector(".sort-icon").classList.remove("hidden");
-                items[items.length] = textarea.value;
+                items.tasks[items.length] = textarea.value;
                 addNewItem();
                 save();
             } else {
-                items[textarea.dataset.id] = textarea.value;
+                items.tasks[textarea.dataset.id] = textarea.value;
                 save();
             }
+        } else if (cl.contains("repeating-task")) {
+            resizeTextarea(textarea);
         }
     });
     document.addEventListener("click", function(e) {
@@ -171,12 +185,12 @@ function globalCode() {
             todos.classList.add("no-transition");
             var itemDivs = document.querySelectorAll(".todos .item:not(.removed)");
             var newPos;
-            for (var i = 0; i < items.length; i++) {
+            for (var i = 0; i < items.tasks.length; i++) {
                 itemDivs[i].style.transform = "translateY(0px)";
                 if (itemDivs[i] == currentItem) newPos = i + moveCount;
             }
             var oldPos = newPos - moveCount;
-            items = moveIndex(items, oldPos, newPos);
+            items.tasks = moveIndex(items.tasks, oldPos, newPos);
             if (moveCount > 0) todos.insertBefore(currentItem, todos.children[newPos+1]);
             else if (moveCount < 0) todos.insertBefore(currentItem, todos.children[newPos]);
             setTimeout(function() {
@@ -190,31 +204,35 @@ function globalCode() {
     });
     function updateColIds() {
         var textareas = document.querySelectorAll(".todos .item:not(.new-item):not(.removed) textarea");
-        for (var i = 0; i < items.length; i++) {
+        for (var i = 0; i < items.tasks.length; i++) {
             textareas[i].setAttribute("data-id", i);
         }
     }
 }
 function addItems() {
-    for (var i = 0; i < items.length; i++) {
+    postRepeatingTasks();
+    for (var i = 0; i < items.tasks.length; i++) {
         var itemDiv = document.createElement("DIV");
         itemDiv.classList.add("item");
         itemDiv.innerHTML =
         '<div class="checkmark"></div>'+
         '<textarea data-id="'+i+'" rows="1" placeholder="oshit where did the text go"></textarea>'+
         '<div class="sort-icon"></div>';
-        itemDiv.querySelector("textarea").value = items[i];
+        itemDiv.querySelector("textarea").value = items.tasks[i];
         var todos = document.querySelector(".todos");
         todos.appendChild(itemDiv);
     }
     addNewItem();
+    for (var i = 0; i < items.repeatingTasks.length; i++) {
+        addRepeatingTask(items.repeatingTasks[i], false);
+    }
 }
 function addNewItem() {
     var item = document.createElement("DIV");
     item.classList.add("item", "new-item");
     item.innerHTML =
     '<div class="checkmark-placeholder"></div>'+
-    '<textarea rows="1" data-id="'+items.length+'" placeholder="Add a new one"></textarea>'+
+    '<textarea rows="1" data-id="'+items.tasks.length+'" placeholder="Add a new one"></textarea>'+
     '<div class="sort-icon hidden"></div>';
     var todos = document.querySelector(".todos");
     todos.appendChild(item);
@@ -283,13 +301,12 @@ window.onbeforeunload = function() {
 }
 var saveTimer;
 var syncIcon = document.querySelector(".sync svg");
-function save(saveGist = true) {
-    unsyncedChanges = true;
+function save(saveGist = true, instant = false) {
+    if (saveGist) unsyncedChanges = true;
     localStorage.setItem("items", JSON.stringify(items));
     if (saveTimer) clearTimeout(saveTimer);
     if (saveGist && personalAccessToken) {
-        console.log("Updating gist in 500ms...");
-        saveTimer = setTimeout(function() {
+        function finallySave() {
             var saveFinished = false;
             var degs = 0;
             function rotate() {
@@ -313,17 +330,374 @@ function save(saveGist = true) {
                 saveFinished = true;
                 unsyncedChanges = false;
             });
-        }, 500);
+        }
+        if (instant) {
+            console.log("Updating gist instantly...");
+            finallySave();
+        } else {
+            console.log("Updating gist in 500ms...");
+            saveTimer = setTimeout(finallySave, 500);
+        }
     }
 }
 
+(function dialogClose() {
+    document.addEventListener("click", function(e) {
+        if (e.target.classList.contains("dialog-container")) {
+            var dialog = e.target;
+            dialog.classList.remove("visible");
+            setTimeout(function() {
+                dialog.classList.remove("displayed");
+            }, 1000);
+        }
+    });
+})();
+function addRepeatingTask(o, transition = true) { // options
+    var dialog = document.querySelector(".repeating-tasks-dialog");
+
+    var nrt = document.createElement("DIV"); // newRepeatingTask
+
+    var dialogChildren = dialog.children[0].children;
+    var bottomBar = dialogChildren[dialogChildren.length-1];
+    dialog.children[0].insertBefore(nrt, bottomBar);
+
+    nrt.classList.add("new-repeating-task", "repeating-task");
+    var repeatingTasks = dialog.querySelectorAll(".repeating-task:not(.new-repeating-task):not(.deleted)");
+    var id = repeatingTasks.length; // weekday Id
+    var p = o.interval.period;
+    var weeks = (p == "weeks") ? " visible" : "";
+    var months = (p == "months") ? " visible" : "";
+    var years = (p == "years") ? " visible" : "";
+    nrt.innerHTML =
+        '<textarea rows="1" data-rt-id="1" placeholder="Add a new one"></textarea>'
+        +'<div class="options">'
+            +'<p>Repeat every</p>'
+                +'<input value="1" class="every">'
+                +'<select class="period">'
+                    +'<option value="days">day</option>'
+                    +'<option value="weeks">week</option>'
+                    +'<option value="months">month</option>'
+                    +'<option value="years">year</option>'
+                +'</select>'
+                +'<div class="time">'
+                    +'<p>at</p>'
+                    +'<input placeholder="15" class="at-hour">'
+                    +'<p>:</p>'
+                    +'<input placeholder="30" class="at-min">'
+                +'</div>'
+                +'<div class="weekday'+weeks+'">'
+                    +'<p>on</p>'
+                    +'<input id="Mon'+id+'" type="checkbox" value="M" class="wd wd1">'
+                    +'<label for="Mon'+id+'">M</label>'
+                    +'<input id="Tue'+id+'" type="checkbox" value="T" class="wd wd2">'
+                    +'<label for="Tue'+id+'">T</label>'
+                    +'<input id="Wed'+id+'" type="checkbox" value="W" class="wd wd3">'
+                    +'<label for="Wed'+id+'">W</label>'
+                    +'<input id="Thu'+id+'" type="checkbox" value="T" class="wd wd4">'
+                    +'<label for="Thu'+id+'">T</label>'
+                    +'<input id="Fri'+id+'" type="checkbox" value="F" class="wd wd5">'
+                    +'<label for="Fri'+id+'">F</label>'
+                    +'<input id="Sat'+id+'" type="checkbox" value="S" class="wd wd6">'
+                    +'<label for="Sat'+id+'">S</label>'
+                    +'<input id="Sun'+id+'" type="checkbox" value="S" class="wd wd0">'
+                    +'<label for="Sun'+id+'">S</label>'
+                +'</div>'
+                +'<div class="day-of-month'+months+'">'
+                    +'<p>, the</p>'
+                    +'<input class="at-day-of-month">'
+                    +'<p class="th">th</p>'
+                    +'<p>&nbsp;day of the month</p>'
+                +'</div>'
+                +'<div class="date'+years+'">'
+                    +'<select class="date-month">'
+                        +'<option value="0">January</option>'
+                        +'<option value="1">February</option>'
+                        +'<option value="2">March</option>'
+                        +'<option value="3">April</option>'
+                        +'<option value="4">May</option>'
+                        +'<option value="5">June</option>'
+                        +'<option value="6">July</option>'
+                        +'<option value="7">August</option>'
+                        +'<option value="8">September</option>'
+                        +'<option value="9">October</option>'
+                        +'<option value="10">November</option>'
+                        +'<option value="11">December</option>'
+                    +'</select>'
+                    +'<input class="at-day-of-month">'
+                    +'<p class="th">th</p>'
+                +'</div>'
+                +'<div class="delete"></div>'
+            +'</div>'
+        +'</div>';
+
+    nrt.querySelector("textarea").value = o.text;
+    nrt.querySelector(".every").value = o.interval.every;
+    if (o.interval.hour < 10) o.interval.hour = "0"+o.interval.hour;
+    if (o.interval.min  < 10) o.interval.min  = "0"+o.interval.min;
+    nrt.querySelector(".at-hour").value = o.interval.hour;
+    nrt.querySelector(".at-min").value = o.interval.min;
+    nrt.querySelector(".period").value = o.interval.period;
+    if (p == "weeks") {
+        var wd = o.interval.weekdays;
+        for (var i = 0; i < 7; i++) {
+            nrt.querySelector(".wd"+i).checked = wd[i];
+        }
+    } else if (p == "months") {
+        nrt.querySelector(".day-of-month .at-day-of-month").value = o.interval.dayOfMonth;
+    } else if (p == "years") {
+        nrt.querySelector(".date-month").value = o.interval.month;
+        nrt.querySelector(".date .at-day-of-month").value = o.interval.dayOfMonth;
+    }
+
+    if (transition) {
+        var height = getComputedStyle(nrt).height;
+        nrt.classList.add("deleted");
+        nrt.style.height = "0px";
+
+        nrt.classList.remove("new-repeating-task");
+        nrt.classList.add("repeating-task");
+
+        setTimeout(function() {
+            nrt.style.height = height;
+            nrt.classList.remove("deleted");
+            setTimeout(function() {
+                nrt.style.height = "";
+            }, 150);
+        }, 10);
+    } else {
+        nrt.classList.remove("new-repeating-task");
+    }
+
+}
+function postRepeatingTasks() {
+    var now = new Date();
+    var newTasks = false;
+    for (var i = 0; i < items.repeatingTasks.length; i++) {
+        // post tasks that are due
+        var item = items.repeatingTasks[i];
+        if (typeof item.nextDate == "string") {
+            item.nextDate = new Date(item.nextDate);
+        }
+        if (now > item.nextDate) {
+            newTasks = true;
+            items.tasks.unshift(item.text); // add to start of array
+            item.nextDate = getNextDate(item);
+        }
+    }
+    if (newTasks) save(true, true);
+}
+(function dateIncrements() {
+    // prototype increment date, month and year
+    Date.prototype.incrementDate = function(incrementWith = 1) {
+        this.setDate(this.getDate()+incrementWith);
+    }
+    Date.prototype.incrementMonth = function(incrementWith = 1) {
+        this.setMonth(this.getMonth()+incrementWith);
+    }
+    Date.prototype.incrementYear = function(incrementWith = 1) {
+        this.setFullYear(this.getFullYear()+incrementWith);
+    }
+})();
+function getNextDate(item, postDueTasks = true) {
+
+    var now = new Date();
+    var nextDate = new Date();
+    now.setSeconds(0);
+    nextDate.setSeconds(0);
+
+    nextDate.setHours(item.interval.hour);
+    nextDate.setMinutes(item.interval.min);
+    if (item.interval.period == "days") {
+        if (now > nextDate) {
+            nextDate.incrementDate();
+        }
+    } else if (item.interval.period == "weeks") {
+        for (var i = 0; i < 7; i++) {
+            var wdi = (i + now.getDay()) % 7; // weekDayIndex
+            if (item.interval.weekdays[wdi] && now < nextDate) {
+                break;
+            }
+            nextDate.incrementDate();
+        }
+    } else if (item.interval.period == "months") {
+        nextDate.setDate(item.interval.dayOfMonth);
+        if (now > nextDate) {
+            nextDate.incrementMonth();
+        }
+    } else if (item.interval.period == "years") {
+        nextDate.setDate(item.interval.dayOfMonth);
+        nextDate.setMonth(item.interval.month);
+        if (now > nextDate) {
+            nextDate.incrementYear();
+        }
+        console.log("------------------------------ NEXXXXXXXX");
+        console.log(item);
+    }
+    return nextDate;
+}
+(function repeatingTasksDialog() {
+    var oldEvery = "";
+    var oldHours = "";
+    var oldMinutes = "";
+    var dayOfMonth = "";
+    document.addEventListener("input", function(e) {
+        var input = e.target;
+        var value = Number(input.value);
+        // validate every x
+        if (e.inputType == "insertText") {
+            if (input.classList.contains("every")) {
+                if (isNaN(value) || value <= 0) {
+                    input.value = oldEvery;
+                } else {
+                    oldEvery = input.value;
+                }
+                // validate hours input
+            } else if (input.classList.contains("at-hour")) {
+                if (isNaN(value) || value < 0 || value > 24) {
+                    input.value = oldHours;
+                } else {
+                    oldHours = input.value;
+                }
+                // validate minutes input
+            } else if (input.classList.contains("at-min")) {
+                if (isNaN(value) || value < 0 || value > 59) {
+                    input.value = oldMinutes;
+                } else {
+                    oldMinutes = input.value;
+                }
+                // validate day-of-the-month input
+            } else if (input.classList.contains("at-day-of-month")) {
+                if (isNaN(value) || value < 1 || value > 31) {
+                    input.value = dayOfMonth;
+                } else {
+                    dayOfMonth = input.value;
+                }
+            }
+        }
+    });
+
+    var dialog = document.querySelector(".repeating-tasks-dialog");
+
+    // dynamic options
+    dialog.addEventListener("change", function(e) {
+        if (e.target.classList.contains("period")) {
+            var selectPeriod = e.target;
+            var weekday = selectPeriod.parentElement.querySelector(".weekday");
+            var dayOfMonth = selectPeriod.parentElement.querySelector(".day-of-month");
+            var date = selectPeriod.parentElement.querySelector(".date");
+
+            weekday.classList.remove("visible");
+            dayOfMonth.classList.remove("visible");
+            date.classList.remove("visible");
+            if (selectPeriod.value == "weeks") {
+                weekday.classList.add("visible");
+            } else if (selectPeriod.value == "months") {
+                dayOfMonth.classList.add("visible");
+            } else if (selectPeriod.value == "years") {
+                date.classList.add("visible");
+            }
+        }
+    });
+
+    // delete
+    window.dialog = dialog;
+    dialog.addEventListener("click", function(e) {
+        if (e.target.classList.contains("delete")) {
+            var repeatingTask = e.target.parentElement.parentElement;
+            repeatingTask.classList.add("deleted");
+            var computedHeight = getComputedStyle(repeatingTask).height;
+            repeatingTask.style.height = computedHeight;
+            setTimeout(function() {
+                repeatingTask.style.height = "0px";
+            }, 10);
+        }
+    });
+    // new
+    var addIcon = dialog.querySelector(".add-repeating-task");
+    addIcon.addEventListener("click", function(e) {
+        addRepeatingTask({
+            text: "",
+            interval: {
+                every: 1,
+                hour: "",
+                min: "",
+                period: "days"
+            },
+            nextDate: new Date()
+        });
+    });
+    // open dialog
+    var icon = document.querySelector(".repeating-tasks svg");
+    icon.addEventListener("click", function() {
+        dialog.classList.add("displayed");
+        setTimeout(function() {
+            dialog.classList.add("visible");
+        }, 10);
+    });
+    // save
+    var saveButton = dialog.querySelector("button.save-personal-access-token");
+    saveButton.addEventListener("click", function() {
+        var repeatingTasks = dialog.querySelectorAll(".repeating-task:not(.new-repeating-task):not(.deleted)");
+        items.repeatingTasks = [];
+        for (var i = 0; i < repeatingTasks.length; i++) {
+            currentTask = repeatingTasks[i];
+            var every = Number(currentTask.querySelector(".every").value);
+            var period = currentTask.querySelector(".period").value;
+            var time = {
+                hour: Number(currentTask.querySelector(".at-hour").value),
+                min: Number(currentTask.querySelector(".at-min").value)
+            }
+            if (period == "weeks") {
+                var weekdays = [];
+                for (var wdi = 0; wdi < 7; wdi++) { // weekDayIndex
+                    var wdElement = currentTask.querySelector(".wd"+wdi);
+                    weekdays.push(wdElement.checked || false);
+                }
+            } else if (period == "months") {
+                var dayOfMonth = currentTask.querySelector(".day-of-month .at-day-of-month").value;
+            } else if (period == "years") {
+                var month = currentTask.querySelector(".date-month").value;
+                var dayOfMonth = currentTask.querySelector(".date .at-day-of-month").value;
+            }
+
+            var currentItem = {
+                text: currentTask.querySelector("textarea").value,
+                interval: {
+                    every: every,
+                    period: period,
+                    hour: time.hour,
+                    min: time.min
+                }
+            };
+            if (period == "weeks") {
+                currentItem.interval.weekdays = weekdays;
+            } else if (period == "months") {
+                currentItem.interval.dayOfMonth = dayOfMonth;
+            } else if (period == "years") {
+                currentItem.interval.month = month;
+                currentItem.interval.dayOfMonth = dayOfMonth;
+            }
+            currentItem.nextDate = getNextDate(currentItem);
+
+            items.repeatingTasks[i] = currentItem;
+        }
+        save(true, true);
+        dialog.classList.remove("visible");
+        setTimeout(function() {
+            dialog.classList.remove("displayed");
+        }, 1000);
+    });
+})();
 (function syncDialog() {
     var svg = document.querySelector(".sync svg");
     var dialog = document.querySelector(".sync-dialog");
     var personalAccessTokenInput = dialog.querySelector("input.personal-access-token");
     if (personalAccessToken) personalAccessTokenInput.value = personalAccessToken;
     svg.addEventListener("click", function() {
-        dialog.classList.add("visible");
+        dialog.classList.add("displayed");
+        setTimeout(function() {
+            dialog.classList.add("visible");
+        }, 10);
     });
     var saveButton = dialog.querySelector("button.save-personal-access-token");
     saveButton.addEventListener("click", function() {
@@ -339,6 +713,9 @@ function save(saveGist = true) {
         reloadTasks(function() {
             dialog.classList.remove("saving");
             dialog.classList.remove("visible");
+            setTimeout(function() {
+                dialog.classList.remove("displayed");
+            }, 10);
         });
     });
 })();
@@ -388,6 +765,7 @@ function gistFound(content, updatedAt) {
         var todos = document.querySelector(".todos");
         todos.innerHTML = "";
         items = content;
+        items = updateItemsObject(items);
         addItems();
         save(false);
     } else {
@@ -496,5 +874,5 @@ function updateGist(paToken, gistId, callback) {
             console.log(code);
             console.log(res);
         }
-    })
+    });
 }

@@ -1,4 +1,3 @@
-// document.querySelector(".repeating-tasks-dialog").classList.add("visible", "displayed");
 globalCode();
 function websiteCode() {
     if (chrome && chrome.webstore && chrome.webstore.install) {
@@ -874,5 +873,5 @@ function updateGist(paToken, gistId, callback) {
             console.log(code);
             console.log(res);
         }
-    })
+    });
 }
