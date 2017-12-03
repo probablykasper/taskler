@@ -62,9 +62,13 @@ function globalCode() {
         save();
     }
     function resizeTextarea(textarea) {
-        var value = textarea.value;
-        var newLineCount = (value.match(/\n/g) || []).length;
-        textarea.setAttribute("rows", newLineCount+1);
+        textarea.style.height = "auto";
+        var scrollHeight = textarea.scrollHeight;
+        var computedStyle = getComputedStyle(textarea);
+        var paddingTop = computedStyle.paddingBottom.slice(0, -2);
+        var paddingBot = computedStyle.paddingTop.slice(0, -2);
+        var padding = Number(paddingTop) + Number(paddingBot);
+        textarea.style.height = textarea.scrollHeight - padding+"px";
     }
     window.resizeTextareas = function() {
         var itemTextareas = document.querySelectorAll("textarea[data-id]");
@@ -222,6 +226,7 @@ function addItems() {
         var todos = document.querySelector(".todos");
         todos.appendChild(itemDiv);
     }
+    resizeTextareas();
     addNewItem();
     for (var i = 0; i < items.repeatingTasks.length; i++) {
         addRepeatingTask(items.repeatingTasks[i], false);
@@ -302,10 +307,10 @@ window.onbeforeunload = function() {
 var saveTimer;
 var syncIcon = document.querySelector(".sync svg");
 function save(saveGist = true, instant = false) {
-    if (saveGist) unsyncedChanges = true;
     localStorage.setItem("items", JSON.stringify(items));
     if (saveTimer) clearTimeout(saveTimer);
     if (saveGist && personalAccessToken) {
+        unsyncedChanges = true;
         function finallySave() {
             var saveFinished = false;
             var degs = 0;
@@ -615,12 +620,17 @@ function getNextDate(item, postDueTasks = true) {
     // new
     var addIcon = dialog.querySelector(".add-repeating-task");
     addIcon.addEventListener("click", function(e) {
+        var now = new Date();
+        var hour = String(now.getHours());
+        var min = String(now.getMinutes());
+        if (hour.length == 1) hour = "0"+hour;
+        if (min.length == 1) min = "0"+min;
         addRepeatingTask({
             text: "",
             interval: {
                 every: 1,
-                hour: "",
-                min: "",
+                hour: hour,
+                min: min,
                 period: "days"
             },
             nextDate: new Date()
