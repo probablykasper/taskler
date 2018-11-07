@@ -1,4 +1,4 @@
-textarea, h1 {
+.textarea, h1 {
   font-family: Rubik; }
 
 body {
@@ -14,16 +14,16 @@ body.blue .dialog-container {
     body.blue .dialog-container .dialog h1 {
       color: #212121; }
 
-body.blue .center textarea {
+body.blue .center .textarea {
   border-color: rgba(255, 255, 255, 0.75);
   color: #FFFFFF; }
-  body.blue .center textarea::-webkit-input-placeholder {
+  body.blue .center .textarea::-webkit-input-placeholder {
     color: rgba(255, 255, 255, 0.4); }
-  body.blue .center textarea:-ms-input-placeholder {
+  body.blue .center .textarea:-ms-input-placeholder {
     color: rgba(255, 255, 255, 0.4); }
-  body.blue .center textarea::-ms-input-placeholder {
+  body.blue .center .textarea::-ms-input-placeholder {
     color: rgba(255, 255, 255, 0.4); }
-  body.blue .center textarea::placeholder {
+  body.blue .center .textarea::placeholder {
     color: rgba(255, 255, 255, 0.4); }
 
 body.blue .settings svg {
@@ -39,16 +39,16 @@ body.light .dialog-container {
     body.light .dialog-container .dialog h1 {
       color: #212121; }
 
-body.light .center textarea {
+body.light .center .textarea {
   border-color: rgba(33, 33, 33, 0.75);
   color: #212121; }
-  body.light .center textarea::-webkit-input-placeholder {
+  body.light .center .textarea::-webkit-input-placeholder {
     color: rgba(33, 33, 33, 0.4); }
-  body.light .center textarea:-ms-input-placeholder {
+  body.light .center .textarea:-ms-input-placeholder {
     color: rgba(33, 33, 33, 0.4); }
-  body.light .center textarea::-ms-input-placeholder {
+  body.light .center .textarea::-ms-input-placeholder {
     color: rgba(33, 33, 33, 0.4); }
-  body.light .center textarea::placeholder {
+  body.light .center .textarea::placeholder {
     color: rgba(33, 33, 33, 0.4); }
 
 body.light .settings svg {
@@ -64,16 +64,16 @@ body.dark .dialog-container {
     body.dark .dialog-container .dialog h1 {
       color: #FFFFFF; }
 
-body.dark .center textarea {
+body.dark .center .textarea {
   border-color: rgba(255, 255, 255, 0.75);
   color: #FFFFFF; }
-  body.dark .center textarea::-webkit-input-placeholder {
+  body.dark .center .textarea::-webkit-input-placeholder {
     color: rgba(255, 255, 255, 0.4); }
-  body.dark .center textarea:-ms-input-placeholder {
+  body.dark .center .textarea:-ms-input-placeholder {
     color: rgba(255, 255, 255, 0.4); }
-  body.dark .center textarea::-ms-input-placeholder {
+  body.dark .center .textarea::-ms-input-placeholder {
     color: rgba(255, 255, 255, 0.4); }
-  body.dark .center textarea::placeholder {
+  body.dark .center .textarea::placeholder {
     color: rgba(255, 255, 255, 0.4); }
 
 body.dark .settings svg {
@@ -127,23 +127,17 @@ body.dark .settings svg {
 
 .center {
   position: absolute;
+  width: 100%;
+  height: 100%;
   display: flex;
-  width: calc(100% - 30px*2);
-  height: calc(100% - 30px*2);
-  padding: 30px;
-  overflow-y: auto; }
-  .center textarea {
-    font-size: 15px;
-    display: block;
-    margin: auto;
-    outline: none;
-    resize: none;
-    width: 470px;
+  align-items: center; }
+  .center #note {
+    width: 450px;
+    height: auto;
     max-width: 100%;
-    border-width: 1px;
-    padding: 16px;
-    border-radius: 4px;
-    transition: border-color 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-    background-color: transparent; }
+    margin-left: auto;
+    margin-right: auto;
+    font-family: 'Rubik';
+    font-size: 14px; }
 
 /*# sourceMappingURL=index.css.map */

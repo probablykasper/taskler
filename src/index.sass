@@ -1,5 +1,5 @@
 @import "variables.sass"
-textarea, h1
+.textarea, h1
   font-family: Rubik
 body
   margin: 0px
@@ -12,7 +12,7 @@ body.blue
       background-color: #FFFFFF
       h1
         color: #212121
-  .center textarea
+  .center .textarea
     border-color: rgba(#FFFFFF, 0.75)
     color: #FFFFFF
     &::placeholder
@@ -28,7 +28,7 @@ body.light
       background-color: #FFFFFF
       h1
         color: #212121
-  .center textarea
+  .center .textarea
     border-color: rgba(#212121, 0.75)
     color: #212121
     &::placeholder
@@ -44,7 +44,7 @@ body.dark
       background-color: #212121
       h1
         color: #FFFFFF
-  .center textarea
+  .center .textarea
     border-color: rgba(#FFFFFF, 0.75)
     color: #FFFFFF
     &::placeholder
@@ -95,21 +95,15 @@ body.dark
         margin-bottom: 15px
 .center
   position: absolute
+  width: 100%
+  height: 100%
   display: flex
-  width: calc(100% - 30px*2)
-  height: calc(100% - 30px*2)
-  padding: 30px
-  overflow-y: auto
-  textarea
-    font-size: 15px
-    display: block
-    margin: auto
-    outline: none
-    resize: none
-    width: 470px
+  align-items: center
+  #note
+    width: 450px
+    height: auto
     max-width: 100%
-    border-width: 1px
-    padding: 16px
-    border-radius: 4px
-    transition: border-color $transition
-    background-color: transparent
+    margin-left: auto
+    margin-right: auto
+    font-family: 'Rubik'
+    font-size: 14px
