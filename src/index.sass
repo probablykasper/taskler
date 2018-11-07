@@ -1,0 +1,115 @@
+@import "variables.sass"
+textarea, h1
+  font-family: Rubik
+body
+  margin: 0px
+body.blue
+  .bg
+    background: linear-gradient(to bottom, #6C84BF, #3D46C0)
+  .dialog-container
+    background-color: rgba(#000000, 0.4)
+    .dialog
+      background-color: #FFFFFF
+      h1
+        color: #212121
+  .center textarea
+    border-color: rgba(#FFFFFF, 0.75)
+    color: #FFFFFF
+    &::placeholder
+      color: rgba(#FFFFFF, 0.4)
+  .settings svg
+    fill: #FFFFFF
+body.light
+  .bg
+    background: #FFFFFF
+  .dialog-container
+    background-color: rgba(#000000, 0.4)
+    .dialog
+      background-color: #FFFFFF
+      h1
+        color: #212121
+  .center textarea
+    border-color: rgba(#212121, 0.75)
+    color: #212121
+    &::placeholder
+      color: rgba(#212121, 0.4)
+  .settings svg
+    fill: #212121
+body.dark
+  .bg
+    background: #212121
+  .dialog-container
+    background-color: rgba(#000000, 0.4)
+    .dialog
+      background-color: #212121
+      h1
+        color: #FFFFFF
+  .center textarea
+    border-color: rgba(#FFFFFF, 0.75)
+    color: #FFFFFF
+    &::placeholder
+      color: rgba(#FFFFFF, 0.4)
+  .settings svg
+    fill: #FFFFFF
+.bg
+  min-height: 1000px
+  transform: translateY(-50%)
+  top: 50%
+  display: flex
+  position: fixed
+  flex-direction: column
+  width: 100%
+  height: 100%
+.settings
+  position: absolute
+  top: 0px
+  right: 0px
+  margin: 8px
+  svg
+    padding: 8px
+    cursor: pointer
+.dialog-container
+  width: 100%
+  height: 100%
+  position: fixed
+  justify-content: center
+  align-items: center
+  display: flex
+  opacity: 0
+  pointer-events: none
+  transition: opacity $transition-short
+  &.visible
+    opacity: 1
+    pointer-events: all
+  .dialog
+    width: 600px
+    max-width: calc(100% - 150px)
+    max-height: calc(100% - 100px)
+    padding: 0px 25px
+    box-shadow: $shadow-4
+    overflow-y: scroll
+    h1
+        font-weight: 500
+        font-size: 20px
+        margin-top: 25px
+        margin-bottom: 15px
+.center
+  position: absolute
+  display: flex
+  width: calc(100% - 30px*2)
+  height: calc(100% - 30px*2)
+  padding: 30px
+  overflow-y: auto
+  textarea
+    font-size: 15px
+    display: block
+    margin: auto
+    outline: none
+    resize: none
+    width: 470px
+    max-width: 100%
+    border-width: 1px
+    padding: 16px
+    border-radius: 4px
+    transition: border-color $transition
+    background-color: transparent

@@ -1,0 +1,149 @@
+textarea, h1 {
+  font-family: Rubik; }
+
+body {
+  margin: 0px; }
+
+body.blue .bg {
+  background: linear-gradient(to bottom, #6C84BF, #3D46C0); }
+
+body.blue .dialog-container {
+  background-color: rgba(0, 0, 0, 0.4); }
+  body.blue .dialog-container .dialog {
+    background-color: #FFFFFF; }
+    body.blue .dialog-container .dialog h1 {
+      color: #212121; }
+
+body.blue .center textarea {
+  border-color: rgba(255, 255, 255, 0.75);
+  color: #FFFFFF; }
+  body.blue .center textarea::-webkit-input-placeholder {
+    color: rgba(255, 255, 255, 0.4); }
+  body.blue .center textarea:-ms-input-placeholder {
+    color: rgba(255, 255, 255, 0.4); }
+  body.blue .center textarea::-ms-input-placeholder {
+    color: rgba(255, 255, 255, 0.4); }
+  body.blue .center textarea::placeholder {
+    color: rgba(255, 255, 255, 0.4); }
+
+body.blue .settings svg {
+  fill: #FFFFFF; }
+
+body.light .bg {
+  background: #FFFFFF; }
+
+body.light .dialog-container {
+  background-color: rgba(0, 0, 0, 0.4); }
+  body.light .dialog-container .dialog {
+    background-color: #FFFFFF; }
+    body.light .dialog-container .dialog h1 {
+      color: #212121; }
+
+body.light .center textarea {
+  border-color: rgba(33, 33, 33, 0.75);
+  color: #212121; }
+  body.light .center textarea::-webkit-input-placeholder {
+    color: rgba(33, 33, 33, 0.4); }
+  body.light .center textarea:-ms-input-placeholder {
+    color: rgba(33, 33, 33, 0.4); }
+  body.light .center textarea::-ms-input-placeholder {
+    color: rgba(33, 33, 33, 0.4); }
+  body.light .center textarea::placeholder {
+    color: rgba(33, 33, 33, 0.4); }
+
+body.light .settings svg {
+  fill: #212121; }
+
+body.dark .bg {
+  background: #212121; }
+
+body.dark .dialog-container {
+  background-color: rgba(0, 0, 0, 0.4); }
+  body.dark .dialog-container .dialog {
+    background-color: #212121; }
+    body.dark .dialog-container .dialog h1 {
+      color: #FFFFFF; }
+
+body.dark .center textarea {
+  border-color: rgba(255, 255, 255, 0.75);
+  color: #FFFFFF; }
+  body.dark .center textarea::-webkit-input-placeholder {
+    color: rgba(255, 255, 255, 0.4); }
+  body.dark .center textarea:-ms-input-placeholder {
+    color: rgba(255, 255, 255, 0.4); }
+  body.dark .center textarea::-ms-input-placeholder {
+    color: rgba(255, 255, 255, 0.4); }
+  body.dark .center textarea::placeholder {
+    color: rgba(255, 255, 255, 0.4); }
+
+body.dark .settings svg {
+  fill: #FFFFFF; }
+
+.bg {
+  min-height: 1000px;
+  -webkit-transform: translateY(-50%);
+  transform: translateY(-50%);
+  top: 50%;
+  display: flex;
+  position: fixed;
+  flex-direction: column;
+  width: 100%;
+  height: 100%; }
+
+.settings {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  margin: 8px; }
+  .settings svg {
+    padding: 8px;
+    cursor: pointer; }
+
+.dialog-container {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.1s cubic-bezier(0.4, 0, 0.2, 1); }
+  .dialog-container.visible {
+    opacity: 1;
+    pointer-events: all; }
+  .dialog-container .dialog {
+    width: 600px;
+    max-width: calc(100% - 150px);
+    max-height: calc(100% - 100px);
+    padding: 0px 25px;
+    box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.24);
+    overflow-y: scroll; }
+    .dialog-container .dialog h1 {
+      font-weight: 500;
+      font-size: 20px;
+      margin-top: 25px;
+      margin-bottom: 15px; }
+
+.center {
+  position: absolute;
+  display: flex;
+  width: calc(100% - 30px*2);
+  height: calc(100% - 30px*2);
+  padding: 30px;
+  overflow-y: auto; }
+  .center textarea {
+    font-size: 15px;
+    display: block;
+    margin: auto;
+    outline: none;
+    resize: none;
+    width: 470px;
+    max-width: 100%;
+    border-width: 1px;
+    padding: 16px;
+    border-radius: 4px;
+    transition: border-color 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    background-color: transparent; }
+
+/*# sourceMappingURL=index.css.map */

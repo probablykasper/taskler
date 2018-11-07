@@ -1,0 +1,30 @@
+{
+  "name": "kasp.io",
+  "main": "index.js",
+  "scripts": {
+    "deploy": "gh-pages --dist build"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-preset-env": "^1.7.0",
+    "browser-sync": "^2.26.3",
+    "clarify": "^2.1.0",
+    "del": "^3.0.0",
+    "git-state": "^4.1.0",
+    "git-utils": "^5.4.0",
+    "gulp": "^4.0.0",
+    "gulp-autoprefixer": "^6.0.0",
+    "gulp-babel": "^7.0.1",
+    "gulp-plumber": "^1.2.0",
+    "gulp-pug": "^4.0.1",
+    "gulp-sass": "^4.0.1",
+    "gulp-sourcemaps": "^2.6.4",
+    "gulp-uglify": "^3.0.1",
+    "gulp-util": "^3.0.8",
+    "gulp-watch": "^5.0.1",
+    "gulp-watch-pug": "^1.0.0",
+    "gulp-watch-sass": "^1.4.1",
+    "simple-git": "^1.105.0"
+  }
+}
