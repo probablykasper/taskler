@@ -3,55 +3,13 @@
   font-family: Rubik
 body
   margin: 0px
-body.blue
-  .bg
-    background: linear-gradient(to bottom, #6C84BF, #3D46C0)
-  .dialog-container
-    background-color: rgba(#000000, 0.4)
-    .dialog
-      background-color: #FFFFFF
-      h1
-        color: #212121
-  .center .textarea
-    border-color: rgba(#FFFFFF, 0.75)
-    color: #FFFFFF
-    &::placeholder
-      color: rgba(#FFFFFF, 0.4)
-  .settings svg
-    fill: #FFFFFF
-body.light
-  .bg
-    background: #FFFFFF
-  .dialog-container
-    background-color: rgba(#000000, 0.4)
-    .dialog
-      background-color: #FFFFFF
-      h1
-        color: #212121
-  .center .textarea
-    border-color: rgba(#212121, 0.75)
-    color: #212121
-    &::placeholder
-      color: rgba(#212121, 0.4)
-  .settings svg
-    fill: #212121
-body.dark
-  .bg
-    background: #212121
-  .dialog-container
-    background-color: rgba(#000000, 0.4)
-    .dialog
-      background-color: #212121
-      h1
-        color: #FFFFFF
-  .center .textarea
-    border-color: rgba(#FFFFFF, 0.75)
-    color: #FFFFFF
-    &::placeholder
-      color: rgba(#FFFFFF, 0.4)
-  .settings svg
-    fill: #FFFFFF
+$dark-bgcolor: #272727
+$light-bgcolor: #fafafa
 .bg
+  .dark-mode &
+    background-color: lighten($dark-bgcolor, 3%)
+  .light-mode &
+    background-color: darken($light-bgcolor, 3%)
   min-height: 1000px
   transform: translateY(-50%)
   top: 50%
@@ -68,6 +26,10 @@ body.dark
   svg
     padding: 8px
     cursor: pointer
+    .dark-mode &
+      fill: rgba(#ffffff, 0.65)
+    .light-mode &
+      fill: rgba(#000000, 0.65)
 .dialog-container
   width: 100%
   height: 100%
@@ -77,11 +39,16 @@ body.dark
   display: flex
   opacity: 0
   pointer-events: none
+  background-color: rgba(#000000, 0.4)
   transition: opacity $transition-short
   &.visible
     opacity: 1
     pointer-events: all
   .dialog
+    .light-mode &
+      background-color: #FFFFFF
+    .dark-mode &
+      background-color: #FFFFFF
     width: 600px
     max-width: calc(100% - 150px)
     max-height: calc(100% - 100px)
@@ -89,21 +56,45 @@ body.dark
     box-shadow: $shadow-4
     overflow-y: scroll
     h1
+        color: #212121
         font-weight: 500
         font-size: 20px
         margin-top: 25px
         margin-bottom: 15px
 .center
   position: absolute
-  width: 100%
-  height: 100%
+  $center-padding: 25px
+  width: calc(100% - #{$center-padding}*2)
+  height: calc(100% - #{$center-padding}*2)
+  padding: $center-padding
   display: flex
   align-items: center
   #note
-    width: 450px
+    // .dark-mode &
+    //   background-color: #272727
+    // .light-mode &
+    //   background-color: #fafafa
+    width: 750px
     height: auto
     max-width: 100%
     margin-left: auto
     margin-right: auto
+    border-radius: 5px
     font-family: 'Rubik'
-    font-size: 14px
+    font-size: 15px
+    border: none
+    .light-mode &
+      color: #3c3c3c
+      // border: 2px solid rgba(#000000, 0.1)
+      background-color: $light-bgcolor
+    .dark-mode &
+      color: #e6e6e6
+      // border: 2px solid rgba(#ffffff, 0.05)
+      background-color: $dark-bgcolor
+    .ql-editor
+      padding: 16px
+      &::before
+        .light-mode &
+          color: rgba(#000000, 0.6)
+        .dark-mode &
+          color: rgba(#ffffff, 0.4)

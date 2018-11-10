@@ -6,13 +6,15 @@ html
     link(rel="stylesheet", type="text/css", href="index.css")
     link(href="https://cdn.quilljs.com/1.0.0/quill.snow.css" rel="stylesheet")
     link(href="https://cdn.quilljs.com/1.0.0/quill.bubble.css" rel="stylesheet")
-  body.light
+    meta(name='google-signin-scope' content='profile https://www.googleapis.com/auth/drive.appdata')
+    meta(name='google-signin-client_id' content='1054692654202-fs72r7ejg1rmhga2gcme0bi82qr36duh.apps.googleusercontent.com')
+  body.dark-mode
+    .bg
 
     //- .center
     #toolbar-container(style='display:none')
     .center
-      #note
-    //- .bg
+      #note(spellcheck='false')
     //- svg(xmlns='http://www.w3.org/2000/svg', fill='#FFFFFF', height='24', viewbox='0 0 24 24', width='24')
     //- .center
     //-   textarea(rows='1' placeholder='I could type in a todo list here')
@@ -25,7 +27,7 @@ html
     .dialog-container.settings-dialog
       .dialog
         h1 Taskler Settings
-    <script src="https://cdn.quilljs.com/1.0.0/quill.min.js"></script>
-    <script src="https://apis.google.com/js/platform.js?onload=init"></script>
+        <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>
+    <script src="lib/quill.min.js"></script>
     script(src='index.js')
 

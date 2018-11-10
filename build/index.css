@@ -4,81 +4,6 @@
 body {
   margin: 0px; }
 
-body.blue .bg {
-  background: linear-gradient(to bottom, #6C84BF, #3D46C0); }
-
-body.blue .dialog-container {
-  background-color: rgba(0, 0, 0, 0.4); }
-  body.blue .dialog-container .dialog {
-    background-color: #FFFFFF; }
-    body.blue .dialog-container .dialog h1 {
-      color: #212121; }
-
-body.blue .center .textarea {
-  border-color: rgba(255, 255, 255, 0.75);
-  color: #FFFFFF; }
-  body.blue .center .textarea::-webkit-input-placeholder {
-    color: rgba(255, 255, 255, 0.4); }
-  body.blue .center .textarea:-ms-input-placeholder {
-    color: rgba(255, 255, 255, 0.4); }
-  body.blue .center .textarea::-ms-input-placeholder {
-    color: rgba(255, 255, 255, 0.4); }
-  body.blue .center .textarea::placeholder {
-    color: rgba(255, 255, 255, 0.4); }
-
-body.blue .settings svg {
-  fill: #FFFFFF; }
-
-body.light .bg {
-  background: #FFFFFF; }
-
-body.light .dialog-container {
-  background-color: rgba(0, 0, 0, 0.4); }
-  body.light .dialog-container .dialog {
-    background-color: #FFFFFF; }
-    body.light .dialog-container .dialog h1 {
-      color: #212121; }
-
-body.light .center .textarea {
-  border-color: rgba(33, 33, 33, 0.75);
-  color: #212121; }
-  body.light .center .textarea::-webkit-input-placeholder {
-    color: rgba(33, 33, 33, 0.4); }
-  body.light .center .textarea:-ms-input-placeholder {
-    color: rgba(33, 33, 33, 0.4); }
-  body.light .center .textarea::-ms-input-placeholder {
-    color: rgba(33, 33, 33, 0.4); }
-  body.light .center .textarea::placeholder {
-    color: rgba(33, 33, 33, 0.4); }
-
-body.light .settings svg {
-  fill: #212121; }
-
-body.dark .bg {
-  background: #212121; }
-
-body.dark .dialog-container {
-  background-color: rgba(0, 0, 0, 0.4); }
-  body.dark .dialog-container .dialog {
-    background-color: #212121; }
-    body.dark .dialog-container .dialog h1 {
-      color: #FFFFFF; }
-
-body.dark .center .textarea {
-  border-color: rgba(255, 255, 255, 0.75);
-  color: #FFFFFF; }
-  body.dark .center .textarea::-webkit-input-placeholder {
-    color: rgba(255, 255, 255, 0.4); }
-  body.dark .center .textarea:-ms-input-placeholder {
-    color: rgba(255, 255, 255, 0.4); }
-  body.dark .center .textarea::-ms-input-placeholder {
-    color: rgba(255, 255, 255, 0.4); }
-  body.dark .center .textarea::placeholder {
-    color: rgba(255, 255, 255, 0.4); }
-
-body.dark .settings svg {
-  fill: #FFFFFF; }
-
 .bg {
   min-height: 1000px;
   -webkit-transform: translateY(-50%);
@@ -89,6 +14,10 @@ body.dark .settings svg {
   flex-direction: column;
   width: 100%;
   height: 100%; }
+  .dark-mode .bg {
+    background-color: #2f2f2f; }
+  .light-mode .bg {
+    background-color: #f2f2f2; }
 
 .settings {
   position: absolute;
@@ -98,6 +27,10 @@ body.dark .settings svg {
   .settings svg {
     padding: 8px;
     cursor: pointer; }
+    .dark-mode .settings svg {
+      fill: rgba(255, 255, 255, 0.65); }
+    .light-mode .settings svg {
+      fill: rgba(0, 0, 0, 0.65); }
 
 .dialog-container {
   width: 100%;
@@ -108,6 +41,7 @@ body.dark .settings svg {
   display: flex;
   opacity: 0;
   pointer-events: none;
+  background-color: rgba(0, 0, 0, 0.4);
   transition: opacity 0.1s cubic-bezier(0.4, 0, 0.2, 1); }
   .dialog-container.visible {
     opacity: 1;
@@ -119,7 +53,12 @@ body.dark .settings svg {
     padding: 0px 25px;
     box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.24);
     overflow-y: scroll; }
+    .light-mode .dialog-container .dialog {
+      background-color: #FFFFFF; }
+    .dark-mode .dialog-container .dialog {
+      background-color: #FFFFFF; }
     .dialog-container .dialog h1 {
+      color: #212121;
       font-weight: 500;
       font-size: 20px;
       margin-top: 25px;
@@ -127,17 +66,32 @@ body.dark .settings svg {
 
 .center {
   position: absolute;
-  width: 100%;
-  height: 100%;
+  width: calc(100% - 25px*2);
+  height: calc(100% - 25px*2);
+  padding: 25px;
   display: flex;
   align-items: center; }
   .center #note {
-    width: 450px;
+    width: 750px;
     height: auto;
     max-width: 100%;
     margin-left: auto;
     margin-right: auto;
+    border-radius: 5px;
     font-family: 'Rubik';
-    font-size: 14px; }
+    font-size: 15px;
+    border: none; }
+    .light-mode .center #note {
+      color: #3c3c3c;
+      background-color: #fafafa; }
+    .dark-mode .center #note {
+      color: #e6e6e6;
+      background-color: #272727; }
+    .center #note .ql-editor {
+      padding: 16px; }
+      .light-mode .center #note .ql-editor::before {
+        color: rgba(0, 0, 0, 0.6); }
+      .dark-mode .center #note .ql-editor::before {
+        color: rgba(255, 255, 255, 0.4); }
 
 /*# sourceMappingURL=index.css.map */
