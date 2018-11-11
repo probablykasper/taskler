@@ -54,9 +54,12 @@ const sass = require('gulp-sass')
 const autoprefixer = require('gulp-autoprefixer')
 gulp.task('css', () => {
   return gulp.src(cssSrc)
-    .pipe(plumber())
     .pipe(sourcemaps.init())
-    .pipe(sass().on('error', sass.logError))
+    .pipe(sass({ outputStyle: 'compressed' }).on('error', sass.logError))
+    .on('error', function () {
+      // exit process because gulp-sass stops compiling after errors
+      process.exit()
+    })
     .pipe(autoprefixer({
       // browsers: ['last 2 versions'],
       cascade: false
@@ -68,9 +71,12 @@ gulp.task('css', () => {
 const watchSass = require('gulp-watch-sass')
 gulp.task('css:watch', () => {
   return watchSass(cssSrc)
-    .pipe(plumber())
     .pipe(sourcemaps.init())
-    .pipe(sass().on('error', sass.logError))
+    .pipe(sass({ outputStyle: 'compressed' }).on('error', sass.logError))
+    .on('error', function () {
+      // exit process because gulp-sass stops compiling after errors
+      process.exit()
+    })
     .pipe(autoprefixer({
       // browsers: ['last 2 versions'],
       cascade: false
