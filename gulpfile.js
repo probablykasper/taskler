@@ -5,8 +5,10 @@ const dest = 'build'
 const deploySrc = 'build/**/*'
 const deploy = 'docs'
 
-const cssSrc = 'src/**/*.{sass,scss,css}'
-const htmlSrc = 'src/**/*.{pug,html}'
+// match all sass/scss/css/pug/html/js files except files in src/lib.
+// htmlSrc is different because gulp-pug-pug does not support arrays.
+const cssSrc = ['src/**/*.{sass,scss,css}', '!src/lib/**']
+const htmlSrc = 'src/{*.{pug,html},!(lib)/**/*.{pug,html}}'
 const jsSrc = ['src/**/*.js', '!src/lib/**']
 
 // Files that will be copied and updated and deleted over to dest.
@@ -45,7 +47,7 @@ gulp.task('html:watch', () => {
   return gulp.src(htmlSrc)
     .pipe(plumber())
     .pipe(watch(htmlSrc))
-    .pipe(gulpWatchPug(htmlSrc, { delay: 100 }))
+    .pipe(gulpWatchPug(htmlSrc, { delay: 50 }))
     .pipe(pug({ locals: locals }))
     .pipe(gulp.dest(dest))
 })
