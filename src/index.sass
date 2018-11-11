@@ -1,15 +1,27 @@
 @import "variables.sass"
-.textarea, h1
-  font-family: Rubik
-body
-  margin: 0px
 $dark-bgcolor: #272727
 $light-bgcolor: #fafafa
-.bg
-  .dark-mode &
-    background-color: lighten($dark-bgcolor, 3%)
+$transition-color: $transition-long
+body
+  margin: 0px
+.no-transition
+  *, ::before, ::after
+    transition: none !important
+p, h1, span
+  font-family: Rubik
+  transition: color $transition-color
   .light-mode &
-    background-color: darken($light-bgcolor, 3%)
+    color: $dark-bgcolor
+  .dark-mode &
+    color: $light-bgcolor
+.bg
+  transition: background-color $transition-color
+  .dark-mode &
+    // background-color: lighten($dark-bgcolor, 3%)
+    background-color: $dark-bgcolor
+  .light-mode &
+    // background-color: darken($light-bgcolor, 3%)
+    background-color: $light-bgcolor
   min-height: 1000px
   transform: translateY(-50%)
   top: 50%
@@ -18,18 +30,60 @@ $light-bgcolor: #fafafa
   flex-direction: column
   width: 100%
   height: 100%
-.settings
+.icons
   position: absolute
   top: 0px
   right: 0px
   margin: 8px
-  svg
-    padding: 8px
-    cursor: pointer
-    .dark-mode &
-      fill: rgba(#ffffff, 0.65)
-    .light-mode &
-      fill: rgba(#000000, 0.65)
+  pointer-events: none
+  .icon
+    display: block
+    pointer-events: all
+    position: relative
+    .tooltip
+      font-size: 14px
+      .light-mode &
+        color: $dark-bgcolor
+      .dark-mode &
+        color: $light-bgcolor
+      position: absolute
+      top: 50%
+      right: 100%
+      white-space: nowrap
+      margin: 0px
+      pointer-events: none
+      transition: opacity $transition, transform $transition
+      opacity: 0
+      transform-origin: right
+      transform: translate(10px, -50%)
+    &:hover .tooltip
+      opacity: 1
+      transform: translate(0px, -50%) 
+    svg
+      display: block
+      padding: 8px
+      width: 24px
+      height: 24px
+      cursor: pointer
+      transition: fill $transition-color
+      .dark-mode &
+        fill: #ffffff
+        opacity: 0.65
+      .light-mode &
+        fill: #000000
+        opacity: 0.65
+    &:active svg
+      .light-mode &
+        opacity: calc(0.65 - 0.15)
+      .dark-mode &
+        opacity: calc(0.65 + 0.15)
+  .extension
+    display: none
+    &.visible
+      display: block
+  #chrome-extension-icon
+    svg
+      transform: scale(0.85)
 .dialog-container
   width: 100%
   height: 100%
@@ -39,62 +93,111 @@ $light-bgcolor: #fafafa
   display: flex
   opacity: 0
   pointer-events: none
-  background-color: rgba(#000000, 0.4)
-  transition: opacity $transition-short
+  background-color: rgba(#000000, 0.3)
+  transition: opacity $transition-long
+  user-select: none
+  > *
+    user-select: text
   &.visible
     opacity: 1
     pointer-events: all
   .dialog
+    transition: background-color $transition-color
     .light-mode &
-      background-color: #FFFFFF
+      background-color: $light-bgcolor
     .dark-mode &
-      background-color: #FFFFFF
+      background-color: $dark-bgcolor
     width: 600px
     max-width: calc(100% - 150px)
     max-height: calc(100% - 100px)
-    padding: 0px 25px
-    box-shadow: $shadow-4
+    padding: 25px
+    border-radius: 5px
+    box-shadow: $dialog-shadow
     overflow-y: scroll
     h1
-        color: #212121
-        font-weight: 500
-        font-size: 20px
-        margin-top: 25px
-        margin-bottom: 15px
+      font-weight: 500
+      font-size: 20px
+      margin-top: 0px
+      margin-bottom: 15px
+    .checkbox-container
+      display: flex
+      align-items: center
+      margin: 10px 0px
+      user-select: none
+      input
+        visibility: hidden
+        height: 0px
+        width: 0px
+      .checkbox
+        width: 18px
+        height: 18px
+        cursor: pointer
+        position: relative
+        &::after
+          content: ''
+          position: absolute
+          box-sizing: border-box
+          width: 100%
+          height: 100%
+          top: 0px
+          left: 0px
+          border: 2px solid
+          .light-mode &
+            border-color: $dark-bgcolor
+          .dark-mode &
+            border-color: $light-bgcolor
+          border-radius: 2px
+          transition: background-color $transition-color, opacity $transition, transform $transition
+        svg
+          display: block
+          transition: background-color $transition-color, opacity $transition, transform $transition
+          width: 100%
+          height: 100%
+          opacity: 0
+          border-radius: 2px
+          .light-mode &
+            fill: $dark-bgcolor
+            background-color: rgba($light-bgcolor, 0.3)
+          .dark-mode &
+            fill: $light-bgcolor
+            background-color: rgba($dark-bgcolor, 0.3)
+          transform: scale(calc(1.3*0.25))
+      input:checked ~ .checkbox
+        &::after
+          opacity: 0
+          transform: scale(1.3)
+        svg
+          opacity: 1
+          transform: scale(1)
+      p
+        margin: 0px
+        padding-left: 5px
+        cursor: pointer
+
 .center
-  position: absolute
+  position: fixed
+  overflow-y: auto
   $center-padding: 25px
   width: calc(100% - #{$center-padding}*2)
   height: calc(100% - #{$center-padding}*2)
   padding: $center-padding
   display: flex
-  align-items: center
   #note
-    // .dark-mode &
-    //   background-color: #272727
-    // .light-mode &
-    //   background-color: #fafafa
-    width: 750px
     height: auto
-    max-width: 100%
-    margin-left: auto
-    margin-right: auto
+    min-width: 500px
+    max-width: 750px
+    margin: auto
     border-radius: 5px
     font-family: 'Rubik'
     font-size: 15px
     border: none
-    .light-mode &
-      color: #3c3c3c
-      // border: 2px solid rgba(#000000, 0.1)
-      background-color: $light-bgcolor
-    .dark-mode &
-      color: #e6e6e6
-      // border: 2px solid rgba(#ffffff, 0.05)
-      background-color: $dark-bgcolor
     .ql-editor
-      padding: 16px
+      padding: 16px 20px
       &::before
+        transition: color $transition-color
         .light-mode &
           color: rgba(#000000, 0.6)
         .dark-mode &
           color: rgba(#ffffff, 0.4)
+      &::after
+        content: ''
