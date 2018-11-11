@@ -29,20 +29,24 @@ gulp.task('cleanDeployDir', () => {
 
 const pug = require('gulp-pug')
 gulp.task('html', () => {
+  const locals = { isExtension: false }
+  if (process.argv.includes('--extension')) locals.isExtension = true
   return gulp.src(htmlSrc)
     .pipe(plumber())
-    .pipe(pug())
+    .pipe(pug({ locals: locals }))
     .pipe(gulp.dest(dest))
 })
 
 const watch = require('gulp-watch')
 const gulpWatchPug = require('gulp-watch-pug')
 gulp.task('html:watch', () => {
+  const locals = { isExtension: false }
+  if (process.argv.includes('--extension')) locals.isExtension = true
   return gulp.src(htmlSrc)
     .pipe(plumber())
     .pipe(watch(htmlSrc))
     .pipe(gulpWatchPug(htmlSrc, { delay: 100 }))
-    .pipe(pug())
+    .pipe(pug({ locals: locals }))
     .pipe(gulp.dest(dest))
 })
 
