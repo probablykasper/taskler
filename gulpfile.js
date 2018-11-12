@@ -42,7 +42,7 @@ function checkForExtensionFlag () {
 const pug = require('gulp-pug')
 gulp.task('html', () => {
   const locals = { isExtension: checkForExtensionFlag() }
-  console.log('Building as', locals.isExtension ? 'EXTENSION' : 'WEBSITE' )
+  console.log('Building as', locals.isExtension ? 'EXTENSION' : 'WEBSITE')
   return gulp.src(htmlSrc)
     .pipe(plumber())
     .pipe(pug({ locals: locals }))

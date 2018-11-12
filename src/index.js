@@ -26,6 +26,41 @@ function save () {
 
 quill.on('text-change', save)
 
+// add old taskler tasks into quill
+if (localStorage.getItem('items') !== null) {
+  const items = JSON.parse(localStorage.getItem('items'))
+  const delta = quill.getContents()
+  if ((items.repeatingTasks && items.repeatingTasks.length) || (items.tasks && items.tasks.length)) {
+    delta.ops.push({
+      insert: "Looks like you've used Taskler before. I imported your old tasks.\n\n"
+    })
+  }
+  if (items.repeatingTasks && items.repeatingTasks.length) {
+    for (let i = 0; i < items.repeatingTasks.length; i++) {
+      delta.ops.push({
+        insert: `Repeating task ${i + 1}:\n`,
+        attributes: { bold: true }
+      })
+      delta.ops.push({
+        insert: items.repeatingTasks[i].text + '\n\n'
+      })
+    }
+  }
+  if (items.tasks && items.tasks.length) {
+    for (let i = 0; i < items.tasks.length; i++) {
+      delta.ops.push({
+        insert: `Task ${i + 1}:\n`,
+        attributes: { bold: true }
+      })
+      delta.ops.push({
+        insert: items.tasks[i] + '\n\n'
+      })
+    }
+  }
+  quill.setContents(delta)
+  localStorage.removeItem('items')
+}
+
 // extension icons
 const body = document.querySelector('body')
 const isExtension = body.dataset.isExtension === 'true'
