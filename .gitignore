@@ -1,3 +1,4 @@
 .DS_Store
 old
-build/**
+/build/**
+node_modules

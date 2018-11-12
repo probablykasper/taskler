@@ -4,6 +4,9 @@ const src = 'src'
 const dest = 'build'
 const deploySrc = 'build/**/*'
 const deploy = 'docs'
+const zipSrc = 'build/*'
+const zipDest = 'dist'
+const manifestPath = 'src/manifest.json'
 
 // match all sass/scss/css/pug/html/js files except files in src/lib.
 // htmlSrc is different because gulp-pug-pug does not support arrays.
@@ -29,10 +32,17 @@ gulp.task('cleanDeployDir', () => {
   return del(deploy)
 })
 
+let extensionOn = false
+function checkForExtensionFlag () {
+  if (process.argv.includes('--extension')) return true
+  else if (extensionOn) return true
+  else return false
+}
+
 const pug = require('gulp-pug')
 gulp.task('html', () => {
-  const locals = { isExtension: false }
-  if (process.argv.includes('--extension')) locals.isExtension = true
+  const locals = { isExtension: checkForExtensionFlag() }
+  console.log('Building as', locals.isExtension ? 'EXTENSION' : 'WEBSITE' )
   return gulp.src(htmlSrc)
     .pipe(plumber())
     .pipe(pug({ locals: locals }))
@@ -42,8 +52,7 @@ gulp.task('html', () => {
 const watch = require('gulp-watch')
 const gulpWatchPug = require('gulp-watch-pug')
 gulp.task('html:watch', () => {
-  const locals = { isExtension: false }
-  if (process.argv.includes('--extension')) locals.isExtension = true
+  const locals = { isExtension: checkForExtensionFlag() }
   return gulp.src(htmlSrc)
     .pipe(plumber())
     .pipe(watch(htmlSrc))
@@ -159,9 +168,34 @@ gulp.task('build', gulp.series('clean', 'css', 'html', 'js', 'assets'))
 gulp.task('watch', gulp.series('build', gulp.parallel('css:watch', 'html:watch', 'js:watch', 'assets:watch')))
 gulp.task('default', gulp.series('build', gulp.parallel('css:watch', 'html:watch', 'js:watch', 'assets:watch', 'server')))
 
-// gulp.task('deploy', gulp.series('build', 'cleanDeployDir'))
 gulp.task('deployToDir', () => {
   return gulp.src(deploySrc)
     .pipe(gulp.dest(deploy))
 })
-gulp.task('deploy', gulp.series('build', 'cleanDeployDir', 'deployToDir'))
+gulp.task('deploy:website', gulp.series('build', 'cleanDeployDir', 'deployToDir'))
+
+const zip = require('gulp-zip')
+// gulp.task('zip', gulp.series('extension-on', 'manifest-version', 'build', 'make-zip', 'extension-off'))
+let manifest
+const fs = require('fs')
+gulp.task('zip', gulp.series(() => {
+  extensionOn = true
+  const inquirer = require('inquirer')
+  manifest = JSON.parse(fs.readFileSync(manifestPath))
+  return inquirer.prompt({
+    type: 'input',
+    name: 'version',
+    default: manifest.version,
+    message: `version:`
+  }, (answers) => {
+    if (manifest.version !== answers.version) {
+      manifest.version = answers.version
+      fs.writeFileSync(manifestPath, JSON.stringify(manifest))
+    }
+  })
+}, 'build', () => {
+  extensionOn = false
+  return gulp.src(zipSrc)
+    .pipe(zip(`${manifest.name}-${manifest.version}-chrome.zip`))
+    .pipe(gulp.dest(zipDest))
+}))

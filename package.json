@@ -25,6 +25,8 @@
     "gulp-watch": "^5.0.1",
     "gulp-watch-pug": "^1.0.0",
     "gulp-watch-sass": "^1.4.1",
+    "gulp-zip": "^4.2.0",
+    "inquirer": "^6.2.0",
     "simple-git": "^1.105.0"
   }
 }
