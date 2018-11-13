@@ -20,9 +20,8 @@ Pug files receive an `isExtension` variable. Add the `--extension` flag to the `
 - `gulp zip`: Build and zip the extension into `/dist`, ready to upload to Chrome Web Store. You'll be prompted to type in a new version.
 
 # ToDo
-- Import for old Taskler tasks
-- Save deltas instead of html & use the localstorage wrapper
-- chrome sync api? filestore sync api? https://developer.chrome.com/apps/storage
+- Setting to enable formatting buttons/toolbar
 - Build quill?
 - https://github.com/quilljs/awesome-quille
 - Firefox/Opera/Brave/Safari/Edge
+- chrome sync api? filestore sync api? https://developer.chrome.com/apps/storage

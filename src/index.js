@@ -1,13 +1,34 @@
-// quill
-
-const noteDiv = document.querySelector('#note')
-
-const content = localStorage.getItem('note')
-if (content) {
-  noteDiv.innerHTML = content
+// localStorage wrapper
+function initLocalStorage (options) {
+  function getItem () {
+    let value = localStorage.getItem(options.key)
+    if (options.type === 'json') value = JSON.parse(value)
+    return value
+  }
+  function setItem (value) {
+    if (options.type === 'json') value = JSON.stringify(value)
+    localStorage.setItem(options.key, value)
+  }
+  if (getItem() === null) setItem(options.defaultValue) // set default
+  options.onUpdate(getItem()) // set value on pageload
+  options.get = getItem
+  options.set = (value) => {
+    setItem(value)
+    return options
+  }
+  options.update = (value) => {
+    if (options.onUpdate) options.onUpdate(value)
+    return options
+  }
+  // detect updates from other tabs
+  window.addEventListener('storage', (event) => {
+    if (event.key === options.key && options.onUpdate) options.onUpdate(getItem())
+  }, false)
+  return options
 }
 
-const quill = new Quill(noteDiv, {
+// quill
+const quill = new Quill(document.querySelector('#note'), {
   modules: {
     toolbar: { container: '#toolbar-container' },
     history: {
@@ -19,12 +40,19 @@ const quill = new Quill(noteDiv, {
   placeholder: 'Maybe I\'ll have a todo list here?'
 })
 
-function save () {
-  localStorage.setItem('note', quill.container.innerHTML)
-  localStorage.setItem('noteTime', new Date().toString())
-}
+const delta = initLocalStorage({
+  key: 'quill-delta',
+  defaultValue: { ops: [] },
+  type: 'json',
+  onUpdate: (delta) => {
+    console.log(delta)
+    quill.setContents(delta)
+  }
+})
 
-quill.on('text-change', save)
+quill.on('text-change', () => {
+  delta.set(quill.getContents())
+})
 
 // add old taskler tasks into quill
 if (localStorage.getItem('items') !== null) {
@@ -83,41 +111,16 @@ if (!isExtension) {
   if (isChrome) document.getElementById('chrome-extension-icon').classList.add('visible')
 }
 
-// localStorage wrapper
-function initLocalStorage (options) {
-  if (localStorage.getItem(options.key) === null) {
-    localStorage.setItem(options.key, options.defaultValue) // set default
-  }
-  options.onUpdate(localStorage.getItem(options.key)) // set value on pageload
-  options.get = () => {
-    return localStorage.getItem(options.key)
-  }
-  options.set = (value) => {
-    if (options.onUpdate) options.onUpdate(value)
-    localStorage.setItem(options.key, value)
-  }
-  // detect updates from other tabs
-  function onStorage (event) {
-    if (event.key === options.key) options.onUpdate(value)
-  }
-  if (window.addEventListener) {
-    window.addEventListener('storage', onStorage, false)
-  } else {
-    window.attachEvent('onstorage', onStorage)
-  }
-  return options
-}
-
 const darkModeInput = document.querySelector('#dark-mode-checkbox')
 const darkMode = initLocalStorage({
   key: 'dark-mode',
   defaultValue: 'false',
-  onUpdate: (darkMode) => {
-    if (darkMode === 'false') {
+  onUpdate: (newDarkMode) => {
+    if (newDarkMode === 'false') {
       body.classList.remove('dark-mode')
       body.classList.add('light-mode')
       darkModeInput.checked = false
-    } else if (darkMode === 'true') {
+    } else if (newDarkMode === 'true') {
       body.classList.remove('light-mode')
       body.classList.add('dark-mode')
       darkModeInput.checked = true
@@ -125,8 +128,8 @@ const darkMode = initLocalStorage({
   }
 })
 darkModeInput.addEventListener('change', (e) => {
-  if (darkModeInput.checked) darkMode.set('true')
-  else darkMode.set('false')
+  if (darkModeInput.checked) darkMode.set('true').update()
+  else darkMode.set('false').update()
 })
 
 // settingsDialog
