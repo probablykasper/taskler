@@ -16,8 +16,8 @@ function initLocalStorage (options) {
     setItem(value)
     return options
   }
-  options.update = (value) => {
-    if (options.onUpdate) options.onUpdate(value)
+  options.update = () => {
+    if (options.onUpdate) options.onUpdate(getItem())
     return options
   }
   // detect updates from other tabs
@@ -30,12 +30,14 @@ function initLocalStorage (options) {
 // quill
 const quill = new Quill(document.querySelector('#note'), {
   modules: {
+    // toolbar: ['bold', 'italic', 'underline', 'strike', 'align'],
     toolbar: { container: '#toolbar-container' },
+    // magicUrl: true,
     history: {
       maxStack: 1000
     }
   },
-  formats: ['bold', 'italic', 'underline'],
+  formats: ['bold', 'italic', 'underline', 'strike', 'align'],
   theme: 'snow',
   placeholder: 'Maybe I\'ll have a todo list here?'
 })

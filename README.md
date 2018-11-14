@@ -22,6 +22,6 @@ Pug files receive an `isExtension` variable. Add the `--extension` flag to the `
 # ToDo
 - Setting to enable formatting buttons/toolbar
 - Build quill?
-- https://github.com/quilljs/awesome-quille
+- https://github.com/quilljs/awesome-quill
 - Firefox/Opera/Brave/Safari/Edge
 - chrome sync api? filestore sync api? https://developer.chrome.com/apps/storage
