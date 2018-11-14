@@ -177,13 +177,15 @@ $icon-size: 24px
         margin: 0px
         padding-left: 5px
         cursor: pointer
+$editor-padding-vertical: 12px
+$editor-padding-horizontal: 15px
+$center-padding-vertical: 25px
+$center-padding-horizontal: ($icon-margin*2 + $icon-padding*2 + $icon-size - $editor-padding-horizontal)
 .center
   position: fixed
   overflow-y: auto
-  $center-padding-vertical: 25px
-  $center-padding-horizontal: ($icon-margin + $icon-padding + $icon-size)
-  width: calc(100% - #{$center-padding-vertical}*2)
-  height: calc(100% - #{$center-padding-horizontal}*2)
+  width: calc(100% - #{$center-padding-horizontal}*2)
+  height: calc(100% - #{$center-padding-vertical}*2)
   padding: $center-padding-vertical $center-padding-horizontal
   display: flex
   flex-direction: column
@@ -200,25 +202,25 @@ $icon-size: 24px
       background-color: rgba(#ffffff, 0.05)
     &.visible
       display: block
-    .ql-picker-label
-      outline: none
-      transition: color $transition-color
-      .light-mode &
-        color: lighten($dark-bgcolor, 25%)
-      .dark-mode &
-        color: darken($light-bgcolor, 25%)
-    button .ql-fill
-      transition: fill $transition-color
-      .light-mode &
-        fill: lighten($dark-bgcolor, 25%)
-      .dark-mode &
-        fill: darken($light-bgcolor, 25%)
-    button .ql-stroke
-      transition: stroke $transition-color
-      .light-mode &
-        stroke: lighten($dark-bgcolor, 25%)
-      .dark-mode &
-        stroke: darken($light-bgcolor, 25%)
+    // .ql-picker-label
+    //   outline: none
+    //   transition: color $transition-color
+    //   .light-mode &
+    //     color: lighten($dark-bgcolor, 25%)
+    //   .dark-mode &
+    //     color: darken($light-bgcolor, 25%)
+    // button .ql-fill
+    //   transition: fill $transition-color
+    //   .light-mode &
+    //     fill: lighten($dark-bgcolor, 25%)
+    //   .dark-mode &
+    //     fill: darken($light-bgcolor, 25%)
+    // button .ql-stroke
+    //   transition: stroke $transition-color
+    //   .light-mode &
+    //     stroke: lighten($dark-bgcolor, 25%)
+    //   .dark-mode &
+    //     stroke: darken($light-bgcolor, 25%)
   #note
     height: auto
     min-width: 500px
@@ -229,6 +231,7 @@ $icon-size: 24px
     font-size: 15px
     border: none
     .ql-editor
+      padding: $editor-padding-vertical $editor-padding-horizontal
       &::before
         transition: color $transition-color
         .light-mode &

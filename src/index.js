@@ -1,16 +1,15 @@
 // localStorage wrapper
 function initLocalStorage (options) {
   function getItem () {
-    let value = localStorage.getItem(options.key)
-    if (options.type === 'json') value = JSON.parse(value)
-    return value
+    return JSON.parse(localStorage.getItem(options.key))
   }
   function setItem (value) {
-    if (options.type === 'json') value = JSON.stringify(value)
-    localStorage.setItem(options.key, value)
+    localStorage.setItem(options.key, JSON.stringify(value))
   }
-  if (getItem() === null) setItem(options.defaultValue) // set default
-  options.onUpdate(getItem()) // set value on pageload
+  if (localStorage.getItem(options.key) === null) {
+    setItem(options.defaultValue) // set default
+  }
+  if (options.onUpdate) options.onUpdate(getItem()) // set value on pageload
   options.get = getItem
   options.set = (value) => {
     setItem(value)
@@ -45,9 +44,7 @@ const quill = new Quill(document.querySelector('#note'), {
 const delta = initLocalStorage({
   key: 'quill-delta',
   defaultValue: { ops: [] },
-  type: 'json',
   onUpdate: (delta) => {
-    console.log(delta)
     quill.setContents(delta)
   }
 })
@@ -116,42 +113,44 @@ if (!isExtension) {
 const darkModeCheckbox = document.querySelector('#dark-mode-checkbox')
 const darkMode = initLocalStorage({
   key: 'dark-mode',
-  defaultValue: 'false',
+  defaultValue: false,
   onUpdate: (newDarkMode) => {
-    if (newDarkMode === 'false') {
+    if (newDarkMode === false) {
       body.classList.remove('dark-mode')
       body.classList.add('light-mode')
-      darkModeCheckbox.checked = false
-    } else if (newDarkMode === 'true') {
+      if (darkModeCheckbox.checked === true) darkModeCheckbox.checked = false
+    } else if (newDarkMode === true) {
       body.classList.remove('light-mode')
       body.classList.add('dark-mode')
-      darkModeCheckbox.checked = true
+      if (darkModeCheckbox.checked === false) darkModeCheckbox.checked = true
     }
   }
 })
 darkModeCheckbox.addEventListener('change', (e) => {
-  if (darkModeCheckbox.checked) darkMode.set('true').update()
-  else darkMode.set('false').update()
+  if (darkModeCheckbox.checked) darkMode.set(true).update()
+  else darkMode.set(false).update()
 })
 
 const toolbarCheckbox = document.querySelector('#toolbar-checkbox')
 const toolbar = document.querySelector('.ql-toolbar')
 const toolbarSetting = initLocalStorage({
   key: 'toolbar',
-  defaultValue: 'false',
+  defaultValue: false,
   onUpdate: (newToolbarSetting) => {
-    if (newToolbarSetting === 'true') {
+    console.log('new:',newToolbarSetting)
+    if (newToolbarSetting === true) {
       toolbar.classList.add('visible')
-      toolbarCheckbox.checked = true
+      if (toolbarCheckbox.checked === true) toolbarCheckbox.checked = true
     } else {
       toolbar.classList.remove('visible')
-      toolbarCheckbox.checked = false
+      if (toolbarCheckbox.checked === false) toolbarCheckbox.checked = false
     }
   }
 })
 toolbarCheckbox.addEventListener('change', (e) => {
-  if (toolbarCheckbox.checked) toolbarSetting.set('true').update()
-  else toolbarSetting.set('false').update()
+  console.log(e)
+  if (toolbarCheckbox.checked) toolbarSetting.set(true).update()
+  else toolbarSetting.set(false).update()
 })
 
 // settingsDialog

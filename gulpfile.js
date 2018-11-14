@@ -96,32 +96,24 @@ gulp.task('css:watch', () => {
     .pipe(gulp.dest(dest))
 })
 
-const babel = require('gulp-babel')
-const uglify = require('gulp-uglify')
-gulp.task('js', () => {
-  return gulp.src(jsSrc)
-    .pipe(plumber())
-    .pipe(sourcemaps.init())
-    .pipe(babel({
-      presets: ['env'],
-      compact: false
-    }))
-    .pipe(uglify())
-    .pipe(sourcemaps.write(''))
-    .pipe(gulp.dest(dest))
+async function jsBundler (options = {}) {
+  const Bundler = require('parcel-bundler')
+  await new Bundler(jsSrc, {
+    outDir: dest,
+    target: 'browser',
+    logLevel: 2, // 3 = log everything, 2 = log warnings & errors, 1 = log errors
+    hmr: false,
+    sourceMaps: true,
+    minify: true,
+    watch: options.watch || false
+  }).bundle()
+}
+gulp.task('js', async () => {
+  await jsBundler({ watch: false })
 })
 
-gulp.task('js:watch', () => {
-  return watch(jsSrc, { ignoreInitial: true })
-    .pipe(plumber())
-    .pipe(sourcemaps.init())
-    .pipe(babel({
-      presets: ['env'],
-      compact: false
-    }))
-    .pipe(uglify())
-    .pipe(sourcemaps.write(''))
-    .pipe(gulp.dest(dest))
+gulp.task('js:watch', async () => {
+  await jsBundler({ watch: true })
 })
 
 const path = require('path')
