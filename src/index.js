@@ -31,13 +31,13 @@ function initLocalStorage (options) {
 const quill = new Quill(document.querySelector('#note'), {
   modules: {
     // toolbar: ['bold', 'italic', 'underline', 'strike', 'align'],
-    toolbar: { container: '#toolbar-container' },
+    // toolbar: { container: '#toolbar-container' },
     // magicUrl: true,
     history: {
       maxStack: 1000
     }
   },
-  formats: ['bold', 'italic', 'underline', 'strike', 'align'],
+  // formats: ['bold', 'italic', 'underline', 'strike', 'align'],
   theme: 'snow',
   placeholder: 'Maybe I\'ll have a todo list here?'
 })
@@ -113,7 +113,7 @@ if (!isExtension) {
   if (isChrome) document.getElementById('chrome-extension-icon').classList.add('visible')
 }
 
-const darkModeInput = document.querySelector('#dark-mode-checkbox')
+const darkModeCheckbox = document.querySelector('#dark-mode-checkbox')
 const darkMode = initLocalStorage({
   key: 'dark-mode',
   defaultValue: 'false',
@@ -121,17 +121,37 @@ const darkMode = initLocalStorage({
     if (newDarkMode === 'false') {
       body.classList.remove('dark-mode')
       body.classList.add('light-mode')
-      darkModeInput.checked = false
+      darkModeCheckbox.checked = false
     } else if (newDarkMode === 'true') {
       body.classList.remove('light-mode')
       body.classList.add('dark-mode')
-      darkModeInput.checked = true
+      darkModeCheckbox.checked = true
     }
   }
 })
-darkModeInput.addEventListener('change', (e) => {
-  if (darkModeInput.checked) darkMode.set('true').update()
+darkModeCheckbox.addEventListener('change', (e) => {
+  if (darkModeCheckbox.checked) darkMode.set('true').update()
   else darkMode.set('false').update()
+})
+
+const toolbarCheckbox = document.querySelector('#toolbar-checkbox')
+const toolbar = document.querySelector('.ql-toolbar')
+const toolbarSetting = initLocalStorage({
+  key: 'toolbar',
+  defaultValue: 'false',
+  onUpdate: (newToolbarSetting) => {
+    if (newToolbarSetting === 'true') {
+      toolbar.classList.add('visible')
+      toolbarCheckbox.checked = true
+    } else {
+      toolbar.classList.remove('visible')
+      toolbarCheckbox.checked = false
+    }
+  }
+})
+toolbarCheckbox.addEventListener('change', (e) => {
+  if (toolbarCheckbox.checked) toolbarSetting.set('true').update()
+  else toolbarSetting.set('false').update()
 })
 
 // settingsDialog

@@ -1,4 +1,5 @@
 @import "variables.sass"
+@import "quill.sass"
 $dark-bgcolor: #272727
 $light-bgcolor: #fafafa
 $transition-color: $transition-long
@@ -7,7 +8,7 @@ body
 .no-transition
   *, ::before, ::after
     transition: none !important
-p, h1, span
+p, h1, #note
   font-family: Rubik
   transition: color $transition-color
   .light-mode &
@@ -30,11 +31,14 @@ p, h1, span
   flex-direction: column
   width: 100%
   height: 100%
+$icon-margin: 8px
+$icon-padding: 8px
+$icon-size: 24px
 .icons
   position: absolute
   top: 0px
   right: 0px
-  margin: 8px
+  margin: $icon-margin
   pointer-events: none
   .icon
     display: block
@@ -61,9 +65,9 @@ p, h1, span
       transform: translate(0px, -50%) 
     svg
       display: block
-      padding: 8px
-      width: 24px
-      height: 24px
+      padding: $icon-padding
+      width: $icon-size
+      height: $icon-size
       cursor: pointer
       transition: fill $transition-color
       .dark-mode &
@@ -173,17 +177,48 @@ p, h1, span
         margin: 0px
         padding-left: 5px
         cursor: pointer
-
-#toolbar-container
-  display: none
 .center
   position: fixed
   overflow-y: auto
-  $center-padding: 25px
-  width: calc(100% - #{$center-padding}*2)
-  height: calc(100% - #{$center-padding}*2)
-  padding: $center-padding
+  $center-padding-vertical: 25px
+  $center-padding-horizontal: ($icon-margin + $icon-padding + $icon-size)
+  width: calc(100% - #{$center-padding-vertical}*2)
+  height: calc(100% - #{$center-padding-horizontal}*2)
+  padding: $center-padding-vertical $center-padding-horizontal
   display: flex
+  flex-direction: column
+  div.ql-toolbar
+    display: none
+    margin-left: auto
+    margin-right: auto
+    border: none
+    border-radius: 5px
+    outline: none
+    .light-mode &
+      background-color: rgba(#000000, 0.05)
+    .dark-mode &
+      background-color: rgba(#ffffff, 0.05)
+    &.visible
+      display: block
+    .ql-picker-label
+      outline: none
+      transition: color $transition-color
+      .light-mode &
+        color: lighten($dark-bgcolor, 25%)
+      .dark-mode &
+        color: darken($light-bgcolor, 25%)
+    button .ql-fill
+      transition: fill $transition-color
+      .light-mode &
+        fill: lighten($dark-bgcolor, 25%)
+      .dark-mode &
+        fill: darken($light-bgcolor, 25%)
+    button .ql-stroke
+      transition: stroke $transition-color
+      .light-mode &
+        stroke: lighten($dark-bgcolor, 25%)
+      .dark-mode &
+        stroke: darken($light-bgcolor, 25%)
   #note
     height: auto
     min-width: 500px

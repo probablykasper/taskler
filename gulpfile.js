@@ -1,4 +1,4 @@
-const openBrowserWhenDevServerStarts = true
+const openBrowserWhenDevServerStarts = false
 
 const src = 'src'
 const dest = 'build'

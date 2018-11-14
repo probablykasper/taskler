@@ -4,13 +4,12 @@ html
     title Taskler
     link(href="https://fonts.googleapis.com/css?family=Rubik:400,500", rel="stylesheet")
     link(rel="stylesheet", type="text/css", href="index.css")
-    link(href="lib/quill.snow.css" rel="stylesheet")
+    //- link(href="lib/quill.snow.css" rel="stylesheet")
     meta(name='google-signin-scope' content='profile https://www.googleapis.com/auth/drive.appdata')
     meta(name='google-signin-client_id' content='1054692654202-fs72r7ejg1rmhga2gcme0bi82qr36duh.apps.googleusercontent.com')
   body.no-transition(data-is-extension=String(isExtension))
     .bg
     //- #toolbar-container(style='display:none')
-    #toolbar-container
     .center
       #note(spellcheck='false')
     .icons
@@ -30,6 +29,13 @@ html
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0V0z"/><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
           label(for='dark-mode-checkbox')
             p Dark mode
+        .checkbox-container.toolbar-checkbox
+          input(type='checkbox' id='toolbar-checkbox')
+          label.checkbox(for='toolbar-checkbox')
+            //- <svg viewBox="0 0 24 24"><path fill="none" stroke="white" d="M1.73,12.91 8.1,19.28 22.79,4.59"></path></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0V0z"/><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+          label(for='toolbar-checkbox')
+            p Toolbar
     <script src="lib/quill.min.js"></script>
     script(src='index.js')
 
