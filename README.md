@@ -12,15 +12,13 @@ Taskler is a simple website and browser extension where you can write down stuff
 
 ### Commands
 Pug files receive an `isExtension` variable. Add the `--extension` flag to the `gulp` command to set it to true.
-- `gulp`: Starts the dev server at localhost:3000, compiles `/src` and watches for changes. Alias for `gulp watch server`.
-- `gulp build`: Deletes `/build` and compiles `/src` into `/build`. It compiles pug into html, sass into css, js using babel. It also adds sourcemaps and autoprefixes css.
-- `gulp watch`: Build and watch for changes.
-- `gulp server`: Start dev server at localhost:3000.
-- `gulp deploy`: Build and deploy the website to GitHub Pages (/docs folder).
-- `gulp zip`: Build and zip the extension into `/dist`, ready to upload to Chrome Web Store. You'll be prompted to type in a new version.
+- `gulp`: Shorthand for `gulp website`.
+- `gulp website`: Build `/src` in website mode, watche for changes and start dev server at http://localhost:1234.
+- `gulp extension`: Build `/src` in extension mode, watche for changes and start dev server at http://localhost:1234.
+- `gulp website:deploy`: Build `/src` in website mode and deploy to `/docs` folder (GitHub Pages).
+- `gulp extension:zip`: Build `/src` in extension mode and create a zip in `/dist`, ready to upload to Chrome Web Store. You'll be prompted to type in a new version.
 
 # ToDo
-- Setting to enable formatting buttons/toolbar
 - https://github.com/quilljs/awesome-quill
 - Firefox/Opera/Brave/Safari/Edge
 - chrome sync api? filestore sync api? https://developer.chrome.com/apps/storage

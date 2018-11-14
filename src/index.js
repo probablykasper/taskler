@@ -21,12 +21,13 @@ function initLocalStorage (options) {
   }
   // detect updates from other tabs
   window.addEventListener('storage', (event) => {
+    console.log('stor', event)
     if (event.key === options.key && options.onUpdate) options.onUpdate(getItem())
   }, false)
   return options
 }
 
-// quill
+import Quill from '~/lib/quill.js'
 const quill = new Quill(document.querySelector('#note'), {
   modules: {
     // toolbar: ['bold', 'italic', 'underline', 'strike', 'align'],

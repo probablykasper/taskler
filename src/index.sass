@@ -1,5 +1,5 @@
 @import "variables.sass"
-@import "quill.sass"
+@import "~/lib/quill.snow.css"
 $dark-bgcolor: #272727
 $light-bgcolor: #fafafa
 $transition-color: $transition-long
@@ -195,13 +195,15 @@ $center-padding-horizontal: ($icon-margin*2 + $icon-padding*2 + $icon-size - $ed
     margin-right: auto
     border: none
     border-radius: 5px
-    outline: none
     .light-mode &
       background-color: rgba(#000000, 0.05)
     .dark-mode &
       background-color: rgba(#ffffff, 0.05)
     &.visible
       display: block
+    .ql-picker-label
+      border: none
+      outline: none
     // .ql-picker-label
     //   outline: none
     //   transition: color $transition-color

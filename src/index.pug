@@ -3,8 +3,8 @@ html
   head
     title Taskler
     link(href="https://fonts.googleapis.com/css?family=Rubik:400,500", rel="stylesheet")
-    link(rel="stylesheet", type="text/css", href="index.css")
-  body.no-transition(data-is-extension=String(isExtension))
+    link(rel="stylesheet", type="text/css", href="index.sass")
+  body.no-transition(data-build-as=String(buildAs))
     .bg
     //- #toolbar-container(style='display:none')
     .center
@@ -33,6 +33,5 @@ html
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0V0z"/><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
           label(for='toolbar-checkbox')
             p Toolbar
-    <script src="lib/quill.min.js"></script>
     script(src='index.js')
 
