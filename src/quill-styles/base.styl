@@ -36,7 +36,7 @@ colorItemsPerRow = 7
     display: none
 
   button:hover, button:focus, button.ql-active,
-  .ql-picker-label:hover, .ql-picker-label.ql-active,
+  .ql-picker-label:hover,
   .ql-picker-item:hover, .ql-picker-item.ql-selected
     // color: activeColor
     opacity: 1
@@ -198,12 +198,13 @@ colorItemsPerRow = 7
       padding-top: 5px
   .ql-picker.ql-expanded
     .ql-picker-label
-      color: borderColor
+      color: var(--color)
+      opacity: 1
       z-index: 2
       .ql-fill
-        fill: borderColor
+        fill: var(--color)
       .ql-stroke
-        stroke: borderColor
+        stroke: var(--color)
     .ql-picker-options
       display: block
       margin-top: -1px
@@ -229,6 +230,7 @@ colorItemsPerRow = 7
       width: (colorItemSize + 2*colorItemMargin) * colorItemsPerRow + 2*inputPaddingWidth + 2  // +2 for the border
     .ql-picker-item
       border: 1px solid transparent
+      border-radius: 5px
       float: left
       height: colorItemSize
       margin: colorItemMargin
@@ -242,6 +244,7 @@ colorItemsPerRow = 7
       right: 0
       top: 50%
       width: 18px
+      height: 18px
 
   .ql-picker.ql-header, .ql-picker.ql-font, .ql-picker.ql-size
     .ql-picker-label[data-label]:not([data-label='']),

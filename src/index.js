@@ -124,7 +124,7 @@ const darkMode = initLocalStorage({
       // body.classList.add('light-mode')
       cssVars({ variables: {
         bgcolor: '#fafafa',
-        'bgcolor-overlay': '#2727270c',
+        'bgcolor-overlay': '#F0F0F0',
         color: '#272727',
       }})
       if (darkModeCheckbox.checked === true) darkModeCheckbox.checked = false
@@ -133,7 +133,7 @@ const darkMode = initLocalStorage({
       // body.classList.add('dark-mode')
       cssVars({ variables: {
         bgcolor: '#272727',
-        'bgcolor-overlay': '#fafafa0c',
+        'bgcolor-overlay': '#313131',
         color: '#fafafa',
       }})
       if (darkModeCheckbox.checked === false) darkModeCheckbox.checked = true
@@ -151,13 +151,12 @@ const toolbarSetting = initLocalStorage({
   key: 'toolbar',
   defaultValue: false,
   onUpdate: (newToolbarSetting) => {
-    console.log('new:',newToolbarSetting)
     if (newToolbarSetting === true) {
       toolbar.classList.add('visible')
-      if (toolbarCheckbox.checked === true) toolbarCheckbox.checked = true
+      if (toolbarCheckbox.checked === false) toolbarCheckbox.checked = true
     } else {
       toolbar.classList.remove('visible')
-      if (toolbarCheckbox.checked === false) toolbarCheckbox.checked = false
+      if (toolbarCheckbox.checked === true) toolbarCheckbox.checked = false
     }
   }
 })
