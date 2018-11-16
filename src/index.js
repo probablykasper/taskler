@@ -1,3 +1,6 @@
+import cssVars from 'css-vars-ponyfill'
+cssVars()
+
 // localStorage wrapper
 function initLocalStorage (options) {
   function getItem () {
@@ -117,12 +120,22 @@ const darkMode = initLocalStorage({
   defaultValue: false,
   onUpdate: (newDarkMode) => {
     if (newDarkMode === false) {
-      body.classList.remove('dark-mode')
-      body.classList.add('light-mode')
+      // body.classList.remove('dark-mode')
+      // body.classList.add('light-mode')
+      cssVars({ variables: {
+        bgcolor: '#fafafa',
+        'bgcolor-overlay': '#2727270c',
+        color: '#272727',
+      }})
       if (darkModeCheckbox.checked === true) darkModeCheckbox.checked = false
     } else if (newDarkMode === true) {
-      body.classList.remove('light-mode')
-      body.classList.add('dark-mode')
+      // body.classList.remove('light-mode')
+      // body.classList.add('dark-mode')
+      cssVars({ variables: {
+        bgcolor: '#272727',
+        'bgcolor-overlay': '#fafafa0c',
+        color: '#fafafa',
+      }})
       if (darkModeCheckbox.checked === false) darkModeCheckbox.checked = true
     }
   }

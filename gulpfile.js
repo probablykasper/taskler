@@ -21,11 +21,12 @@ async function bundle (options) {
     cache: false, // turned off because pug.config.js output gets cached
     logLevel: 3, // 3 = log everything, 2 = log warnings & errors, 1 = log errors
     hmr: false,
-    // sourceMaps: true,
+    sourceMaps: true,
     minify: false, // because sourcemaps aren't supported when minify is enabled
     watch: options.watch,
   })
-  if (options.watch) return bundler.serve(devServerPort)
+  options.server = false
+  if (options.server) return bundler.serve(devServerPort)
   else return bundler.bundle()
 }
 gulp.task('website:bundle', () => {
@@ -51,14 +52,15 @@ gulp.task('server', () => {
     server: {
       baseDir: dest
     },
+    port: devServerPort,
     files: './src',
     open: openBrowserWhenDevServerStarts
   })
 })
 
-gulp.task('default', gulp.series('website:bundle:watch'))
-gulp.task('website', gulp.series('website:bundle:watch'))
-gulp.task('extension', gulp.series('extension:bundle:watch'))
+gulp.task('default', gulp.parallel('website:bundle:watch', 'server'))
+gulp.task('website', gulp.parallel('website:bundle:watch', 'server'))
+gulp.task('extension', gulp.parallel('extension:bundle:watch', 'server'))
 
 gulp.task('website:deploy', async () => {
   del.sync(websiteDeploy)
