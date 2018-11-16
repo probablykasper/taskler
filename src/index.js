@@ -33,14 +33,21 @@ function initLocalStorage (options) {
 import Quill from '~/lib/quill.js'
 const quill = new Quill(document.querySelector('#note'), {
   modules: {
-    // toolbar: ['bold', 'italic', 'underline', 'strike', 'align'],
+    toolbar: [
+      [{header: [1, 2, false]}],
+      ['bold', 'italic', 'underline', 'strike'],
+      [{list: 'bullet'}, {list: 'ordered'}],
+      [{ 'align': [] }],
+      ['link'],
+      ['clean']
+    ],
     // toolbar: { container: '#toolbar-container' },
-    // magicUrl: true,
+    magicUrl: true,
     history: {
       maxStack: 1000
     }
   },
-  // formats: ['bold', 'italic', 'underline', 'strike', 'align'],
+  // formats: ['header'],
   theme: 'snow',
   placeholder: 'Maybe I\'ll have a todo list here?'
 })

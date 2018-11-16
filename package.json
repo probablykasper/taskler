@@ -17,6 +17,7 @@
     "parcel-plugin-inlinesvg": "0.0.14",
     "pug": "^2.0.3",
     "quill": "^1.3.6",
+    "quill-magic-url": "^1.0.0",
     "sass": "^1.14.3",
     "stylus": "^0.54.5"
   }
