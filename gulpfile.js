@@ -52,6 +52,7 @@ gulp.task('server', () => {
     server: {
       baseDir: dest
     },
+    ghostMode: false, // disables interactions syncing between tabs, like clicks
     port: devServerPort,
     files: './src',
     open: openBrowserWhenDevServerStarts
