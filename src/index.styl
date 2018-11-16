@@ -2,24 +2,27 @@
 @import '~/quill-styles/snow.styl'
 body
   margin: 0px
+  transition: background-color transition-color
+  background-color var(--bgcolor)
 .no-transition
+  transition: none !important
   *, ::before, ::after
     transition: none !important
 p, h1, #note
   font-family: Rubik
   transition: color transition-color
   color: var(--color)
-.bg
-  transition: background-color transition-color
-  background-color var(--bgcolor)
-  min-height: 1000px
-  transform: translateY(-50%)
-  top: 50%
-  display: flex
-  position: fixed
-  flex-direction: column
-  width: 100%
-  height: 100%
+// .bg
+//   transition: background-color transition-color
+//   background-color var(--bgcolor)
+//   min-height: 1000px
+//   transform: translateY(-50%)
+//   top: 50%
+//   display: flex
+//   position: fixed
+//   flex-direction: column
+//   width: 100%
+//   height: 100%
 icon-margin = 8px
 icon-padding = 8px
 icon-size = 24px
@@ -124,10 +127,10 @@ icon-size = 24px
           border: 2px solid
           border-color: var(--color)
           border-radius: 2px
-          transition: background-color transition-color, opacity transition, transform transition
+          transition: border-color transition-color, opacity transition, transform transition
         svg
           display: block
-          transition: background-color transition-color, opacity transition, transform transition
+          transition: fill transition-color, opacity transition, transform transition
           width: 100%
           height: 100%
           opacity: 0
@@ -148,7 +151,7 @@ icon-size = 24px
 editor-padding-vertical = 12px
 editor-padding-horizontal = 15px
 center-padding-vertical = 25px
-center-padding-horizontal = icon-margin * 2 + icon-padding * 2 + icon-size - editor-padding-horizontal
+center-padding-horizontal = icon-margin * 2 + icon-padding * 2 + icon-size
 .center
   position: fixed
   overflow-y: auto
@@ -161,8 +164,10 @@ center-padding-horizontal = icon-margin * 2 + icon-padding * 2 + icon-size - edi
     display: none
     margin-left: auto
     margin-right: auto
+    margin-bottom: 15px
     border-radius: 5px
     background-color: var(--bgcolor-overlay)
+    transition: background-color transition-color
     &.visible
       display: block
     .ql-picker-label
@@ -176,7 +181,10 @@ center-padding-horizontal = icon-margin * 2 + icon-padding * 2 + icon-size - edi
     font-family: 'Rubik'
     font-size: 15px
     .ql-editor
-      padding: editor-padding-vertical editor-padding-horizontal
+      background-color: var(--bgcolor-overlay)
+      transition: background-color transition-color
+      // padding: editor-padding-vertical editor-padding-horizontal
+      // margin: editor-padding-vertical editor-padding-horizontal
       &::before
         transition: color transition-color
         color: var(--color)

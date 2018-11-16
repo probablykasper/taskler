@@ -168,7 +168,6 @@ const toolbarSetting = initLocalStorage({
   }
 })
 toolbarCheckbox.addEventListener('change', (e) => {
-  console.log(e)
   if (toolbarCheckbox.checked) toolbarSetting.set(true).update()
   else toolbarSetting.set(false).update()
 })
@@ -177,10 +176,7 @@ toolbarCheckbox.addEventListener('change', (e) => {
 const settingsIcon = document.querySelector('.settings')
 const dialog = document.querySelector('.settings-dialog')
 settingsIcon.addEventListener('click', () => {
-  // document.activeElement && document.activeElement.blur()
-  dialog.click()
   dialog.classList.add('visible')
-  settingsIcon.blur()
 })
 
 document.addEventListener('click', function (e) {

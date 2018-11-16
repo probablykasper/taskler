@@ -51,12 +51,15 @@ colorItemsPerRow = 7
 
   button, .ql-picker-label, .ql-picker-item
     color: var(--color)
+    transition: color transition-color
     opacity: 0.4
     outline: none
     .ql-fill, .ql-stroke.ql-fill
       fill: var(--color)
+      transition: fill transition-color
     .ql-stroke, .ql-stroke-miter
       stroke: var(--color)
+      transition: stroke transition-color
     svg
       width: 100%
 
@@ -189,7 +192,8 @@ colorItemsPerRow = 7
       display: inline-block
       line-height: 22px
   .ql-picker-options
-    background-color: backgroundColor
+    background-color: var(--bgcolor-overlay)
+    transition: background-color transition-color
     display: none
     min-width: 100%
     padding: 4px 8px
@@ -203,12 +207,15 @@ colorItemsPerRow = 7
   .ql-picker.ql-expanded
     .ql-picker-label
       color: var(--color)
+      transition: color transition-color
       opacity: 1
       z-index: 2
       .ql-fill
         fill: var(--color)
+        transition: color transition-color
       .ql-stroke
         stroke: var(--color)
+        transition: color transition-color
     .ql-picker-options
       display: block
       margin-top: -1px
