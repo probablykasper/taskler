@@ -1,28 +1,32 @@
-const src = 'src/**/*'
-const manifestPath = 'src/manifest.json'
-const dest = 'build'
-const websiteDeploy = 'docs'
-const extensionZipSrc = 'build/**/*'
-const extensionZipDest = 'dist'
 const devServerPort = 1234
 const openBrowserWhenDevServerStarts = false
+
+const buildSrc = 'src/**/*'
+const buildDest = 'build'
+
+const websiteDeploy = 'docs'
+
+const extensionZipSrc = 'build/**/*'
+const extensionZipDest = 'dist'
+const extensionManifest = 'src/manifest.json'
+const extensionName = (manifest) => `${manifest.name}-${manifest.version}-chrome.zip`
 
 require('clarify') // hides nodecore from stack trace
 const gulp = require('gulp')
 const del = require('del')
 
 async function bundle (options) {
-  del.sync(dest)
+  del.sync(buildDest)
   const Bundler = require('parcel-bundler')
   process.env.BUILD_AS = options.buildAs
-  const bundler = new Bundler(src, {
-    outDir: dest,
+  const bundler = new Bundler(buildSrc, {
+    outDir: buildDest,
     target: 'browser',
     cache: false, // turned off because pug.config.js output gets cached
     logLevel: 3, // 3 = log everything, 2 = log warnings & errors, 1 = log errors
     hmr: false,
     sourceMaps: true,
-    minify: false, // because sourcemaps aren't supported when minify is enabled
+    minify: false, // needs to be false for sourcemaps to work
     watch: options.watch,
   })
   options.server = false
@@ -50,7 +54,7 @@ gulp.task('server', () => {
   const browserSync = require('browser-sync').create()
   return browserSync.init({
     server: {
-      baseDir: dest
+      baseDir: buildDest
     },
     ghostMode: false, // disables interactions syncing between tabs, like clicks
     port: devServerPort,
@@ -65,12 +69,12 @@ gulp.task('extension', gulp.parallel('extension:bundle:watch', 'server'))
 
 gulp.task('website:deploy', async () => {
   del.sync(websiteDeploy)
-  return gulp.src(dest)
+  return gulp.src(buildDest)
     .pipe(gulp.dest(websiteDeploy))
 })
 gulp.task('extension:zip', async () => {
   const fs = require('fs')
-  const manifest = JSON.parse(fs.readFileSync(manifestPath))
+  const manifest = JSON.parse(fs.readFileSync(extensionManifest))
   const inquirer = require('inquirer')
   const answers = await inquirer.prompt({
     type: 'input',
@@ -79,10 +83,10 @@ gulp.task('extension:zip', async () => {
     message: 'version:'
   })
   manifest.version = answers.version
-  fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2))
+  fs.writeFileSync(extensionManifest, JSON.stringify(manifest, null, 2))
   await bundle({ watch: false, buildAs: 'extension' })
   const zip = require('gulp-zip')
-  return gulp.src('build/**/*')
-    .pipe(zip(`${manifest.name}-${manifest.version}-chrome.zip`))
-    .pipe(gulp.dest('dist'))
+  return gulp.src(extensionZipSrc)
+    .pipe(zip(extensionName(manifest)))
+    .pipe(gulp.dest(extensionZipDest))
 })

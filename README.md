@@ -19,6 +19,6 @@ Pug files receive an `isExtension` variable. Add the `--extension` flag to the `
 - `gulp extension:zip`: Build `/src` in extension mode and create a zip in `/dist`, ready to upload to Chrome Web Store. You'll be prompted to type in a new version.
 
 # ToDo
-- https://github.com/quilljs/awesome-quill
 - Firefox/Opera/Brave/Safari/Edge
-- chrome sync api? filestore sync api? https://developer.chrome.com/apps/storage
+    Opera probably doesn't hae an option to replace the new tab page
+- Sync
