@@ -29,6 +29,7 @@ async function bundle (options) {
     minify: false, // needs to be false for sourcemaps to work
     watch: options.watch,
   })
+  bundler.addAssetType('.json', require.resolve('./JSONAsset.js'))
   options.server = false
   if (options.server) return bundler.serve(devServerPort)
   else return bundler.bundle()
