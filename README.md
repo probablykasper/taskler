@@ -16,9 +16,7 @@ Pug files receive an `isExtension` variable. Add the `--extension` flag to the `
 - `gulp website`: Build `/src` in website mode, watche for changes and start dev server at http://localhost:1234.
 - `gulp extension`: Build `/src` in extension mode, watche for changes and start dev server at http://localhost:1234.
 - `gulp website:deploy`: Build `/src` in website mode and deploy to `/docs` folder (GitHub Pages).
-- `gulp extension:zip`: Build `/src` in extension mode and create a zip in `/dist`, ready to upload to Chrome Web Store. You'll be prompted to type in a new version.
+- `gulp extension:zip`: Build `/src` in extension mode and create a zip in `/dist`, ready to be uploaded to Chrome Web Store and such. You'll be prompted to type in a new version.
 
 # ToDo
-- Firefox/Opera/Brave/Safari/Edge
-    Opera probably doesn't hae an option to replace the new tab page
 - Sync
