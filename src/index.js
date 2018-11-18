@@ -129,7 +129,7 @@ const delta = initLocalStorage({
   key: 'quill-delta',
   defaultValue: { ops: [] },
   onUpdate: (delta) => {
-    quill.setContents(delta)
+    quill.setContents(delta, 'silent')
   }
 })
 
