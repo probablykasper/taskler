@@ -9,7 +9,7 @@ const websiteDeploy = 'docs'
 const extensionZipSrc = 'build/**/*'
 const extensionZipDest = 'dist'
 const extensionManifest = 'src/manifest.json'
-const extensionName = (manifest) => `${manifest.name}-${manifest.version}-chrome.zip`
+const extensionName = (manifest) => `${manifest.name}-${manifest.version}-chrome-firefox.zip`
 
 require('clarify') // hides nodecore from stack trace
 const gulp = require('gulp')
