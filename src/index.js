@@ -30,8 +30,29 @@ function initLocalStorage (options) {
   return options
 }
 
+let autoList
+const autoListCheckbox = document.querySelector('#auto-list-checkbox')
+const autoListSetting = initLocalStorage({
+  key: 'auto-list',
+  defaultValue: false,
+  onUpdate: (newAutoListSetting) => {
+    if (newAutoListSetting === true) {
+      autoList = true
+      if (autoListCheckbox.checked === false) autoListCheckbox.checked = true
+    } else {
+      autoList = false
+      if (autoListCheckbox.checked === true) autoListCheckbox.checked = false
+    }
+  }
+})
+autoListCheckbox.addEventListener('change', (e) => {
+  if (autoListCheckbox.checked) autoListSetting.set(true).update()
+  else autoListSetting.set(false).update()
+})
+
 import Quill from '~/lib/quill.js'
-const quill = new Quill(document.querySelector('#note'), {
+import Delta from 'quill-delta';
+window.quill = new Quill(document.querySelector('#note'), {
   modules: {
     toolbar: [
       [{header: [1, 2, false]}],
@@ -41,6 +62,58 @@ const quill = new Quill(document.querySelector('#note'), {
       ['link'],
       ['clean']
     ],
+    keyboard: {
+      bindings: {
+        'list autofill': {
+          key: ' ',
+          shiftKey: null,
+          collapsed: true,
+          format: {
+            list: false,
+            'code-block': false,
+            blockquote: false,
+            header: false,
+            table: false,
+          },
+          prefix: /^\s*?(\d+\.|-|\*|\[ ?\]|\[x\])$/,
+          handler(range, context) {
+            if (!autoList) return true
+            // this is part of the default handler, but causes an error for some reason:
+            // if (this.quill.scroll.query('list') == null) return true;
+            const { length } = context.prefix;
+            const [line, offset] = this.quill.getLine(range.index);
+            if (offset > length) return true;
+            let value;
+            switch (context.prefix.trim()) {
+              case '[]':
+              case '[ ]':
+                value = 'unchecked';
+                break;
+              case '[x]':
+                value = 'checked';
+                break;
+              case '-':
+              case '*':
+                value = 'bullet';
+                break;
+              default:
+                value = 'ordered';
+            }
+            this.quill.insertText(range.index, ' ', Quill.sources.USER);
+            this.quill.history.cutoff();
+            const delta = new Delta()
+              .retain(range.index - offset)
+              .delete(length + 1)
+              .retain(line.length() - 2 - offset)
+              .retain(1, { list: value });
+            this.quill.updateContents(delta, Quill.sources.USER);
+            this.quill.history.cutoff();
+            this.quill.setSelection(range.index - length, Quill.sources.SILENT);
+            return false;
+          },
+        },
+      },
+    },
     // toolbar: { container: '#toolbar-container' },
     magicUrl: true,
     history: {
