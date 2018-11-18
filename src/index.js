@@ -203,18 +203,26 @@ const darkMode = initLocalStorage({
       // body.classList.remove('dark-mode')
       // body.classList.add('light-mode')
       cssVars({ variables: {
-        bgcolor: '#fafafa',
+        'bgcolor': '#fafafa',
         'bgcolor-overlay': '#F0F0F0',
-        color: '#272727',
+        'color': '#272727',
+
+        'logo-dark': '#272727',
+        'logo-mid': '#424242',
+        'logo-light': '#696969',
       }})
       if (darkModeCheckbox.checked === true) darkModeCheckbox.checked = false
     } else if (newDarkMode === true) {
       // body.classList.remove('light-mode')
       // body.classList.add('dark-mode')
       cssVars({ variables: {
-        bgcolor: '#272727',
+        'bgcolor': '#272727',
         'bgcolor-overlay': '#313131',
-        color: '#fafafa',
+        'color': '#fafafa',
+
+        'logo-dark': '#fafafa',
+        'logo-mid': '#bdbdbd',
+        'logo-light': '#969696',
       }})
       if (darkModeCheckbox.checked === false) darkModeCheckbox.checked = true
     }

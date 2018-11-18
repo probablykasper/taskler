@@ -1,3 +1,9 @@
+## 2.0.0 - 2018 Nov 18
+- Taskler is just a page with a text editor. That means Taskler is not a suitable name anymore.
+- Dark mode can be turned on in the settings.
+- The toolbar can be enabled in settings, if you want bold text and such.
+- There are shortcuts, like Ctrl+B/I/U for bold/italics/underline. Those are just from Quill, I didn't do anything.
+
 ## 1.3.1 - 2017 Dec 3
 - Updated GitHub pages HTML, so that Taskler actually works
 - No more unsynced changes popup when syncing is disabled

@@ -26,6 +26,8 @@ p, h1, #note
 icon-margin = 8px
 icon-padding = 8px
 icon-size = 24px
+#__bs_notify__
+  opacity: 0 !important
 .icons
   position: absolute
   top: 0px
@@ -36,6 +38,13 @@ icon-size = 24px
     display: block
     pointer-events: all
     position: relative
+    &.settings svg
+      .logo-dark
+        stop-color: var(--logo-dark)
+      .logo-mid
+        stop-color: var(--logo-mid)
+      .logo-light
+        stop-color: var(--logo-light)
     .tooltip
       font-size: 14px
       color: var(--color)
