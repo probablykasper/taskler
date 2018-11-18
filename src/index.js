@@ -179,7 +179,7 @@ if (!isExtension) {
   // Opera 8.0+
   // const isOpera = (!!window.opr && !!opr.addons) || !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0
   // Firefox 1.0+
-  // const isFirefox = typeof InstallTrigger !== 'undefined';
+  const isFirefox = typeof InstallTrigger !== 'undefined';
   // Safari 3.0+ "[object HTMLElementConstructor]"
   // const isSafari = /constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari'] || (typeof safari !== 'undefined' && safari.pushNotification))
   // Internet Explorer 6-11
@@ -192,6 +192,7 @@ if (!isExtension) {
   // const isBlink = (isChrome || isOpera) && !!window.CSS
 
   if (isChrome) document.getElementById('chrome-extension-icon').classList.add('visible')
+  if (isFirefox) document.getElementById('firefox-extension-icon').classList.add('visible')
 }
 
 const darkModeCheckbox = document.querySelector('#dark-mode-checkbox')
