@@ -12,6 +12,9 @@ p, h1, #note
   font-family: Rubik
   transition: color transition-color
   color: var(--color)
+activeColor = #006edc
+a
+  color: activeColor
 // .bg
 //   transition: background-color transition-color
 //   background-color var(--bgcolor)
@@ -26,8 +29,6 @@ p, h1, #note
 icon-margin = 8px
 icon-padding = 8px
 icon-size = 24px
-#__bs_notify__
-  opacity: 0 !important
 .icons
   position: absolute
   top: 0px
@@ -105,6 +106,11 @@ icon-size = 24px
       font-size: 20px
       margin-top: 0px
       margin-bottom: 15px
+    h1:not(:first-child)
+      margin-top: 25px
+    p
+      margin-top: 0px
+      margin-bottom: 5px
     .checkbox-container
       display: flex
       align-items: center

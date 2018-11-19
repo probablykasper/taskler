@@ -30,9 +30,7 @@ async function bundle (options) {
     watch: options.watch,
   })
   bundler.addAssetType('.json', require.resolve('./JSONAsset.js'))
-  options.server = false
-  if (options.server) return bundler.serve(devServerPort)
-  else return bundler.bundle()
+  return bundler.bundle()
 }
 gulp.task('website:bundle', () => {
   return bundle({ watch: false, buildAs: 'website' })
