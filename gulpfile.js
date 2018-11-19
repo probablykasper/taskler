@@ -3,6 +3,7 @@ const openBrowserWhenDevServerStarts = false
 
 const buildSrc = 'src/**/*'
 const buildDest = 'build'
+const buildDestFiles = 'build/**/*'
 
 const websiteDeploy = 'docs'
 
@@ -69,7 +70,7 @@ gulp.task('extension', gulp.parallel('extension:bundle:watch', 'server'))
 gulp.task('website:deploy', async () => {
   await bundle({ watch: false, buildAs: 'website' })
   del.sync(websiteDeploy)
-  return gulp.src(buildDest)
+  return gulp.src(buildDestFiles)
     .pipe(gulp.dest(websiteDeploy))
 })
 gulp.task('extension:zip', async () => {
