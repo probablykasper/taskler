@@ -1,3 +1,6 @@
+## 2.0.1 Firefox - 2018 Nov 19
+- Made extension icons square, to support Firefox.
+
 ## 2.0.0 - 2018 Nov 19
 - Taskler is just a page with a text editor. That means Taskler is not a suitable name anymore.
 - Dark mode can be turned on in the settings.
