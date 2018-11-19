@@ -1,7 +1,12 @@
-# Taskler
-Taskler is a simple website and browser extension where you can write down stuff.
+<h1 align="center">
+  Taskler
+</h1>
+<p align="center">
+  <a href="https://taskler.kasp.io/" title="Taskler"><img alt="Quill Logo" src="https://raw.githubusercontent.com/SpectralKH/taskler/9363a32916f6f0f7316528c92a7df265a5b53d62/logo/logo.png" width="180"></a>
+</p>
+Taskler is a simple text editor web page. It's available as a [website](https://taskler.kasp.io/), [Chrome Extension](https://chrome.google.com/webstore/detail/jnibmbpjkpfgaefgbnaneldfbfecpjih) and a [Firefox Extension](https://addons.mozilla.org/addon/taskler).
 
-[Website](https://taskler.kasp.io/) | [Chrome Extension](https://chrome.google.com/webstore/detail/jnibmbpjkpfgaefgbnaneldfbfecpjih) | [Firefox Extension](https://addons.mozilla.org/addon/taskler)
+Pro-tip: You can use shortcuts like ctrl/cmd + B, I, U for <b>bold</b>, <i>italics</i>, <u>underline</u>.
 
 # Dev Instructions
 
