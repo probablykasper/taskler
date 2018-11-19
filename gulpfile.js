@@ -67,6 +67,7 @@ gulp.task('website', gulp.parallel('website:bundle:watch', 'server'))
 gulp.task('extension', gulp.parallel('extension:bundle:watch', 'server'))
 
 gulp.task('website:deploy', async () => {
+  await bundle({ watch: false, buildAs: 'website' })
   del.sync(websiteDeploy)
   return gulp.src(buildDest)
     .pipe(gulp.dest(websiteDeploy))
