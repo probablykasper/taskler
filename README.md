@@ -4,9 +4,9 @@
 <p align="center">
   <a href="https://taskler.kasp.io/" title="Taskler"><img alt="Quill Logo" src="https://raw.githubusercontent.com/SpectralKH/taskler/9363a32916f6f0f7316528c92a7df265a5b53d62/logo/logo.png" width="180"></a>
 </p>
-Taskler is a simple text editor web page. It's available as a [website](https://taskler.kasp.io/), [Chrome Extension](https://chrome.google.com/webstore/detail/jnibmbpjkpfgaefgbnaneldfbfecpjih) and [Firefox Extension](https://addons.mozilla.org/addon/taskler).
+Taskler is a simple text editor web page. It's available as a <a href='https://taskler.kasp.io'>website</a>, <a href='https://chrome.google.com/webstore/detail/jnibmbpjkpfgaefgbnaneldfbfecpjih'>Chrome extension</a> and a <a href='https://addons.mozilla.org/addon/taskler'>Firefox extension</a>.
 
-Pro-tip: You can use shortcuts like ctrl/cmd + B, I, U for <b>bold</b>, <i>italics</i>, <u>underline</u>.
+You can use shortcuts like cmd+B for <b>bold</b>, cmd+<i>I</i> for italics, cmd+U for <u>underline</u> and cmd+K for <a href='https://www.youtube.com/watch?v=LDU_Txk06tM'>links</a>.
 
 # Dev Instructions
 
