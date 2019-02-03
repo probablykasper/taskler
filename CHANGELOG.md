@@ -1,3 +1,6 @@
+## 2.0.2 - 2019 Feb 3
+- Made extension icons show when they should
+
 ## 2.0.1 Firefox - 2018 Nov 19
 - Made extension icons square, to support Firefox.
 
