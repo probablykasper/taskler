@@ -1,4 +1,4 @@
-const devServerPort = 1234
+const devServerPort = 3000
 const openBrowserWhenDevServerStarts = false
 
 const buildSrc = 'src/**/*'
