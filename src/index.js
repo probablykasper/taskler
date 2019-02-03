@@ -176,20 +176,13 @@ if (localStorage.getItem('items') !== null) {
 const body = document.querySelector('body')
 const isExtension = body.dataset.isExtension === 'true'
 if (!isExtension) {
-  // Opera 8.0+
-  // const isOpera = (!!window.opr && !!opr.addons) || !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0
+  // browser version check:
+  // https://stackoverflow.com/questions/9847580/how-to-detect-safari-chrome-ie-firefox-and-opera-browser/9851769
+  
   // Firefox 1.0+
   const isFirefox = typeof InstallTrigger !== 'undefined';
-  // Safari 3.0+ "[object HTMLElementConstructor]"
-  // const isSafari = /constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari'] || (typeof safari !== 'undefined' && safari.pushNotification))
-  // Internet Explorer 6-11
-  // const isIE = /*@cc_on!@*/false || !!document.documentMode
-  // Edge 20+
-  // const isEdge = !isIE && !!window.StyleMedia
-  // Chrome 1+
-  const isChrome = !!window.chrome && !!window.chrome.webstore
-  // Blink engine detection
-  // const isBlink = (isChrome || isOpera) && !!window.CSS
+  // Chrome 1-71
+  const isChrome = !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime);
 
   if (isChrome) document.getElementById('chrome-extension-icon').classList.add('visible')
   if (isFirefox) document.getElementById('firefox-extension-icon').classList.add('visible')
