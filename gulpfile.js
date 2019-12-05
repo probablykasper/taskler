@@ -6,7 +6,7 @@ const buildDest = 'build'
 const buildDestFiles = 'build/**/*'
 
 const websiteDeployDest = 'docs'
-const WebsiteDeployDestClean = ['docs', '!docs/CNAME'] // what files to delete when deploying website
+const WebsiteDeployDestClean = ['docs/**', '!docs/CNAME'] // what files to delete when deploying website
 
 const extensionZipSrc = 'build/**/*'
 const extensionZipDest = 'dist'
