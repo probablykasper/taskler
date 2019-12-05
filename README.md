@@ -15,12 +15,8 @@ You can use shortcuts like cmd+B for <b>bold</b>, cmd+<i>I</i> for italics, cmd+
 2. Run `npm install` to install dependencies
 
 ### Commands
-Pug files receive an `isExtension` variable. Add the `--extension` flag to the `gulp` command to set it to true.
 - `npm run start`: Same as `npm run website`.
 - `npm run website`: Build `/src` in website mode, watch for changes and start dev server at http://localhost:3000.
 - `npm run extension`: Build `/src` in extension mode, watch for changes and start dev server at http://localhost:3000.
 - `npm run website:deploy`: Build `/src` in website mode and deploy to `/docs` folder (GitHub Pages).
 - `npm run extension:zip`: Build `/src` in extension mode and create a zip in `/dist`, ready to be uploaded to Chrome Web Store and such. You'll be prompted to type in a new version.
-
-# ToDo
-- Sync
