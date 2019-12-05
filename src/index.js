@@ -193,6 +193,7 @@ const darkMode = initLocalStorage({
   key: 'dark-mode',
   defaultValue: false,
   onUpdate: (newDarkMode) => {
+    const darkModeDialogShadow = '0 11px 15px -7px rgba(0,0,0,.2)';
     if (newDarkMode === false) {
       // body.classList.remove('dark-mode')
       // body.classList.add('light-mode')
@@ -204,19 +205,23 @@ const darkMode = initLocalStorage({
         'logo-dark': '#272727',
         'logo-mid': '#424242',
         'logo-light': '#696969',
+
+        'dialog-shadow': darkModeDialogShadow + ', 0 24px 38px 3px rgba(0,0,0,.14), 0 9px 46px 8px rgba(0,0,0,.12)',
       }})
       if (darkModeCheckbox.checked === true) darkModeCheckbox.checked = false
     } else if (newDarkMode === true) {
       // body.classList.remove('light-mode')
       // body.classList.add('dark-mode')
       cssVars({ variables: {
-        'bgcolor': '#272727',
-        'bgcolor-overlay': '#313131',
+        'bgcolor': '#191A1F',
+        'bgcolor-overlay': '#272830',
         'color': '#fafafa',
 
         'logo-dark': '#fafafa',
         'logo-mid': '#bdbdbd',
         'logo-light': '#969696',
+
+        'dialog-shadow': darkModeDialogShadow,
       }})
       if (darkModeCheckbox.checked === false) darkModeCheckbox.checked = true
     }
