@@ -5,7 +5,8 @@ const buildSrc = 'src/**/*'
 const buildDest = 'build'
 const buildDestFiles = 'build/**/*'
 
-const websiteDeploy = 'docs'
+const websiteDeployDest = 'docs'
+const WebsiteDeployDestClean = ['docs', '!docs/CNAME'] // what files to delete when deploying website
 
 const extensionZipSrc = 'build/**/*'
 const extensionZipDest = 'dist'
@@ -69,9 +70,10 @@ gulp.task('extension', gulp.parallel('extension:bundle:watch', 'server'))
 
 gulp.task('website:deploy', async () => {
   await bundle({ watch: false, buildAs: 'website' })
-  del.sync(websiteDeploy)
+
+  del.sync([websiteDeployDest, '!'])
   return gulp.src(buildDestFiles)
-    .pipe(gulp.dest(websiteDeploy))
+    .pipe(gulp.dest(websiteDeployDest))
 })
 gulp.task('extension:zip', async () => {
   const fs = require('fs')

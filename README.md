@@ -6,7 +6,7 @@
 </p>
 Taskler is a simple text editor web page. It's available as a <a href='https://taskler.kasp.io'>website</a>, <a href='https://chrome.google.com/webstore/detail/jnibmbpjkpfgaefgbnaneldfbfecpjih'>Chrome extension</a> and a <a href='https://addons.mozilla.org/addon/taskler'>Firefox extension</a>.
 
-You can use shortcuts like cmd+B for <b>bold</b>, cmd+<i>I</i> for italics, cmd+U for <u>underline</u> and cmd+K for <a href='https://www.youtube.com/watch?v=LDU_Txk06tM'>links</a>.
+You can use shortcuts like cmd+B for <b>bold</b>, cmd+I for <i>italics</i>, cmd+U for <u>underline</u> and cmd+K for <a href='https://www.youtube.com/watch?v=LDU_Txk06tM'>links</a>.
 
 # Dev Instructions
 
