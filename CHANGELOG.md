@@ -1,3 +1,6 @@
+## 2.0.4 - 2019 Dec 5
+- Made dark mode darker and bluer
+
 ## 2.0.3 - 2019 Feb 3
 - Made extension icons show when they should
 - (2.0.2 doesn't exist, accidentally made it 2.0.3)
