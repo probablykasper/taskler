@@ -30,6 +30,13 @@ function initLocalStorage (options) {
   return options
 }
 
+// migrate from quill-delta to quill-state
+if (localStorage.getItem('quill-delta') !== null) {
+  const delta = localStorage.getItem('quill-delta')
+  localStorage.setItem('quill-state', '{"delta":'+delta+',"historyStack":{"undo":[],"redo":[]}}')
+  localStorage.removeItem('quill-delta')
+}
+
 let autoList
 const autoListCheckbox = document.querySelector('#auto-list-checkbox')
 const autoListSetting = initLocalStorage({
@@ -125,16 +132,33 @@ window.quill = new Quill(document.querySelector('#note'), {
   placeholder: 'Maybe I\'ll have a todo list here?'
 })
 
-const delta = initLocalStorage({
-  key: 'quill-delta',
-  defaultValue: { ops: [] },
-  onUpdate: (delta) => {
-    quill.setContents(delta, 'silent')
+const quillState = initLocalStorage({
+  key: 'quill-state',
+  defaultValue: { delta: {ops: []}, historyStack: { undo: [], redo: []} },
+  onUpdate: (quillState) => {
+    quill.setContents(quillState.delta, 'silent')
+    quill.history.clear()
+    const stack = quillState.historyStack
+    for (let i = 0; i < stack.undo.length; i++) {
+      const ob = {}
+      ob.redo = new Delta(stack.undo[i].redo.ops)
+      ob.undo = new Delta(stack.undo[i].undo.ops)
+      quill.history.stack.undo.push(ob)
+    }
+    for (let i = 0; i < stack.redo.length; i++) {
+      const ob = {}
+      ob.redo = new Delta(stack.redo[i].redo.ops)
+      ob.undo = new Delta(stack.redo[i].undo.ops)
+      quill.history.stack.redo.push(ob)
+    }
   }
 })
 
 quill.on('text-change', () => {
-  delta.set(quill.getContents())
+  quillState.set({
+    delta: quill.getContents(),
+    historyStack: quill.history.stack,
+  })
 })
 
 // extension icons
