@@ -15260,6 +15260,13 @@ function initLocalStorage(options) {
     if (event.key === options.key && options.onUpdate) options.onUpdate(getItem());
   }, false);
   return options;
+} // migrate from quill-delta to quill-state
+
+
+if (localStorage.getItem('quill-delta') !== null) {
+  var delta = localStorage.getItem('quill-delta');
+  localStorage.setItem('quill-state', '{"delta":' + delta + ',"historyStack":{"undo":[],"redo":[]}}');
+  localStorage.removeItem('quill-delta');
 }
 
 var autoList;
@@ -15361,64 +15368,43 @@ window.quill = new _quill.default(document.querySelector('#note'), {
   theme: 'snow',
   placeholder: 'Maybe I\'ll have a todo list here?'
 });
-var delta = initLocalStorage({
-  key: 'quill-delta',
+var quillState = initLocalStorage({
+  key: 'quill-state',
   defaultValue: {
-    ops: []
+    delta: {
+      ops: []
+    },
+    historyStack: {
+      undo: [],
+      redo: []
+    }
   },
-  onUpdate: function onUpdate(delta) {
-    quill.setContents(delta, 'silent');
+  onUpdate: function onUpdate(quillState) {
+    quill.setContents(quillState.delta, 'silent');
+    quill.history.clear();
+    var stack = quillState.historyStack;
+
+    for (var i = 0; i < stack.undo.length; i++) {
+      var ob = {};
+      ob.redo = new _quillDelta.default(stack.undo[i].redo.ops);
+      ob.undo = new _quillDelta.default(stack.undo[i].undo.ops);
+      quill.history.stack.undo.push(ob);
+    }
+
+    for (var _i = 0; _i < stack.redo.length; _i++) {
+      var _ob = {};
+      _ob.redo = new _quillDelta.default(stack.redo[_i].redo.ops);
+      _ob.undo = new _quillDelta.default(stack.redo[_i].undo.ops);
+      quill.history.stack.redo.push(_ob);
+    }
   }
 });
 quill.on('text-change', function () {
-  delta.set(quill.getContents());
-}); // add old taskler tasks into quill
-
-if (localStorage.getItem('items') !== null) {
-  var items = JSON.parse(localStorage.getItem('items'));
-
-  var _delta = quill.getContents();
-
-  if (items.repeatingTasks && items.repeatingTasks.length || items.tasks && items.tasks.length) {
-    _delta.ops.push({
-      insert: "Looks like you've used Taskler before. I imported your old tasks.\n\n"
-    });
-  }
-
-  if (items.repeatingTasks && items.repeatingTasks.length) {
-    for (var i = 0; i < items.repeatingTasks.length; i++) {
-      _delta.ops.push({
-        insert: "Repeating task ".concat(i + 1, ":\n"),
-        attributes: {
-          bold: true
-        }
-      });
-
-      _delta.ops.push({
-        insert: items.repeatingTasks[i].text + '\n\n'
-      });
-    }
-  }
-
-  if (items.tasks && items.tasks.length) {
-    for (var _i = 0; _i < items.tasks.length; _i++) {
-      _delta.ops.push({
-        insert: "Task ".concat(_i + 1, ":\n"),
-        attributes: {
-          bold: true
-        }
-      });
-
-      _delta.ops.push({
-        insert: items.tasks[_i] + '\n\n'
-      });
-    }
-  }
-
-  quill.setContents(_delta);
-  localStorage.removeItem('items');
-} // extension icons
-
+  quillState.set({
+    delta: quill.getContents(),
+    historyStack: quill.history.stack
+  });
+}); // extension icons
 
 var body = document.querySelector('body');
 var isExtension = body.dataset.buildAs === 'extension';

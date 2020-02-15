@@ -1,3 +1,7 @@
+## 2.1.0 - 2020 Feb 15
+- Undo/redo history is now saved
+- v1 tasks are no longer auto-migrated
+
 ## 2.0.4 - 2019 Dec 5
 - Made dark mode darker and bluer
 
