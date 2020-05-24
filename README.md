@@ -20,3 +20,24 @@ You can use shortcuts like cmd+B for <b>bold</b>, cmd+I for <i>italics</i>, cmd+
 - `npm run extension`: Build `/src` in extension mode, watch for changes and start dev server at http://localhost:3000.
 - `npm run website:deploy`: Build `/src` in website mode and deploy to `/docs` folder (GitHub Pages).
 - `npm run extension:zip`: Build `/src` in extension mode and create a zip in `/dist`, ready to be uploaded to Chrome Web Store and such. You'll be prompted to type in a new version.
+
+### Data recovery
+For some reason, Brave deleted all my localStorage data, including Taskler's. This does not seem to be a problem with Taskler. If you have a backups, Taskler's data can be restored. Brave stores localStorage at in the following folder in my case:
+```
+~/Library/Application Support/BraveSoftware/Brave-Browser/Default/Local Storage/leveldb
+```
+For Chrome, it's this folder in my case:
+```
+~/Library/Application Support/Google/Chrome/Profile 1/Local Storage/leveldb
+```
+You should be able to simply restore this folder. Keep in mind that this folder doesn't just contain Taskler's data.
+
+What I did to restore my Taskler data was this:
+1. Restore the aforementioned folder into `~/Downloads`
+2. Install [golang](https://golang.org/)
+3. Install (leveldb-tools)[https://github.com/rchunping/leveldb-tools] by running `go get github.com/rchunping/leveldb-tools`
+4. Export the database into plaintext format by running `leveldb-tools -dbpath ~/Downloads/leveldb -action export -file ~/Downloads/dumpfile.txt`
+5. Open `~/Downloads/dumpfile.txt` and search for `quill-state`. If there are multiple instances of that, you might be able to tell which one is correct by the text after it.
+6. Select and copy the object that is after `quill-state`, starting with `{` and ending with `}`. Unfortunately you'll have to figure out where that is. In my case, this text came after the object: `KL:=_chrome-extension://jnibmbpjkpfgaefgbnaneldfbfecpjih`.
+7. In Taskler, open the developer tools and go to the `Application` tab. In the sidebar, open the item found inside `Local Storage`.
+8. You'll see a table with `Key` and `Value` columns. Double-click the value of the `quill-state` key and pase in the object.
