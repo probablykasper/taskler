@@ -12,6 +12,9 @@ Taskler is a simple text editor web page. It's available as a <a href='https://t
 
 You can use shortcuts like cmd+B for <b>bold</b>, cmd+I for <i>italics</i>, cmd+U for <u>underline</u> and cmd+K for <a href='https://www.youtube.com/watch?v=LDU_Txk06tM'>links</a>.
 
+![Screenshot](https://raw.githubusercontent.com/probablykasper/taskler/master/assets/screenshot3.png)
+
+
 # Dev Instructions
 
 ### Setup
