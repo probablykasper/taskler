@@ -1098,6 +1098,11 @@ a {
 .icons .extension.visible {
   display: block;
 }
+@media (max-width: 600px) {
+  .icons .extension.visible {
+    display: none;
+  }
+}
 .icons #chrome-extension-icon svg {
   transform: scale(0.85);
 }
@@ -1110,7 +1115,7 @@ a {
   display: flex;
   opacity: 0;
   pointer-events: none;
-  background-color: rgba(0,0,0,0.3);
+  background-color: rgba(0,0,0,0.5);
   transition: opacity 0.15s cubic-bezier(0.4, 0, 0.2, 1);
   user-select: none;
   font-size: 15px;
@@ -1124,7 +1129,7 @@ a {
 }
 .dialog-container .dialog {
   transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  background-color: var(--bgcolor);
+  background-color: var(--bgcolor-overlay);
   width: 600px;
   max-width: calc(100% - 150px);
   max-height: calc(100% - 100px);
@@ -1202,20 +1207,50 @@ a {
 .center {
   position: fixed;
   overflow-y: auto;
-  width: calc(100% - 56px*2);
-  height: calc(100% - 25px*2);
-  padding: 25px 56px;
+  width: 100%;
+  height: 100%;
+  min-width: 350px;
+  box-sizing: border-box;
+  padding-left: 24px;
+  padding-right: 24px;
+  padding-bottom: 24px;
   display: flex;
   flex-direction: column;
+}
+@media (max-width: 600px) {
+  .center {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+}
+@media (max-width: 500px) {
+  .center {
+    padding-left: 0px;
+    padding-right: 0px;
+  }
 }
 .center div.ql-toolbar {
   display: none;
   margin-left: auto;
   margin-right: auto;
-  margin-bottom: 15px;
+  margin-top: 8px;
+  margin-bottom: 5px;
   border-radius: 5px;
-  background-color: var(--bgcolor-overlay);
-  transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+@media (max-width: 600px) {
+  .center div.ql-toolbar {
+    margin-left: 0px;
+  }
+}
+@media (max-width: 500px) {
+  .center div.ql-toolbar {
+    padding-right: 50px;
+  }
+  .center div.ql-toolbar .ql-formats {
+    margin-right: 5px;
+  }
 }
 .center div.ql-toolbar.visible {
   display: block;
@@ -1231,10 +1266,21 @@ a {
   font-family: 'Rubik';
   font-size: 15px;
 }
+@media (max-width: 600px) {
+  .center #note {
+    font-size: 14px;
+    min-width: 100%;
+  }
+}
 .center #note .ql-editor {
   background-color: var(--bgcolor-overlay);
   border-radius: 5px;
   transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+@media (max-width: 500px) {
+  .center #note .ql-editor {
+    border-radius: 0px;
+  }
 }
 .center #note .ql-editor::before {
   transition: color 0.3s cubic-bezier(0.4, 0, 0.2, 1);

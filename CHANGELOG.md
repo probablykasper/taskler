@@ -1,3 +1,8 @@
+## 2.2.0 - 2020 Apr 7
+- Improved mobile support
+- Made dark mode a bit darker
+- Fixed extension download icon not showing
+
 ## 2.1.0 - 2020 Feb 15
 - Undo/redo history is now saved
 - v1 tasks are no longer auto-migrated
