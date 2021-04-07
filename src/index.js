@@ -202,8 +202,8 @@ const darkMode = initLocalStorage({
       // body.classList.remove('light-mode')
       // body.classList.add('dark-mode')
       cssVars({ variables: {
-        'bgcolor': '#191A1F',
-        'bgcolor-overlay': '#272830',
+        'bgcolor': '#151519',
+        'bgcolor-overlay': '#202127',
         'color': '#fafafa',
 
         'logo-dark': '#fafafa',
