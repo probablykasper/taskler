@@ -28,6 +28,18 @@ You can use shortcuts like cmd+B for <b>bold</b>, cmd+I for <i>italics</i>, cmd+
 - `npm run website:deploy`: Build `/src` in website mode and deploy to `/docs` folder (GitHub Pages).
 - `npm run extension:zip`: Build `/src` in extension mode and create a zip in `/dist`, ready to be uploaded to Chrome Web Store and such. You'll be prompted to type in a new version.
 
+## Publish new version
+1. Update `CHANGELOG.md`
+2. Build and deploy the website:
+    ```
+    npm run website:deploy
+    ```
+3. Build the extension:
+    ```
+    extension:zip
+    ```
+4. Commit and tag in format "v#.#.#"
+
 ## Data recovery
 For some reason, Brave deleted all my localStorage data, including Taskler's. This does not seem to be a problem with Taskler. If you have a backups, Taskler's data can be restored. Brave stores localStorage at in the following folder in my case:
 ```
