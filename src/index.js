@@ -168,13 +168,16 @@ if (!isExtension) {
   // browser version check:
   // https://stackoverflow.com/questions/9847580/how-to-detect-safari-chrome-ie-firefox-and-opera-browser/9851769
   
-  // Firefox 1.0+
-  const isFirefox = typeof InstallTrigger !== 'undefined';
-  // Chrome 1-71
-  const isChrome = !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime);
+  // Firefox 1+
+  const isFirefox = typeof InstallTrigger !== 'undefined'
+  // Chrome 1+ and other Chromium-based browsers
+  const isChromium = !!window.chrome
 
-  if (isChrome) document.getElementById('chrome-extension-icon').classList.add('visible')
-  if (isFirefox) document.getElementById('firefox-extension-icon').classList.add('visible')
+  if (isFirefox) {
+    document.getElementById('firefox-extension-icon').classList.add('visible')
+  } else  if (isChromium) {
+    document.getElementById('chrome-extension-icon').classList.add('visible')
+  }
 }
 
 const darkModeCheckbox = document.querySelector('#dark-mode-checkbox')
