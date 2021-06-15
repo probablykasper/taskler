@@ -41,7 +41,7 @@ You can use shortcuts like cmd+B for <b>bold</b>, cmd+I for <i>italics</i>, cmd+
 4. Commit and tag in format "v#.#.#"
 
 ## Data recovery
-For some reason, Brave deleted all my localStorage data, including Taskler's. This does not seem to be a problem with Taskler. If you have a backups, Taskler's data can be restored. Brave stores localStorage at in the following folder in my case:
+For some reason, Brave deleted all my localStorage data, including Taskler's. This does not seem to be a problem with Taskler. If you have a backup, Taskler's data can be restored. Brave stores localStorage at in the following folder in my case:
 ```
 ~/Library/Application Support/BraveSoftware/Brave-Browser/Default/Local Storage/leveldb
 ```
