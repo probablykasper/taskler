@@ -1,30 +1,47 @@
+type InitLocalStorageOptions<T> = {
+  key: string;
+  defaultValue: T;
+  onUpdate: (value: T) => void;
+}
+type LocalStorageHandle<T> = {
+  get: () => T;
+  set: (value: T) => LocalStorageHandle<T>;
+  update: () => LocalStorageHandle<T>;
+}
 // localStorage wrapper
-function initLocalStorage (options) {
-  function getItem () {
-    return JSON.parse(localStorage.getItem(options.key))
+function initLocalStorage<T>(options: InitLocalStorageOptions<T>) {
+  const handle: LocalStorageHandle<T> = {
+    get() {
+      const item = localStorage.getItem(options.key)
+      if (item === null) {
+        return JSON.parse(JSON.stringify(options.defaultValue))
+      } else {
+        return JSON.parse(item)
+      }
+    },
+    set(value) {
+      setItem(value)
+      return handle
+    },
+    update() {
+      if (options.onUpdate) options.onUpdate(getItem())
+      return handle
+    }
   }
-  function setItem (value) {
+  function getItem () {
+    const value = localStorage.getItem(options.key)
+    return value === null ? null : JSON.parse(value)
+  }
+  function setItem (value: any) {
     localStorage.setItem(options.key, JSON.stringify(value))
   }
-  if (localStorage.getItem(options.key) === null) {
-    setItem(options.defaultValue) // set default
-  }
-  if (options.onUpdate) options.onUpdate(getItem()) // set value on pageload
-  options.get = getItem
-  options.set = (value) => {
-    setItem(value)
-    return options
-  }
-  options.update = () => {
-    if (options.onUpdate) options.onUpdate(getItem())
-    return options
-  }
+  if (options.onUpdate) options.onUpdate(handle.get()) // set value on pageload
   // detect updates from other tabs
   window.addEventListener('storage', (event) => {
     console.log('stor', event)
     if (event.key === options.key && options.onUpdate) options.onUpdate(getItem())
   }, false)
-  return options
+  return handle
 }
 
 // migrate from quill-delta to quill-state
@@ -34,9 +51,10 @@ if (localStorage.getItem('quill-delta') !== null) {
   localStorage.removeItem('quill-delta')
 }
 
-let autoList
+let autoList: boolean
 const autoListCheckbox = document.querySelector('#auto-list-checkbox')
-const autoListSetting = initLocalStorage({
+if (!(autoListCheckbox instanceof HTMLInputElement)) throw alert('autoListCheckbox not found')
+const autoListSetting = initLocalStorage<boolean>({
   key: 'auto-list',
   defaultValue: false,
   onUpdate: (newAutoListSetting) => {
@@ -59,7 +77,24 @@ import MagicUrl from 'quill-magic-url'
 Quill.register('modules/magicUrl', MagicUrl)
 
 import Delta from 'quill-delta';
-window.quill = new Quill(document.querySelector('#note'), {
+
+type HistoryModule = {
+  clear: () => void;
+  undo: () => void;
+  redo: () => void;
+  stack: {
+    undo: Delta[],
+    redo: Delta[],
+  };
+}
+/** Add missing quill module types */
+interface QuillInstance extends Quill {
+  history: HistoryModule;
+}
+
+const noteElement = document.querySelector('#note')
+if (!(noteElement instanceof HTMLElement)) throw alert('noteElement not found')
+const quill: QuillInstance = new Quill(noteElement, {
   modules: {
     toolbar: [
       [{header: [1, 2, false]}],
@@ -130,9 +165,13 @@ window.quill = new Quill(document.querySelector('#note'), {
   // formats: ['header'],
   theme: 'snow',
   placeholder: 'Maybe I\'ll have a todo list here?'
-})
+}) as QuillInstance
 
-const quillState = initLocalStorage({
+type QuillState = {
+  delta: Delta,
+  historyStack: HistoryModule['stack'],
+}
+const quillState = initLocalStorage<QuillState>({
   key: 'quill-state',
   defaultValue: { delta: {ops: []}, historyStack: { undo: [], redo: []} },
   onUpdate: (quillState) => {
@@ -140,15 +179,17 @@ const quillState = initLocalStorage({
     quill.history.clear()
     const stack = quillState.historyStack
     for (let i = 0; i < stack.undo.length; i++) {
-      const ob = {}
-      ob.redo = new Delta(stack.undo[i].redo.ops)
-      ob.undo = new Delta(stack.undo[i].undo.ops)
+      const ob = {
+        redo: new Delta(stack.undo[i].redo.ops),
+        undo: new Delta(stack.undo[i].undo.ops),
+      }
       quill.history.stack.undo.push(ob)
     }
     for (let i = 0; i < stack.redo.length; i++) {
-      const ob = {}
-      ob.redo = new Delta(stack.redo[i].redo.ops)
-      ob.undo = new Delta(stack.redo[i].undo.ops)
+      const ob = {
+        redo: new Delta(stack.redo[i].redo.ops),
+        undo: new Delta(stack.redo[i].undo.ops),
+      }
       quill.history.stack.redo.push(ob)
     }
   }
@@ -162,27 +203,27 @@ quill.on('text-change', () => {
 })
 
 // extension icons
-const body = document.querySelector('body')
 const isBrowser = location.protocol === 'https:' || location.protocol === 'http:'
 if (isBrowser) {
   // browser version check:
   // https://stackoverflow.com/questions/9847580/how-to-detect-safari-chrome-ie-firefox-and-opera-browser/9851769
   
   // Firefox 1+
-  const isFirefox = typeof InstallTrigger !== 'undefined'
+  const isFirefox = typeof window['InstallTrigger'] !== 'undefined'
   // Chrome 1+ and other Chromium-based browsers
-  const isChromium = !!window.chrome
+  const isChromium = !!window['chrome']
 
   if (isFirefox) {
-    document.getElementById('firefox-extension-icon').classList.add('visible')
+    document.getElementById('firefox-extension-icon')?.classList.add('visible')
   } else  if (isChromium) {
-    document.getElementById('chrome-extension-icon').classList.add('visible')
+    document.getElementById('chrome-extension-icon')?.classList.add('visible')
   }
 }
 
 /** There's also initial theme setup in index.pug */
 function themeHandling() {
   const darkModeCheckbox = document.querySelector('#dark-mode-checkbox')
+  if (!(darkModeCheckbox instanceof HTMLInputElement)) throw alert('darkModeCheckbox not found')
   // Get the systemTheme using window.matchMedia
   const prefersDarkMQ = matchMedia('(prefers-color-scheme: dark)')
   let systemTheme = prefersDarkMQ.matches ? 'dark' : 'light'
@@ -191,7 +232,7 @@ function themeHandling() {
     systemTheme = e.matches ? 'dark' : 'light'
     // Update the theme, as long as there's no theme override
     if (localStorage.getItem('theme') === null) {
-      window.setTheme(systemTheme)
+      setTheme(systemTheme)
     }
   }
 
@@ -216,12 +257,15 @@ function themeHandling() {
 themeHandling()
 
 const toolbarCheckbox = document.querySelector('#toolbar-checkbox')
-const toolbar = document.querySelector('.ql-toolbar')
+if (!(toolbarCheckbox instanceof HTMLInputElement)) throw alert('toolbarCheckbox not found')
 const toolbarSetting = initLocalStorage({
   key: 'toolbar',
   defaultValue: false,
   onUpdate: (newToolbarSetting) => {
-    if (newToolbarSetting === true) {
+    const toolbar = document.querySelector('.ql-toolbar')
+    if (!toolbar) {
+      throw alert('Toolbar element not found')
+    } else if (newToolbarSetting === true) {
       toolbar.classList.add('visible')
       if (toolbarCheckbox.checked === false) toolbarCheckbox.checked = true
     } else {
@@ -237,13 +281,15 @@ toolbarCheckbox.addEventListener('change', (e) => {
 
 // settingsDialog
 const settingsIcon = document.querySelector('.settings')
+if (!settingsIcon) throw alert('Settings icon not found')
 const dialog = document.querySelector('.settings-dialog')
+if (!dialog) throw alert('Dialog not found')
 settingsIcon.addEventListener('click', () => {
   dialog.classList.add('visible')
 })
 
 document.addEventListener('click', function (e) {
-  if (e.target.classList.contains('dialog-container')) {
+  if (e.target instanceof HTMLElement && e.target.classList.contains('dialog-container')) {
     var dialog = e.target
     dialog.classList.remove('visible')
   }
@@ -251,5 +297,5 @@ document.addEventListener('click', function (e) {
 
 // enable transitions
 window.addEventListener('load', () => {
-  body.classList.remove('no-transition')
+  document.body.classList.remove('no-transition')
 })
