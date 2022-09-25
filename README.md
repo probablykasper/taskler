@@ -31,9 +31,9 @@ You can use shortcuts like cmd+B for <b>bold</b>, cmd+I for <i>italics</i>, cmd+
 1. Update `CHANGELOG.md`
 2. Build the extension:
     ```
-    build:extension
+    npm run build:extension
     ```
-3. Commit and tag in format "v#.#.#"
+3. Commit with a tag in format "v#.#.#"
 4. Merge `dev` into `prod` to deploy website
 5. Publish to Chrome and Firefox stores
 

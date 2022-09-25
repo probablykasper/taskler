@@ -1,6 +1,6 @@
 # Changelog
 
-## Next
+## 2.2.1 - 2022 Sep 25
 - Faster theme initialization
 
 ## 2.2.0 - 2020 Apr 7
