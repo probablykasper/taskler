@@ -15,22 +15,8 @@ html
     meta(name="msapplication-TileColor", content="#272727")
     meta(name="msapplication-config", content="/icons/browserconfig.xml?v=2")
     meta(name="theme-color", content="#ffffff")
-    script.
-      function detectTheme() {
-        var themeOverride = localStorage.getItem('theme')
-        if (themeOverride == 'dark' || themeOverride === 'light') {
-          // Override the system theme
-          return themeOverride
-        } else if (window.matchMedia('(prefers-color-scheme: light)').matches) {
-          // Use the system theme
-          return 'light'
-        } else {
-          // Default theme
-          return 'dark'
-        }
-      }
-      document.documentElement.setAttribute('data-theme', detectTheme())
   body.no-transition(data-build-as=String(buildAs))
+    script(src='./theme-init.ts')
     //- .bg
     //- #toolbar-container(style='display:none')
     .center

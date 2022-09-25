@@ -1,5 +1,8 @@
 # Changelog
 
+## Next
+- Fix theme loading in web extension
+
 ## 2.2.1 - 2022 Sep 25
 - Faster theme initialization
 
