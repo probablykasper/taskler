@@ -1,5 +1,8 @@
 # Changelog
 
+## Next
+- Fix toolbar
+
 ## 2.2.2 - 2022 Sep 25
 - Fix theme loading in web extension
 
