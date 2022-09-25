@@ -54,7 +54,10 @@ autoListCheckbox.addEventListener('change', (e) => {
   else autoListSetting.set(false).update()
 })
 
-import Quill from './lib/quill.js'
+import Quill from 'quill/quill'
+import MagicUrl from 'quill-magic-url'
+Quill.register('modules/magicUrl', MagicUrl)
+
 import Delta from 'quill-delta';
 window.quill = new Quill(document.querySelector('#note'), {
   modules: {
