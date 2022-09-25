@@ -46,15 +46,15 @@ What I did to restore my Taskler data was this:
 - `npm run dev:extension`: Build extension and watch for changes
 - `npm run build:website`: Build website
 - `npm run build:extension`: Build extension and create a zip in `/dist`, ready for distribution to stores
+- `npm run format`: Format code and apply code suggestions
+- `npm run check`: Check code
 
 ### Publish new version
-1. Update `CHANGELOG.md`
-2. Update version in `manifest.json`
-3. Build the extension:
-    ```
-    npm run build:extension
-    ```
-4. Commit with a tag in format "v#.#.#"
-5. Create GitHub release with the extension zip and release notes
-6. Merge `dev` into `prod` to deploy website
-7. Publish to Chrome and Firefox stores
+1. Run `npm run check`
+2. Update `CHANGELOG.md`
+3. Update version in `manifest.json`
+4. Run `npm run build:extension`
+5. Commit with a tag in format "v#.#.#"
+6. Create GitHub release with the extension zip and release notes
+7. Merge `dev` into `prod` to deploy website
+8. Publish to Chrome and Firefox stores
