@@ -5,12 +5,12 @@
   "homepage_url": "https://taskler.kasper.space",
   "description": "A simple text editor on your New Tab page",
   "icons": {
-    "16": "icon16.png",
-    "48": "icon48.png",
-    "128": "icon128.png"
+    "16": "src/icon16.png",
+    "48": "src/icon48.png",
+    "128": "src/icon128.png"
   },
   "chrome_url_overrides": {
-    "newtab": "./index.pug"
+    "newtab": "src/index.pug"
   },
   "permissions": []
 }

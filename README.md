@@ -22,21 +22,22 @@ You can use shortcuts like cmd+B for <b>bold</b>, cmd+I for <i>italics</i>, cmd+
 2. Run `npm install` to install dependencies
 
 ## Commands
-- `npm run dev`: Build `/src` in website mode, watch for changes and start dev server at http://localhost:3000.
-- `npm run dev:extension`: Build `/src` in extension mode, watch for changes and start dev server at http://localhost:3000.
-- `npm run build:website`: Build `/src` in website mode and deploy to `/docs` folder (GitHub Pages).
-- `npm run build:extension`: Build `/src` in extension mode and create a zip in `/dist`, ready to be uploaded to Chrome Web Store and such. You'll be prompted to type in a new version.
+- `npm run dev:website`: Start website dev server
+- `npm run dev:extension`: Build extension and watch for changes
+- `npm run build:website`: Build website
+- `npm run build:extension`: Build extension and create a zip in `/dist`, ready for distribution to stores
 
 ## Publish new version
 1. Update `CHANGELOG.md`
-2. Build the extension:
+2. Update version in `manifest.json`
+3. Build the extension:
     ```
     npm run build:extension
     ```
-3. Commit with a tag in format "v#.#.#"
-4. Create GitHub release with the extension zip and release notes
-5. Merge `dev` into `prod` to deploy website
-6. Publish to Chrome and Firefox stores
+4. Commit with a tag in format "v#.#.#"
+5. Create GitHub release with the extension zip and release notes
+6. Merge `dev` into `prod` to deploy website
+7. Publish to Chrome and Firefox stores
 
 ## Data recovery
 For some reason, Brave deleted all my localStorage data, including Taskler's. This does not seem to be a problem with Taskler. If you have a backup, Taskler's data can be restored. Brave stores localStorage at in the following folder in my case:
