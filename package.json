@@ -1,11 +1,10 @@
 {
   "name": "taskler",
   "scripts": {
-    "start": "gulp website",
-    "website": "gulp website",
-    "extension": "gulp extension",
-    "website:deploy": "gulp website:deploy",
-    "extension:zip": "gulp extension:zip"
+    "dev": "gulp website",
+    "dev:extension": "gulp extension",
+    "build:website": "gulp website:deploy",
+    "build:extension": "gulp extension:zip"
   },
   "browserslist": "> 0.2%",
   "devDependencies": {
