@@ -14,31 +14,6 @@ You can use shortcuts like cmd+B for <b>bold</b>, cmd+I for <i>italics</i>, cmd+
 
 ![Screenshot](https://raw.githubusercontent.com/probablykasper/taskler/master/assets/screenshot3.png)
 
-
-# Dev Instructions
-
-## Setup
-1. Install Node.js
-2. Run `npm install` to install dependencies
-
-## Commands
-- `npm run dev:website`: Start website dev server
-- `npm run dev:extension`: Build extension and watch for changes
-- `npm run build:website`: Build website
-- `npm run build:extension`: Build extension and create a zip in `/dist`, ready for distribution to stores
-
-## Publish new version
-1. Update `CHANGELOG.md`
-2. Update version in `manifest.json`
-3. Build the extension:
-    ```
-    npm run build:extension
-    ```
-4. Commit with a tag in format "v#.#.#"
-5. Create GitHub release with the extension zip and release notes
-6. Merge `dev` into `prod` to deploy website
-7. Publish to Chrome and Firefox stores
-
 ## Data recovery
 For some reason, Brave deleted all my localStorage data, including Taskler's. This does not seem to be a problem with Taskler. If you have a backup, Taskler's data can be restored. Brave stores localStorage at in the following folder in my case:
 ```
@@ -59,3 +34,27 @@ What I did to restore my Taskler data was this:
 6. Select and copy the object that is after `quill-state`, starting with `{` and ending with `}`. Unfortunately you'll have to figure out where that is. In my case, this text came after the object: `KL:=_chrome-extension://jnibmbpjkpfgaefgbnaneldfbfecpjih`.
 7. In Taskler, open the developer tools and go to the `Application` tab. In the sidebar, open the item found inside `Local Storage`.
 8. You'll see a table with `Key` and `Value` columns. Double-click the value of the `quill-state` key and pase in the object.
+
+## Dev Instructions
+
+### Setup
+1. Install Node.js
+2. Run `npm install` to install dependencies
+
+### Commands
+- `npm run dev:website`: Start website dev server
+- `npm run dev:extension`: Build extension and watch for changes
+- `npm run build:website`: Build website
+- `npm run build:extension`: Build extension and create a zip in `/dist`, ready for distribution to stores
+
+### Publish new version
+1. Update `CHANGELOG.md`
+2. Update version in `manifest.json`
+3. Build the extension:
+    ```
+    npm run build:extension
+    ```
+4. Commit with a tag in format "v#.#.#"
+5. Create GitHub release with the extension zip and release notes
+6. Merge `dev` into `prod` to deploy website
+7. Publish to Chrome and Firefox stores
