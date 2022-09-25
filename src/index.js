@@ -163,8 +163,8 @@ quill.on('text-change', () => {
 
 // extension icons
 const body = document.querySelector('body')
-const isExtension = body.dataset.buildAs === 'extension'
-if (!isExtension) {
+const isBrowser = location.protocol === 'https:' || location.protocol === 'http:'
+if (isBrowser) {
   // browser version check:
   // https://stackoverflow.com/questions/9847580/how-to-detect-safari-chrome-ie-firefox-and-opera-browser/9851769
   
