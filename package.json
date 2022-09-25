@@ -2,7 +2,7 @@
   "name": "taskler",
   "scripts": {
     "dev:website": "parcel serve src/index.pug --dist-dir build/website",
-    "build:website": "rm -rf build/website parcel && build src/index.pug --dist-dir build/website",
+    "build:website": "rm -rf build/website && parcel build src/index.pug --dist-dir build/website",
     "dev:extension": "parcel watch manifest.json --dist-dir build/extension --config @parcel/config-webextension --host localhost",
     "build:extension": "npm run bundle:extension && gulp zip",
     "bundle:extension": "rm -rf build/extension && parcel build manifest.json --dist-dir build/extension --config @parcel/config-webextension"
