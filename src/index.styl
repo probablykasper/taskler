@@ -4,6 +4,31 @@ body
   margin: 0px
   transition: background-color transition-color
   background-color var(--bgcolor)
+
+darkModeDialogShadow = 0 11px 15px -7px rgba(0,0,0,.2)
+html[data-theme="dark"]
+  --bgcolor: #151519
+  --bgcolor-overlay: #202127
+  --color: #fafafa
+  --logo-dark: #fafafa
+  --logo-mid: #bdbdbd
+  --logo-light: #969696
+  --dialog-shadow: darkModeDialogShadow
+
+html[data-theme="light"]
+  --bgcolor: #fafafa
+  --bgcolor-overlay: #F0F0F0
+  --color: #272727
+  --logo-dark: #272727
+  --logo-mid: #424242
+  --logo-light: #696969
+  --dialog-shadow: darkModeDialogShadow, 0 24px 38px 3px rgba(0,0,0,.14), 0 9px 46px 8px rgba(0,0,0,.12)
+
+html {
+  background-color: var(--bg);
+  color: var(--color);
+}
+
 .no-transition
   transition: none !important
   *, ::before, ::after
@@ -15,17 +40,6 @@ p, h1, #note
 activeColor = #006edc
 a
   color: activeColor
-// .bg
-//   transition: background-color transition-color
-//   background-color var(--bgcolor)
-//   min-height: 1000px
-//   transform: translateY(-50%)
-//   top: 50%
-//   display: flex
-//   position: fixed
-//   flex-direction: column
-//   width: 100%
-//   height: 100%
 topcontent-margin = 8px
 topcontent-padding = 8px
 .icons

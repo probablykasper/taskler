@@ -180,49 +180,40 @@ if (!isExtension) {
   }
 }
 
-const darkModeCheckbox = document.querySelector('#dark-mode-checkbox')
-const darkMode = initLocalStorage({
-  key: 'dark-mode',
-  defaultValue: false,
-  onUpdate: (newDarkMode) => {
-    const darkModeDialogShadow = '0 11px 15px -7px rgba(0,0,0,.2)';
-    if (newDarkMode === false) {
-      // body.classList.remove('dark-mode')
-      // body.classList.add('light-mode')
-      cssVars({ variables: {
-        'bgcolor': '#fafafa',
-        'bgcolor-overlay': '#F0F0F0',
-        'color': '#272727',
-
-        'logo-dark': '#272727',
-        'logo-mid': '#424242',
-        'logo-light': '#696969',
-
-        'dialog-shadow': darkModeDialogShadow + ', 0 24px 38px 3px rgba(0,0,0,.14), 0 9px 46px 8px rgba(0,0,0,.12)',
-      }})
-      if (darkModeCheckbox.checked === true) darkModeCheckbox.checked = false
-    } else if (newDarkMode === true) {
-      // body.classList.remove('light-mode')
-      // body.classList.add('dark-mode')
-      cssVars({ variables: {
-        'bgcolor': '#151519',
-        'bgcolor-overlay': '#202127',
-        'color': '#fafafa',
-
-        'logo-dark': '#fafafa',
-        'logo-mid': '#bdbdbd',
-        'logo-light': '#969696',
-
-        'dialog-shadow': darkModeDialogShadow,
-      }})
-      if (darkModeCheckbox.checked === false) darkModeCheckbox.checked = true
+/** There's also initial theme setup in index.pug */
+function themeHandling() {
+  const darkModeCheckbox = document.querySelector('#dark-mode-checkbox')
+  // Get the systemTheme using window.matchMedia
+  const prefersDarkMQ = matchMedia('(prefers-color-scheme: dark)')
+  let systemTheme = prefersDarkMQ.matches ? 'dark' : 'light'
+  prefersDarkMQ.onchange = (e) => {
+    // Keep the systemTheme variable up to date
+    systemTheme = e.matches ? 'dark' : 'light'
+    // Update the theme, as long as there's no theme override
+    if (localStorage.getItem('theme') === null) {
+      window.setTheme(systemTheme)
     }
   }
-})
-darkModeCheckbox.addEventListener('change', (e) => {
-  if (darkModeCheckbox.checked) darkMode.set(true).update()
-  else darkMode.set(false).update()
-})
+
+  let theme = document.documentElement.getAttribute('data-theme') || 'dark'
+
+  function setTheme(newTheme) {
+    document.documentElement.setAttribute('data-theme', newTheme)
+    theme = newTheme
+    if (newTheme === systemTheme) {
+      // Remove override if the user sets the theme to match the system theme
+      localStorage.removeItem('theme')
+    } else {
+      localStorage.setItem('theme', newTheme)
+    }
+  }
+  darkModeCheckbox.checked = theme === 'dark'
+  darkModeCheckbox.addEventListener('change', (e) => {
+    if (darkModeCheckbox.checked) setTheme('dark')
+    else setTheme('light')
+  })
+}
+themeHandling()
 
 const toolbarCheckbox = document.querySelector('#toolbar-checkbox')
 const toolbar = document.querySelector('.ql-toolbar')

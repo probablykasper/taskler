@@ -1,3 +1,8 @@
+# Changelog
+
+## Next
+- Faster theme initialization
+
 ## 2.2.0 - 2020 Apr 7
 - Improved mobile support
 - Made dark mode a bit darker
