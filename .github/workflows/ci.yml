@@ -1,6 +1,11 @@
-steps:
-    - uses: rome/setup-rome@latest
-      with:
-        version: 0.4.0
-    - uses: actions/checkout@v2
-    - run: npm run check
+name: CI
+on: [push, pull_request, workflow_dispatch]
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - run: npm install
+      - run: npm run check
