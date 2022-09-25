@@ -3,10 +3,6 @@ const openBrowserWhenDevServerStarts = false
 
 const buildSrc = 'src/**/*'
 const buildDest = 'build'
-const buildDestFiles = 'build/**/*'
-
-const websiteDeployDest = 'docs'
-const WebsiteDeployDestClean = ['docs/**', '!docs/CNAME'] // what files to delete when deploying website
 
 const extensionZipSrc = 'build/**/*'
 const extensionZipDest = 'dist'
@@ -34,12 +30,6 @@ async function bundle (options) {
   bundler.addAssetType('.json', require.resolve('./JSONAsset.js'))
   return bundler.bundle()
 }
-gulp.task('website:bundle', () => {
-  return bundle({ watch: false, buildAs: 'website' })
-})
-gulp.task('extension:bundle', () => {
-  return bundle({ watch: false, buildAs: 'extension' })
-})
 gulp.task('website:bundle:watch', () => {
   return new Promise(() => {
     bundle({ watch: true, buildAs: 'website' })
@@ -64,18 +54,13 @@ gulp.task('server', () => {
   })
 })
 
-gulp.task('default', gulp.parallel('website:bundle:watch', 'server'))
-gulp.task('website', gulp.parallel('website:bundle:watch', 'server'))
-gulp.task('extension', gulp.parallel('extension:bundle:watch', 'server'))
+gulp.task('dev:website', gulp.parallel('website:bundle:watch', 'server'))
+gulp.task('dev:extension', gulp.parallel('extension:bundle:watch', 'server'))
 
-gulp.task('website:deploy', async () => {
+gulp.task('build:website', async () => {
   await bundle({ watch: false, buildAs: 'website' })
-
-  del.sync(WebsiteDeployDestClean)
-  return gulp.src(buildDestFiles)
-    .pipe(gulp.dest(websiteDeployDest))
 })
-gulp.task('extension:zip', async () => {
+gulp.task('build:extension', async () => {
   const fs = require('fs')
   const manifest = JSON.parse(fs.readFileSync(extensionManifest))
   const inquirer = require('inquirer')
