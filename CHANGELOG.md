@@ -1,6 +1,6 @@
 # Changelog
 
-## Next
+## 2.2.2 - 2022 Sep 25
 - Fix theme loading in web extension
 
 ## 2.2.1 - 2022 Sep 25
