@@ -3,4 +3,4 @@ old
 build
 dist
 node_modules
-.cache
+.parcel-cache

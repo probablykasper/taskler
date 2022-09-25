@@ -6,14 +6,14 @@ html
     link(rel="stylesheet", type="text/css", href="index.styl")
     meta(name="viewport" content="width=device-width, initial-scale=1")
     //- favicon
-    link(rel="apple-touch-icon", sizes="180x180", href="/icons/apple-touch-icon.png?v=2")
-    link(rel="icon", type="image/png", sizes="32x32", href="/icons/favicon-32x32.png?v=2")
-    link(rel="icon", type="image/png", sizes="16x16", href="/icons/favicon-16x16.png?v=2")
-    link(rel="manifest", href="/icons/site.webmanifest?v=2")
-    link(rel="mask-icon", href="/icons/safari-pinned-tab.svg?v=2", color="#272727")
-    link(rel="shortcut icon", href="/icons/favicon.ico?v=2")
+    link(rel="apple-touch-icon", sizes="180x180", href="./icons/apple-touch-icon.png?v=2")
+    link(rel="icon", type="image/png", sizes="32x32", href="./icons/favicon-32x32.png?v=2")
+    link(rel="icon", type="image/png", sizes="16x16", href="./icons/favicon-16x16.png?v=2")
+    link(rel="manifest", href="./icons/site.webmanifest?v=2")
+    link(rel="mask-icon", href="./icons/safari-pinned-tab.svg?v=2", color="#272727")
+    link(rel="shortcut icon", href="./icons/favicon.ico?v=2")
     meta(name="msapplication-TileColor", content="#272727")
-    meta(name="msapplication-config", content="/icons/browserconfig.xml?v=2")
+    meta(name="msapplication-config", content="./icons/browserconfig.xml?v=2")
     meta(name="theme-color", content="#ffffff")
     script(src='./theme-init.ts')
   body.no-transition
@@ -59,5 +59,5 @@ html
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0V0z"/><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
           label(for='auto-list-checkbox')
             p Automatically create lists
-    script(src='index.js')
+    script(type='module' src='index.js')
 

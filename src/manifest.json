@@ -10,7 +10,7 @@
     "128": "icon128.png"
   },
   "chrome_url_overrides": {
-    "newtab": "index.html"
+    "newtab": "./index.pug"
   },
   "permissions": []
 }

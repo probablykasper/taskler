@@ -1,6 +1,3 @@
-import cssVars from 'css-vars-ponyfill'
-cssVars()
-
 // localStorage wrapper
 function initLocalStorage (options) {
   function getItem () {
@@ -57,7 +54,7 @@ autoListCheckbox.addEventListener('change', (e) => {
   else autoListSetting.set(false).update()
 })
 
-import Quill from '~/lib/quill.js'
+import Quill from './lib/quill.js'
 import Delta from 'quill-delta';
 window.quill = new Quill(document.querySelector('#note'), {
   modules: {
