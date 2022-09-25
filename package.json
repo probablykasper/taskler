@@ -1,15 +1,27 @@
 {
   "name": "taskler",
   "scripts": {
-    "dev:website": "parcel serve src/index.pug --dist-dir build/website",
-    "build:website": "rm -rf build/website && parcel build src/index.pug --dist-dir build/website",
-    "dev:extension": "parcel watch manifest.json --dist-dir build/extension --config @parcel/config-webextension --host localhost",
-    "build:extension": "npm run bundle:extension && gulp zip",
-    "bundle:extension": "rm -rf build/extension && parcel build manifest.json --dist-dir build/extension --config @parcel/config-webextension",
+    "dev:website": "parcel serve --target website",
+    "build:website": "rm -rf build/website && parcel build --target website",
+    "dev:extension": "parcel watch manifest.json --target extension --config @parcel/config-webextension --host localhost",
+    "build:extension": "rm -rf build/extension && parcel build --target extension --config @parcel/config-webextension && gulp zip",
     "format": "rome format --write src *.js --quote-style single && rome check src *.js --apply-suggested",
     "check": "rome ci src *.js --quote-style single"
   },
   "browserslist": "> 0.5%, last 2 versions, not dead",
+  "targets": {
+    "website": {
+      "source": "src/index.pug",
+      "distDir": "build/website",
+      "sourceMap": true
+    },
+    "extension": {
+      "source": "manifest.json",
+      "distDir": "build/extension",
+      "sourceMap": false
+    }
+  },
+  "___comment": "Extension source maps disabled because @parcel/config-webextension causes them to be inline",
   "devDependencies": {
     "@parcel/config-webextension": "^2.7.0",
     "@parcel/packager-raw-url": "^2.7.0",
