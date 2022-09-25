@@ -2,6 +2,7 @@
 
 ## Next
 - Fix toolbar
+- Fix theme switching not applying to other tabs until reload
 
 ## 2.2.2 - 2022 Sep 25
 - Fix theme loading in web extension

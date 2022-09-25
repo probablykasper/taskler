@@ -38,8 +38,10 @@ function initLocalStorage<T>(options: InitLocalStorageOptions<T>) {
   if (options.onUpdate) options.onUpdate(handle.get()) // set value on pageload
   // detect updates from other tabs
   window.addEventListener('storage', (event) => {
-    console.log('stor', event)
-    if (event.key === options.key && options.onUpdate) options.onUpdate(getItem())
+    if (event.key === options.key && options.onUpdate) {
+      console.log('stor', event)
+      options.onUpdate(getItem())
+    }
   }, false)
   return handle
 }
@@ -178,6 +180,7 @@ const quillState = initLocalStorage<QuillState>({
     quill.setContents(quillState.delta, 'silent')
     quill.history.clear()
     const stack = quillState.historyStack
+    // apply historyStack which was reset by quill.setContents()
     for (let i = 0; i < stack.undo.length; i++) {
       const ob = {
         redo: new Delta(stack.undo[i].redo.ops),
@@ -224,6 +227,14 @@ if (isBrowser) {
 function themeHandling() {
   const darkModeCheckbox = document.querySelector('#dark-mode-checkbox')
   if (!(darkModeCheckbox instanceof HTMLInputElement)) throw alert('darkModeCheckbox not found')
+
+  function updateTheme(theme: string) {
+    if (!(darkModeCheckbox instanceof HTMLInputElement)) throw alert('darkModeCheckbox not found')
+    darkModeCheckbox.checked = theme === 'dark'
+    document.documentElement.setAttribute('data-theme', theme)
+  }
+  updateTheme(document.documentElement.getAttribute('data-theme') || 'dark')
+  
   // Get the systemTheme using window.matchMedia
   const prefersDarkMQ = matchMedia('(prefers-color-scheme: dark)')
   let systemTheme = prefersDarkMQ.matches ? 'dark' : 'light'
@@ -232,15 +243,12 @@ function themeHandling() {
     systemTheme = e.matches ? 'dark' : 'light'
     // Update the theme, as long as there's no theme override
     if (localStorage.getItem('theme') === null) {
-      setTheme(systemTheme)
+      setAndSaveTheme(systemTheme)
     }
   }
 
-  let theme = document.documentElement.getAttribute('data-theme') || 'dark'
-
-  function setTheme(newTheme) {
-    document.documentElement.setAttribute('data-theme', newTheme)
-    theme = newTheme
+  function setAndSaveTheme(newTheme: string) {
+    updateTheme(newTheme)
     if (newTheme === systemTheme) {
       // Remove override if the user sets the theme to match the system theme
       localStorage.removeItem('theme')
@@ -248,11 +256,18 @@ function themeHandling() {
       localStorage.setItem('theme', newTheme)
     }
   }
-  darkModeCheckbox.checked = theme === 'dark'
   darkModeCheckbox.addEventListener('change', (e) => {
-    if (darkModeCheckbox.checked) setTheme('dark')
-    else setTheme('light')
+    if (darkModeCheckbox.checked) setAndSaveTheme('dark')
+    else setAndSaveTheme('light')
   })
+
+  // detect updates from other tabs
+  window.addEventListener('storage', (event) => {
+    if (event.key === 'theme') {
+      console.log('stor', event)
+      updateTheme(event.newValue || systemTheme)
+    }
+  }, false)
 }
 themeHandling()
 
