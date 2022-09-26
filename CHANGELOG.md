@@ -1,6 +1,6 @@
 # Changelog
 
-## Next
+## 2.2.3 - 2022 Sep 26
 - Fix toolbar
 - Fix theme switching not applying to other tabs until reload
 
