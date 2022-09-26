@@ -2,8 +2,12 @@
   <a href="https://taskler.kasper.space" title="Taskler"><img alt="Quill Logo" src="https://raw.githubusercontent.com/SpectralKH/taskler/9363a32916f6f0f7316528c92a7df265a5b53d62/logo/logo.png" width="96"></a>
 </p>
 <p align="center">
-  <img alt="Chrome Web Store" src="https://img.shields.io/chrome-web-store/users/jnibmbpjkpfgaefgbnaneldfbfecpjih?color=yellow&logo=Google%20Chrome&logoColor=white&style=flat-square">
+  <a href="https://chrome.google.com/webstore/detail/jnibmbpjkpfgaefgbnaneldfbfecpjih">
+    <img alt="Chrome Web Store" src="https://img.shields.io/chrome-web-store/users/jnibmbpjkpfgaefgbnaneldfbfecpjih?color=yellow&logo=Google%20Chrome&logoColor=white&style=flat-square">
+  </a>
+  <a href="https://addons.mozilla.org/addon/taskler">
   <img alt="Mozilla Add-on" src="https://img.shields.io/amo/users/taskler?color=orange&logo=Firefox%20Browser&logoColor=white&style=flat-square">
+  </a>
 </p>
 <h1 align="center">
   Taskler

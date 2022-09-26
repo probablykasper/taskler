@@ -3,7 +3,7 @@
   "scripts": {
     "dev:website": "parcel serve --target website",
     "build:website": "rm -rf build/website && parcel build --target website",
-    "dev:extension": "parcel watch manifest.json --target extension --config @parcel/config-webextension --host localhost",
+    "dev:extension": "rm -rf build/extension && parcel watch --target extension --config @parcel/config-webextension --host localhost",
     "build:extension": "rm -rf build/extension && parcel build --target extension --config @parcel/config-webextension && gulp zip",
     "format": "rome format --write src *.js --quote-style single && rome check src *.js --apply-suggested",
     "check": "rome ci src *.js --quote-style single"
